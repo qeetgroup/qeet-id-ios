@@ -23,3 +23,10 @@ All notable changes to Qeet ID for iPhone are documented here. The format follow
 - The Locked screen, asking for Face ID by itself when the app opens or returns from the background, and a privacy
   cover whenever the app isn't active, both in a window of their own above sheets and alerts, so the app switcher
   never shows a code.
+- Sign-in codes: the Accounts screen (large title, search, each account's code with the time left, tap to copy for a
+  minute on this iPhone only), the empty state, Add account with the QR scanner (camera, torch, camera access off)
+  and the setup-key sheet with Advanced settings, the context menu (Copy Code, Rename, Delete Account), Rename with
+  the system alert and Delete with the action sheet.
+- AutoFill (iOS 18 and later): the AutoFill codes page and the credential provider's "Choose a code" sheet, with the
+  site's codes first, Face ID before any code is shown or filled, and sites remembered only once the person chose an
+  account there.

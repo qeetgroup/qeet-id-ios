@@ -1,6 +1,15 @@
 {
   "sourceLanguage" : "en",
   "strings" : {
+    "%@ added" : {
+
+    },
+    "%@ deleted" : {
+
+    },
+    "%@ didn't confirm it's you. Try again, or turn it on later in Settings." : {
+
+    },
     "%@ on %@" : {
       "comment" : "A browser on a system: Chrome on macOS",
       "localizations" : {
@@ -12,16 +21,125 @@
         }
       }
     },
+    "%lld digits · every %lld seconds · %@" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "%1$lld digits · every %2$lld seconds · %3$@"
+          }
+        }
+      }
+    },
+    "%lld seconds" : {
+
+    },
+    "Account" : {
+
+    },
     "Accounts" : {
+
+    },
+    "Add" : {
+
+    },
+    "Add account" : {
+
+    },
+    "Advanced" : {
+
+    },
+    "Algorithm" : {
+
+    },
+    "Approve sign-ins" : {
+
+    },
+    "AutoFill codes" : {
+
+    },
+    "Can't add this account" : {
+
+    },
+    "Cancel" : {
+
+    },
+    "Clears from the clipboard after 1 minute" : {
+
+    },
+    "Confirm it's you with Face ID when you sign in on a computer." : {
+
+    },
+    "Continue" : {
+
+    },
+    "Copied" : {
+
+    },
+    "Delete %@?" : {
+
+    },
+    "Digits" : {
 
     },
     "Enter the setup key from the site's setup page." : {
 
     },
+    "Example: a code field, with Qeet ID's code offered above the keyboard" : {
+
+    },
     "Face ID" : {
 
     },
+    "Face ID lock" : {
+
+    },
+    "For Qeet ID and any site with 2-step verification. They work offline." : {
+
+    },
+    "From" : {
+
+    },
+    "From the site's setup page. Spaces don't matter." : {
+
+    },
+    "General, then AutoFill & Passwords" : {
+
+    },
+    "Get sign-in requests on this iPhone" : {
+
+    },
+    "Kept on this iPhone" : {
+
+    },
+    "Link this iPhone from Settings to approve sign-ins." : {
+
+    },
+    "New code every" : {
+
+    },
+    "Not now" : {
+
+    },
+    "Only changes how it's shown on this iPhone." : {
+
+    },
+    "Open iOS Settings" : {
+
+    },
     "Optic ID" : {
+
+    },
+    "Optic ID lock" : {
+
+    },
+    "Passcode lock" : {
+
+    },
+    "Point the camera at the QR code" : {
+
+    },
+    "Qeet ID asks you to approve each sign-in to your account. Allow notifications so the requests reach you." : {
 
     },
     "Qeet ID couldn't be reached. Check your connection and try again." : {
@@ -30,10 +148,37 @@
     "Qeet ID couldn't save to this iPhone's Keychain. Try again." : {
 
     },
+    "Rename account" : {
+
+    },
+    "Save" : {
+
+    },
+    "Search" : {
+
+    },
+    "Secrets stay in the Secure Enclave and the Keychain. Qeet ID never receives them." : {
+
+    },
     "Security" : {
 
     },
+    "Service" : {
+
+    },
     "Settings" : {
+
+    },
+    "Setup key" : {
+
+    },
+    "Sign-in codes" : {
+
+    },
+    "Step 1 of 2" : {
+
+    },
+    "Step 2 of 2" : {
 
     },
     "That key has letters or digits a setup key can't have. Check it against the site's setup page." : {
@@ -57,19 +202,65 @@
     "This account's codes use settings Qeet ID doesn't support." : {
 
     },
+    "This iPhone has no passcode, so Qeet ID can't be locked. Set one in iOS Settings, then turn on the lock in Qeet ID's Settings." : {
+
+    },
+    "This is a Qeet ID pairing code" : {
+
+    },
     "Touch ID" : {
+
+    },
+    "Touch ID lock" : {
 
     },
     "Turn off the lock for Qeet ID." : {
 
     },
+    "Turn on Qeet ID" : {
+
+    },
     "Turn on the lock for Qeet ID." : {
+
+    },
+    "Type the key instead" : {
+
+    },
+    "Under “AutoFill From” and Verification Codes" : {
 
     },
     "Unlock Qeet ID to see your codes and sign-in requests." : {
 
     },
+    "Unlock with Face ID" : {
+
+    },
+    "Unlock with Optic ID" : {
+
+    },
+    "Unlock with Touch ID" : {
+
+    },
+    "Unlock with passcode" : {
+
+    },
+    "Verification code" : {
+
+    },
+    "You'll stop getting codes for %@. Turn off 2-step verification on %@ first, or you may be locked out." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "You'll stop getting codes for %1$@. Turn off 2-step verification on %2$@ first, or you may be locked out."
+          }
+        }
+      }
+    },
     "You're offline. Connect to the internet and try again." : {
+
+    },
+    "Your passcode if %@ can't see you" : {
 
     },
     "passcode" : {

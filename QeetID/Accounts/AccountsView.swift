@@ -1,35 +1,177 @@
 import Qeetrix
 import SwiftUI
 
-/// The home screen: the large title, search, and each account's code.
+/// Screens 4, 5, 9, 10 and 26: the large title and search, each account's code, and the context menu with copy,
+/// rename and delete; with no accounts, both ways to add one.
 struct AccountsView: View {
-    @State private var query = ""
+    let model: AppModel
+    @Environment(\.colorScheme) private var colorScheme
+    @State private var showsSetupKey = false
+    @State private var renaming: OTPAccount?
+    @State private var renameIssuer = ""
+    @State private var renameName = ""
+    @State private var confirmation: QeetrixConfirmationDialog?
+
+    private var accounts: AccountsModel { model.accounts }
 
     var body: some View {
-        List {
-            Section {
-                QeetrixEmptyState(
-                    "No accounts yet", description: "Turn on 2-step verification on a website or app. It shows a QR code; scan it here.",
-                    icon: .keyRound, size: .section
-                )
-                .listRowBackground(Color.clear)
+        list
+            .qeetrixListStyle()
+            .navigationTitle("Accounts")
+            .navigationBarTitleDisplayMode(.large)
+            .qeetrixNavigationBar(background: .canvas, title: .qeetrix)
+            .toolbar { toolbar }
+            .qeetrixConfirmationDialog($confirmation)
+            .alert("Rename account", isPresented: isRenaming, presenting: renaming) { account in
+                TextField("Service", text: $renameIssuer)
+                    .textInputAutocapitalization(.words)
+                    .accessibilityIdentifier("rename.service")
+                TextField("Account", text: $renameName)
+                    .textInputAutocapitalization(.never)
+                    .autocorrectionDisabled()
+                    .accessibilityIdentifier("rename.account")
+                Button("Cancel", role: .cancel) {}
+                Button("Save") { accounts.rename(account, issuer: renameIssuer, name: renameName) }
+            } message: { _ in
+                Text("Only changes how it's shown on this iPhone.")
             }
-        }
-        .qeetrixListStyle()
-        .searchable(text: $query, placement: .navigationBarDrawer(displayMode: .always))
-        .navigationTitle("Accounts")
-        .navigationBarTitleDisplayMode(.large)
-        .qeetrixNavigationBar(background: .canvas, title: .qeetrix)
-        .toolbar {
-            ToolbarItem(placement: .primaryAction) {
-                NavigationLink(value: Route.settings) {
-                    Label {
-                        Text("Settings")
-                    } icon: {
-                        Image(qeetrix: .settings, shape: .sharp)
-                    }
+            .qeetrixSheet(isPresented: $showsSetupKey) {
+                SetupKeySheet { draft throws(AccountStoreError) in
+                    let account = try accounts.add(draft)
+                    model.accountAdded(account)
                 }
             }
+            .task { await accounts.runClock() }
+    }
+
+    @ViewBuilder private var list: some View {
+        if accounts.accounts.isEmpty {
+            List {
+                Section {
+                    emptyState
+                        .listRowBackground(Color.clear)
+                        .listRowSeparator(.hidden)
+                        .listRowInsets(EdgeInsets())
+                }
+            }
+        } else {
+            List {
+                Section {
+                    let visible = accounts.visibleAccounts
+                    if visible.isEmpty {
+                        QeetrixEmptyState("No results", description: "No account matches your search.", icon: .search, size: .section)
+                            .listRowBackground(Color.clear)
+                            .listRowSeparator(.hidden)
+                    }
+                    ForEach(visible) { account in
+                        row(account)
+                    }
+                } header: {
+                    QeetrixSectionHeader("Codes", isRuled: false)
+                }
+                .listSectionSeparator(.hidden, edges: .top)
+            }
+            .searchable(
+                text: Binding(get: { accounts.query }, set: { accounts.query = $0 }),
+                placement: .navigationBarDrawer(displayMode: .always), prompt: Text("Search"))
         }
+    }
+
+    private func row(_ account: OTPAccount) -> some View {
+        let code = accounts.codes[account.id]
+        return AccountRow(
+            account: account, code: code, hidesCode: model.preferences.hidesCodes,
+            toast: Binding(get: { model.toast }, set: { model.toast = $0 })
+        )
+        .qeetrixListRow(colorScheme: colorScheme)
+        .contextMenu {
+            if let code {
+                QeetrixMenuItem("Copy Code", icon: .copy) { copy(code) }
+            }
+            QeetrixMenuItem("Rename", icon: .pencil) { startRenaming(account) }
+            Divider()
+            QeetrixMenuItem("Delete Account", icon: .trash, tone: .danger) { confirmDelete(account) }
+        } preview: {
+            AccountRow(account: account, code: code, hidesCode: model.preferences.hidesCodes, toast: nil)
+                .frame(width: 340)
+                .background(QeetrixColor.surfaceRaised)
+                .qeetrixRootTheme()
+        }
+        .accessibilityIdentifier("account.\(account.issuer)")
+    }
+
+    private var emptyState: some View {
+        QeetrixEmptyState(
+            "No accounts yet", description: "Turn on 2-step verification on a website or app. It shows a QR code; scan it here.",
+            icon: .keyRound, level: 2
+        ) {
+            QeetrixButton("Scan QR code", icon: .scanLine) { model.modal = .addAccount }
+                .accessibilityIdentifier("empty.scan")
+            QeetrixButton("Type the key", variant: .ghost) { showsSetupKey = true }
+                .accessibilityIdentifier("empty.type")
+        }
+        .frame(maxWidth: .infinity)
+        .padding(.top, QeetrixSpace.layoutLg)
+        .accessibilityIdentifier("accounts.empty")
+    }
+
+    @ToolbarContentBuilder private var toolbar: some ToolbarContent {
+        ToolbarItemGroup(placement: .primaryAction) {
+            Button {
+                model.modal = .addAccount
+            } label: {
+                Label {
+                    Text("Add account")
+                } icon: {
+                    Image(qeetrix: .plus, shape: .sharp)
+                }
+            }
+            .accessibilityIdentifier("accounts.add")
+            NavigationLink(value: Route.settings) {
+                Label {
+                    Text("Settings")
+                } icon: {
+                    Image(qeetrix: .settings, shape: .sharp)
+                }
+            }
+            .accessibilityIdentifier("accounts.settings")
+        }
+    }
+
+    private var isRenaming: Binding<Bool> {
+        Binding(get: { renaming != nil }, set: { if !$0 { renaming = nil } })
+    }
+
+    private func copy(_ code: GeneratedCode) {
+        SensitiveCopy.copy(code.code)
+        QeetrixFeedback.lightImpact.play()
+        model.toast = QeetrixToast(
+            .success, title: String(localized: "Copied"), description: String(localized: "Clears from the clipboard after 1 minute"))
+    }
+
+    private func startRenaming(_ account: OTPAccount) {
+        renameIssuer = account.issuer
+        renameName = account.name
+        renaming = account
+    }
+
+    private func confirmDelete(_ account: OTPAccount) {
+        let message =
+            account.name.isEmpty
+            ? Text(
+                "You'll stop getting codes for \(account.issuer). Turn off 2-step verification on \(account.issuer) first, or you may be locked out."
+            )
+            : Text(
+                "You'll stop getting codes for \(account.name). Turn off 2-step verification on \(account.issuer) first, or you may be locked out."
+            )
+        confirmation = QeetrixConfirmationDialog(
+            title: Text("Delete \(account.issuer)?"), message: message,
+            actions: [
+                QeetrixDialogAction("Delete Account", role: .destructive) {
+                    accounts.delete(account)
+                    QeetrixFeedback.success.play()
+                    model.toast = QeetrixToast(.info, title: String(localized: "\(account.issuer) deleted"))
+                }
+            ])
     }
 }

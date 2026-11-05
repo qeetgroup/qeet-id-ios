@@ -7,6 +7,7 @@
     /// - `-ui-auth success|failed|cancelled|no-passcode`: the stub's answer (success by default).
     /// - `-ui-onboarded`: skip the welcome steps.
     /// - `-ui-lock-on`: start with the app lock on.
+    /// - `-ui-scan <text>`: the QR scanner reads `<text>` (the simulator has no camera).
     enum UITestSupport {
         static var arguments: [String] { ProcessInfo.processInfo.arguments }
 
@@ -16,6 +17,8 @@
             guard let index = arguments.firstIndex(of: flag), arguments.indices.contains(index + 1) else { return nil }
             return arguments[index + 1]
         }
+
+        static var simulatedScan: String? { value(after: "-ui-scan") }
 
         static var authenticationOutcome: AuthenticationOutcome {
             switch value(after: "-ui-auth") {
@@ -35,7 +38,9 @@
             try? DeviceLinkStore().clear()
             preferences.hasCompletedOnboarding = arguments.contains("-ui-onboarded")
             preferences.isLockEnabled = arguments.contains("-ui-lock-on")
-            return AppModel(preferences: preferences, authenticator: StubDeviceOwnerAuthenticator(outcome: authenticationOutcome))
+            return AppModel(
+                preferences: preferences, authenticator: StubDeviceOwnerAuthenticator(outcome: authenticationOutcome),
+                accountStore: KeychainAccountStore())
         }
     }
 #endif

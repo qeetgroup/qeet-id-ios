@@ -12,19 +12,49 @@
         }
       }
     },
+    "Cancel" : {
+
+    },
+    "Choose a code" : {
+
+    },
     "Enter the setup key from the site's setup page." : {
 
     },
     "Face ID" : {
 
     },
+    "Face ID lock" : {
+
+    },
+    "Fill a sign-in code from Qeet ID." : {
+
+    },
+    "Fills this code" : {
+
+    },
+    "For %@" : {
+
+    },
+    "Locked" : {
+
+    },
     "Optic ID" : {
+
+    },
+    "Optic ID lock" : {
+
+    },
+    "Passcode lock" : {
 
     },
     "Qeet ID couldn't be reached. Check your connection and try again." : {
 
     },
     "Qeet ID couldn't save to this iPhone's Keychain. Try again." : {
+
+    },
+    "Shows this account's code" : {
 
     },
     "That key has letters or digits a setup key can't have. Check it against the site's setup page." : {
@@ -49,6 +79,21 @@
 
     },
     "Touch ID" : {
+
+    },
+    "Touch ID lock" : {
+
+    },
+    "Unlock with Face ID" : {
+
+    },
+    "Unlock with Optic ID" : {
+
+    },
+    "Unlock with Touch ID" : {
+
+    },
+    "Unlock with passcode" : {
 
     },
     "You're offline. Connect to the internet and try again." : {
