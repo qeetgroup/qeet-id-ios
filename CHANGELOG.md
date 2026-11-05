@@ -14,3 +14,8 @@ All notable changes to Qeet ID for iPhone are documented here. The format follow
 - Qeetrix for iOS from 0.1.0 through Swift Package Manager.
 - The app icon (light, dark and tinted) and the in-app Q-key mark.
 - CI on pull requests into `main` and pushes to `main`: build, tests, lint and a gitleaks scan.
+- Foundations: Keychain storage (`…ThisDeviceOnly`, never synchronizable, one item per account in the access group
+  shared with AutoFill); RFC 6238 codes with CryptoKit (SHA-1, SHA-256, SHA-512; 6 or 8 digits); RFC 4648 Base32;
+  `otpauth://` links; pairing codes; the API client for `/v1/mfa/push/*` with the server's clock correction; the
+  device link; Face ID, Touch ID or passcode checks and the app lock; String Catalogs for every target
+  (`Scripts/sync-strings.sh`).

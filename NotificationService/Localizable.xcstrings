@@ -1,7 +1,50 @@
 {
   "sourceLanguage" : "en",
   "strings" : {
+    "%@ on %@" : {
+      "comment" : "A browser on a system: Chrome on macOS",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "%1$@ on %2$@"
+          }
+        }
+      }
+    },
+    "Enter the setup key from the site's setup page." : {
 
+    },
+    "Qeet ID couldn't be reached. Check your connection and try again." : {
+
+    },
+    "Qeet ID couldn't save to this iPhone's Keychain. Try again." : {
+
+    },
+    "That key has letters or digits a setup key can't have. Check it against the site's setup page." : {
+
+    },
+    "That key is too short. Check that you typed all of it." : {
+
+    },
+    "This QR code isn't for sign-in codes. Scan the code on the site's 2-step verification page." : {
+
+    },
+    "This QR code moves accounts out of another app. Add each account from its own website instead." : {
+
+    },
+    "This account is already on this iPhone." : {
+
+    },
+    "This account uses counter-based codes, which Qeet ID doesn't make. Ask the site for time-based codes." : {
+
+    },
+    "This account's codes use settings Qeet ID doesn't support." : {
+
+    },
+    "You're offline. Connect to the internet and try again." : {
+
+    }
   },
   "version" : "1.0"
 }
