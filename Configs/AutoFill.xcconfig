@@ -1,0 +1,15 @@
+// AutoFill.xcconfig — the AutoFill credential provider: one-time codes above the keyboard, iOS 18 and
+// later. iOS 17 never loads it, so its deployment target is 18 while the app's stays 17.
+
+PRODUCT_NAME = QeetIDAutoFill
+PRODUCT_MODULE_NAME = QeetIDAutoFill
+PRODUCT_BUNDLE_IDENTIFIER = $(QEETID_APP_BUNDLE_IDENTIFIER).autofill
+IPHONEOS_DEPLOYMENT_TARGET = 18.0
+INFOPLIST_FILE = Configs/AutoFill-Info.plist
+GENERATE_INFOPLIST_FILE = YES
+CODE_SIGN_ENTITLEMENTS = Configs/AutoFill.entitlements
+INFOPLIST_KEY_CFBundleDisplayName = Qeet ID
+INFOPLIST_KEY_NSFaceIDUsageDescription = Qeet ID uses Face ID to confirm it's you before it fills a code.
+SKIP_INSTALL = YES
+APPLICATION_EXTENSION_API_ONLY = YES
+LD_RUNPATH_SEARCH_PATHS = $(inherited) @executable_path/Frameworks @executable_path/../../Frameworks

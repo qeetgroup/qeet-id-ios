@@ -1,0 +1,657 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 77;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		036A20D73A7F5CCA831B11BE /* Qeetrix in Frameworks */ = {isa = PBXBuildFile; productRef = 19056A15686009E0B7E50B48 /* Qeetrix */; };
+		20C233B9FC0FD49F9907370D /* Qeetrix in Frameworks */ = {isa = PBXBuildFile; productRef = 1E29CCF73046A67AE49D8F87 /* Qeetrix */; };
+		96B15848DF9B581E1681573F /* QeetIDAutoFill.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = 2AFCB60CB4A329174BF5C04B /* QeetIDAutoFill.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		2832EFE252A70EC00A942D68 /* QeetIDNotificationService.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = 681B0F8F9D41C670DC2D90F8 /* QeetIDNotificationService.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		F1AF1CA9084078DDD84CC248 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 98F54143AB4E86B28C3AFEE0 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 874153A7D023DA984C0B8C7F;
+			remoteInfo = QeetIDAutoFill;
+		};
+		3EF0A0B17DB4E66CB8C0D539 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 98F54143AB4E86B28C3AFEE0 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 785CF9298395F90FBBFA9EA3;
+			remoteInfo = QeetIDNotificationService;
+		};
+		8DACCFE14D6B415529035951 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 98F54143AB4E86B28C3AFEE0 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = A804E3A643578780733AB11C;
+			remoteInfo = QeetID;
+		};
+		8206E21DA84F12B4D681D658 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 98F54143AB4E86B28C3AFEE0 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = A804E3A643578780733AB11C;
+			remoteInfo = QeetID;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		A9583ED56E9085B26353E851 /* Embed Foundation Extensions */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 13;
+			files = (
+				96B15848DF9B581E1681573F /* QeetIDAutoFill.appex in Embed Foundation Extensions */,
+				2832EFE252A70EC00A942D68 /* QeetIDNotificationService.appex in Embed Foundation Extensions */,
+			);
+			name = "Embed Foundation Extensions";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
+/* Begin PBXFileReference section */
+		7A1274F3A8D3D3AA8DAB42F8 /* Project.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = "Project.xcconfig"; sourceTree = "<group>"; };
+		EEB5316220CC10C31AC68C7E /* Signing.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = "Signing.xcconfig"; sourceTree = "<group>"; };
+		1451AA92A0176F23BCCCD615 /* App.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = "App.xcconfig"; sourceTree = "<group>"; };
+		A3C54CCA0C6DFE9441FAB828 /* AutoFill.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = "AutoFill.xcconfig"; sourceTree = "<group>"; };
+		6454076572A3239130D80A56 /* NotificationService.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = "NotificationService.xcconfig"; sourceTree = "<group>"; };
+		8EBA45716CBEE72F07D916D2 /* Tests.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = "Tests.xcconfig"; sourceTree = "<group>"; };
+		2F0BB17B72463A5333884CB3 /* UITests.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = "UITests.xcconfig"; sourceTree = "<group>"; };
+		87EFB5F2D126AD000B614735 /* QeetID-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "QeetID-Info.plist"; sourceTree = "<group>"; };
+		BC2996EEEDEA4A4509116D44 /* AutoFill-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "AutoFill-Info.plist"; sourceTree = "<group>"; };
+		E156B410D6952E3197AE4B62 /* NotificationService-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "NotificationService-Info.plist"; sourceTree = "<group>"; };
+		2F6793066F3257B7C2027665 /* QeetID.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = "QeetID.entitlements"; sourceTree = "<group>"; };
+		A62F8FF8FAAC9E61B4CC9292 /* AutoFill.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = "AutoFill.entitlements"; sourceTree = "<group>"; };
+		75CE31B1D9CD005685B34A39 /* NotificationService.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = "NotificationService.entitlements"; sourceTree = "<group>"; };
+		A9825885FA47EC23A1525157 /* QeetID.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = QeetID.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		2AFCB60CB4A329174BF5C04B /* QeetIDAutoFill.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = QeetIDAutoFill.appex; sourceTree = BUILT_PRODUCTS_DIR; };
+		681B0F8F9D41C670DC2D90F8 /* QeetIDNotificationService.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = QeetIDNotificationService.appex; sourceTree = BUILT_PRODUCTS_DIR; };
+		530C49BD49834ED002CB78C8 /* QeetIDTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = QeetIDTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		F500734AABDEAC15EC8DB534 /* QeetIDUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = QeetIDUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+/* End PBXFileReference section */
+
+/* Begin PBXFileSystemSynchronizedRootGroup section */
+		A4466544207184787E7BC032 /* QeetID */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = QeetID;
+			sourceTree = "<group>";
+		};
+		9DCD2023BB7F15FB2D257518 /* Shared */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = Shared;
+			sourceTree = "<group>";
+		};
+		AA4ABF629C44690D90DB5863 /* Core */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = Core;
+			sourceTree = "<group>";
+		};
+		9A9349C3BEE313CABBDA30E9 /* AutoFill */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = AutoFill;
+			sourceTree = "<group>";
+		};
+		208EF8FC6C18432C315A916C /* NotificationService */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = NotificationService;
+			sourceTree = "<group>";
+		};
+		23AE719F31BC1F64770C1597 /* QeetIDTests */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = QeetIDTests;
+			sourceTree = "<group>";
+		};
+		0A423D8FC0C47DEAE78DDF3B /* QeetIDUITests */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = QeetIDUITests;
+			sourceTree = "<group>";
+		};
+/* End PBXFileSystemSynchronizedRootGroup section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		09443250E680D919A84BC444 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				036A20D73A7F5CCA831B11BE /* Qeetrix in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		3864422A4DBB1DD9AF2319AF /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				20C233B9FC0FD49F9907370D /* Qeetrix in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		6E3DB74DF8852F7550E09088 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		14728CB99C4A98C751A4EC3F /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		CFA9A56D0946114C0833CD58 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		AB48CFA305015276AB5620D4 = {
+			isa = PBXGroup;
+			children = (
+				1EEBAA6AAA08DB4338DC8647 /* Configs */,
+				A4466544207184787E7BC032 /* QeetID */,
+				9DCD2023BB7F15FB2D257518 /* Shared */,
+				AA4ABF629C44690D90DB5863 /* Core */,
+				9A9349C3BEE313CABBDA30E9 /* AutoFill */,
+				208EF8FC6C18432C315A916C /* NotificationService */,
+				23AE719F31BC1F64770C1597 /* QeetIDTests */,
+				0A423D8FC0C47DEAE78DDF3B /* QeetIDUITests */,
+				692092DE1C1C8624E142B71D /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		1EEBAA6AAA08DB4338DC8647 /* Configs */ = {
+			isa = PBXGroup;
+			children = (
+				7A1274F3A8D3D3AA8DAB42F8 /* Project.xcconfig */,
+				EEB5316220CC10C31AC68C7E /* Signing.xcconfig */,
+				1451AA92A0176F23BCCCD615 /* App.xcconfig */,
+				A3C54CCA0C6DFE9441FAB828 /* AutoFill.xcconfig */,
+				6454076572A3239130D80A56 /* NotificationService.xcconfig */,
+				8EBA45716CBEE72F07D916D2 /* Tests.xcconfig */,
+				2F0BB17B72463A5333884CB3 /* UITests.xcconfig */,
+				87EFB5F2D126AD000B614735 /* QeetID-Info.plist */,
+				BC2996EEEDEA4A4509116D44 /* AutoFill-Info.plist */,
+				E156B410D6952E3197AE4B62 /* NotificationService-Info.plist */,
+				2F6793066F3257B7C2027665 /* QeetID.entitlements */,
+				A62F8FF8FAAC9E61B4CC9292 /* AutoFill.entitlements */,
+				75CE31B1D9CD005685B34A39 /* NotificationService.entitlements */,
+			);
+			path = Configs;
+			sourceTree = "<group>";
+		};
+		692092DE1C1C8624E142B71D /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				A9825885FA47EC23A1525157 /* QeetID.app */,
+				2AFCB60CB4A329174BF5C04B /* QeetIDAutoFill.appex */,
+				681B0F8F9D41C670DC2D90F8 /* QeetIDNotificationService.appex */,
+				530C49BD49834ED002CB78C8 /* QeetIDTests.xctest */,
+				F500734AABDEAC15EC8DB534 /* QeetIDUITests.xctest */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		A804E3A643578780733AB11C /* QeetID */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 57E545CDBC53112C882F8FCA /* Build configuration list for PBXNativeTarget "QeetID" */;
+			buildPhases = (
+				3B3DE796038C45C1B6780527 /* Sources */,
+				09443250E680D919A84BC444 /* Frameworks */,
+				8D25FA1202D6C65B912AA2E9 /* Resources */,
+				A9583ED56E9085B26353E851 /* Embed Foundation Extensions */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				A2D443DFF1E36B52BFE86621 /* PBXTargetDependency */,
+				BC01D0EC102C89AD85771D2F /* PBXTargetDependency */,
+			);
+			fileSystemSynchronizedGroups = (
+				A4466544207184787E7BC032 /* QeetID */,
+				9DCD2023BB7F15FB2D257518 /* Shared */,
+				AA4ABF629C44690D90DB5863 /* Core */,
+			);
+			name = QeetID;
+			packageProductDependencies = (
+				19056A15686009E0B7E50B48 /* Qeetrix */,
+			);
+			productName = QeetID;
+			productReference = A9825885FA47EC23A1525157 /* QeetID.app */;
+			productType = "com.apple.product-type.application";
+		};
+		874153A7D023DA984C0B8C7F /* QeetIDAutoFill */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = D843C6ABC130D418D8BF34E8 /* Build configuration list for PBXNativeTarget "QeetIDAutoFill" */;
+			buildPhases = (
+				AF7AE16BE89A4360BA7C5579 /* Sources */,
+				3864422A4DBB1DD9AF2319AF /* Frameworks */,
+				7CD9A8EFEE19DBEC9BBE790C /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			fileSystemSynchronizedGroups = (
+				9A9349C3BEE313CABBDA30E9 /* AutoFill */,
+				9DCD2023BB7F15FB2D257518 /* Shared */,
+				AA4ABF629C44690D90DB5863 /* Core */,
+			);
+			name = QeetIDAutoFill;
+			packageProductDependencies = (
+				1E29CCF73046A67AE49D8F87 /* Qeetrix */,
+			);
+			productName = QeetIDAutoFill;
+			productReference = 2AFCB60CB4A329174BF5C04B /* QeetIDAutoFill.appex */;
+			productType = "com.apple.product-type.app-extension";
+		};
+		785CF9298395F90FBBFA9EA3 /* QeetIDNotificationService */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = A61172E7E6B2FE420E25B526 /* Build configuration list for PBXNativeTarget "QeetIDNotificationService" */;
+			buildPhases = (
+				B180CDEA34184150D764A81E /* Sources */,
+				6E3DB74DF8852F7550E09088 /* Frameworks */,
+				5B7EC5588091F80A8328A1C3 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			fileSystemSynchronizedGroups = (
+				208EF8FC6C18432C315A916C /* NotificationService */,
+				AA4ABF629C44690D90DB5863 /* Core */,
+			);
+			name = QeetIDNotificationService;
+			packageProductDependencies = (
+			);
+			productName = QeetIDNotificationService;
+			productReference = 681B0F8F9D41C670DC2D90F8 /* QeetIDNotificationService.appex */;
+			productType = "com.apple.product-type.app-extension";
+		};
+		9BC24A176F57C50777AB15F5 /* QeetIDTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 0DB20E0851A4125651872FDD /* Build configuration list for PBXNativeTarget "QeetIDTests" */;
+			buildPhases = (
+				9C2EA3EFFCEA22C7A78D3BE0 /* Sources */,
+				14728CB99C4A98C751A4EC3F /* Frameworks */,
+				EB1B377E0CF2144CA7BF27C4 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				AD6E6E281F2119F4048D21B2 /* PBXTargetDependency */,
+			);
+			fileSystemSynchronizedGroups = (
+				23AE719F31BC1F64770C1597 /* QeetIDTests */,
+			);
+			name = QeetIDTests;
+			packageProductDependencies = (
+			);
+			productName = QeetIDTests;
+			productReference = 530C49BD49834ED002CB78C8 /* QeetIDTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
+		1DD9798B3A592C9FA7173818 /* QeetIDUITests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = CD63E2368F967880410FB5CD /* Build configuration list for PBXNativeTarget "QeetIDUITests" */;
+			buildPhases = (
+				342AB37EB6D1893992DCD6A2 /* Sources */,
+				CFA9A56D0946114C0833CD58 /* Frameworks */,
+				9DEE41B507121685297DA456 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				CD08640914BC9ACC1B2547EB /* PBXTargetDependency */,
+			);
+			fileSystemSynchronizedGroups = (
+				0A423D8FC0C47DEAE78DDF3B /* QeetIDUITests */,
+			);
+			name = QeetIDUITests;
+			packageProductDependencies = (
+			);
+			productName = QeetIDUITests;
+			productReference = F500734AABDEAC15EC8DB534 /* QeetIDUITests.xctest */;
+			productType = "com.apple.product-type.bundle.ui-testing";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		98F54143AB4E86B28C3AFEE0 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				BuildIndependentTargetsInParallel = 1;
+				LastSwiftUpdateCheck = 2720;
+				LastUpgradeCheck = 2720;
+				TargetAttributes = {
+					A804E3A643578780733AB11C = {
+						CreatedOnToolsVersion = 27.2;
+					};
+					874153A7D023DA984C0B8C7F = {
+						CreatedOnToolsVersion = 27.2;
+					};
+					785CF9298395F90FBBFA9EA3 = {
+						CreatedOnToolsVersion = 27.2;
+					};
+					9BC24A176F57C50777AB15F5 = {
+						CreatedOnToolsVersion = 27.2;
+						TestTargetID = A804E3A643578780733AB11C;
+					};
+					1DD9798B3A592C9FA7173818 = {
+						CreatedOnToolsVersion = 27.2;
+						TestTargetID = A804E3A643578780733AB11C;
+					};
+				};
+			};
+			buildConfigurationList = 99DE79F146C1665D0B462638 /* Build configuration list for PBXProject "QeetID" */;
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = AB48CFA305015276AB5620D4;
+			minimizedProjectReferenceProxies = 1;
+			packageReferences = (
+				A714E02FB206ACD06361126B /* XCRemoteSwiftPackageReference "qeetrix-ios" */,
+			);
+			preferredProjectObjectVersion = 77;
+			productRefGroup = 692092DE1C1C8624E142B71D /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				A804E3A643578780733AB11C /* QeetID */,
+				874153A7D023DA984C0B8C7F /* QeetIDAutoFill */,
+				785CF9298395F90FBBFA9EA3 /* QeetIDNotificationService */,
+				9BC24A176F57C50777AB15F5 /* QeetIDTests */,
+				1DD9798B3A592C9FA7173818 /* QeetIDUITests */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		8D25FA1202D6C65B912AA2E9 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		7CD9A8EFEE19DBEC9BBE790C /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		5B7EC5588091F80A8328A1C3 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		EB1B377E0CF2144CA7BF27C4 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		9DEE41B507121685297DA456 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		3B3DE796038C45C1B6780527 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		AF7AE16BE89A4360BA7C5579 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		B180CDEA34184150D764A81E /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		9C2EA3EFFCEA22C7A78D3BE0 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		342AB37EB6D1893992DCD6A2 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		A2D443DFF1E36B52BFE86621 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 874153A7D023DA984C0B8C7F /* QeetIDAutoFill */;
+			targetProxy = F1AF1CA9084078DDD84CC248 /* PBXContainerItemProxy */;
+		};
+		BC01D0EC102C89AD85771D2F /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 785CF9298395F90FBBFA9EA3 /* QeetIDNotificationService */;
+			targetProxy = 3EF0A0B17DB4E66CB8C0D539 /* PBXContainerItemProxy */;
+		};
+		AD6E6E281F2119F4048D21B2 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = A804E3A643578780733AB11C /* QeetID */;
+			targetProxy = 8DACCFE14D6B415529035951 /* PBXContainerItemProxy */;
+		};
+		CD08640914BC9ACC1B2547EB /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = A804E3A643578780733AB11C /* QeetID */;
+			targetProxy = 8206E21DA84F12B4D681D658 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin XCBuildConfiguration section */
+		8D15F8B88B3136D25DB14F0C /* Debug */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 7A1274F3A8D3D3AA8DAB42F8 /* Project.xcconfig */;
+			buildSettings = {
+			};
+			name = Debug;
+		};
+		2D91E1B09B2A8DFC3CA847CD /* Release */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 7A1274F3A8D3D3AA8DAB42F8 /* Project.xcconfig */;
+			buildSettings = {
+			};
+			name = Release;
+		};
+		3EAD986199F98BE69C10F27B /* Debug */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 1451AA92A0176F23BCCCD615 /* App.xcconfig */;
+			buildSettings = {
+			};
+			name = Debug;
+		};
+		710E404C7CC6F6DFDECDFCF2 /* Release */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 1451AA92A0176F23BCCCD615 /* App.xcconfig */;
+			buildSettings = {
+			};
+			name = Release;
+		};
+		5B09B6313D3D08A50D3332C3 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = A3C54CCA0C6DFE9441FAB828 /* AutoFill.xcconfig */;
+			buildSettings = {
+			};
+			name = Debug;
+		};
+		CD99B28AFE695006B9002F42 /* Release */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = A3C54CCA0C6DFE9441FAB828 /* AutoFill.xcconfig */;
+			buildSettings = {
+			};
+			name = Release;
+		};
+		A13AA87E012F4CDE54D43AA7 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 6454076572A3239130D80A56 /* NotificationService.xcconfig */;
+			buildSettings = {
+			};
+			name = Debug;
+		};
+		C9A0DB660B608685BF549A94 /* Release */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 6454076572A3239130D80A56 /* NotificationService.xcconfig */;
+			buildSettings = {
+			};
+			name = Release;
+		};
+		2ECD583AC5712B3AFFEC1ED7 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 8EBA45716CBEE72F07D916D2 /* Tests.xcconfig */;
+			buildSettings = {
+			};
+			name = Debug;
+		};
+		19F2C6EB89ECA9E8CAE44691 /* Release */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 8EBA45716CBEE72F07D916D2 /* Tests.xcconfig */;
+			buildSettings = {
+			};
+			name = Release;
+		};
+		98DCDD20DB8E27366B45F126 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 2F0BB17B72463A5333884CB3 /* UITests.xcconfig */;
+			buildSettings = {
+			};
+			name = Debug;
+		};
+		4D2F90562504B566520E480F /* Release */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 2F0BB17B72463A5333884CB3 /* UITests.xcconfig */;
+			buildSettings = {
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		99DE79F146C1665D0B462638 /* Build configuration list for PBXProject "QeetID" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				8D15F8B88B3136D25DB14F0C /* Debug */,
+				2D91E1B09B2A8DFC3CA847CD /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		57E545CDBC53112C882F8FCA /* Build configuration list for PBXNativeTarget "QeetID" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				3EAD986199F98BE69C10F27B /* Debug */,
+				710E404C7CC6F6DFDECDFCF2 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		D843C6ABC130D418D8BF34E8 /* Build configuration list for PBXNativeTarget "QeetIDAutoFill" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				5B09B6313D3D08A50D3332C3 /* Debug */,
+				CD99B28AFE695006B9002F42 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		A61172E7E6B2FE420E25B526 /* Build configuration list for PBXNativeTarget "QeetIDNotificationService" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				A13AA87E012F4CDE54D43AA7 /* Debug */,
+				C9A0DB660B608685BF549A94 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		0DB20E0851A4125651872FDD /* Build configuration list for PBXNativeTarget "QeetIDTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				2ECD583AC5712B3AFFEC1ED7 /* Debug */,
+				19F2C6EB89ECA9E8CAE44691 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		CD63E2368F967880410FB5CD /* Build configuration list for PBXNativeTarget "QeetIDUITests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				98DCDD20DB8E27366B45F126 /* Debug */,
+				4D2F90562504B566520E480F /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		A714E02FB206ACD06361126B /* XCRemoteSwiftPackageReference "qeetrix-ios" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/qeetgroup/qeetrix-ios.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 0.1.0;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		19056A15686009E0B7E50B48 /* Qeetrix */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = A714E02FB206ACD06361126B /* XCRemoteSwiftPackageReference "qeetrix-ios" */;
+			productName = Qeetrix;
+		};
+		1E29CCF73046A67AE49D8F87 /* Qeetrix */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = A714E02FB206ACD06361126B /* XCRemoteSwiftPackageReference "qeetrix-ios" */;
+			productName = Qeetrix;
+		};
+/* End XCSwiftPackageProductDependency section */
+	};
+	rootObject = 98F54143AB4E86B28C3AFEE0 /* Project object */;
+}

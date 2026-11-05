@@ -1,0 +1,115 @@
+# qeet-id-ios — repository context metadata (Level 2).
+# Inherits qeetgroup/qeet-context (L0) and qeetgroup/qeet-id-context (L1).
+
+schema_version: 1
+
+context:
+  type: repository
+  level: L2
+  canonical: true
+  last_verified: "2026-11-06"
+
+inheritance:
+  organization: {repository: qeetgroup/qeet-context, level: L0}
+  product:      {repository: qeetgroup/qeet-id-context, level: L1}
+
+repository:
+  name: qeet-id-ios
+  product: qeet-id
+  type: mobile-app
+  role: authenticator
+  status: development
+  visibility: private
+  default_branch: main
+  working_branch: develop
+  replaces: qeetgroup/qeet-id-auth      # the Expo / React Native authenticator
+  sibling: qeetgroup/qeet-id-android    # the same flows on Android
+
+runtime:
+  language: Swift
+  swift_language_mode: "6"              # complete strict concurrency, warnings as errors
+  ui: SwiftUI
+  platforms: {ios: "17.0", autofill_extension: "18.0"}
+  devices: iPhone
+  toolchain: Xcode 27.2
+  design_system: {package: "https://github.com/qeetgroup/qeetrix-ios", from: "0.1.0", product: Qeetrix}
+  third_party_deps: [Qeetrix]           # nothing else
+
+app:
+  display_name: Qeet ID
+  bundle_id: com.qeetgroup.qeetid
+  url_scheme: qeetidauth                # qeetidauth://pair?code=ABCDE-FGHJK from the console's QR code
+  app_group: group.com.qeetgroup.qeetid
+  keychain_access_group: "$(AppIdentifierPrefix)com.qeetgroup.qeetid.shared"
+
+targets:
+  QeetID:                    {bundle_id: com.qeetgroup.qeetid, sources: [QeetID, Shared, Core]}
+  QeetIDAutoFill:            {bundle_id: com.qeetgroup.qeetid.autofill, sources: [AutoFill, Shared, Core], min_ios: "18.0"}
+  QeetIDNotificationService: {bundle_id: com.qeetgroup.qeetid.notification-service, sources: [NotificationService, Core]}
+  QeetIDTests:               {kind: unit, framework: Swift Testing, host: QeetID}
+  QeetIDUITests:             {kind: ui, framework: XCTest}
+
+entitlements:
+  app: [aps-environment, usernotifications.time-sensitive, authentication-services.autofill-credential-provider, application-groups, keychain-access-groups]
+  autofill: [authentication-services.autofill-credential-provider, application-groups, keychain-access-groups]
+  notification_service: [application-groups]
+
+capabilities:
+  totp: offline                         # RFC 6238, SHA-1/256/512, 6 or 8 digits, 30 or 60 s, CryptoKit
+  push_approval: true                   # number matching + LocalAuthentication .deviceOwnerAuthentication
+  app_lock: face-id-or-passcode         # LocalAuthentication .deviceOwnerAuthentication
+  privacy_cover: app-switcher
+  autofill_one_time_codes: ios-18
+
+contracts:
+  consumes: {api: qeet-id-server}
+  base_url: https://api.id.qeet.in
+  no_localhost_default: true            # Debug builds alone accept -api-url <url>
+  auth_scheme: long-lived device credential in the JSON body (180 days after the last link)
+  endpoints:
+    link:        "POST /v1/mfa/push/pairing/claim"                # pairing code; no bearer
+    read:        "GET  /v1/mfa/push/challenges/{id}"              # public; never reveals the number
+    respond:     "POST /v1/mfa/push/challenges/{id}/respond"      # {user_id, device_token, approved, number}
+    push_token:  "POST /v1/mfa/push/devices/{id}/push-token"      # {user_id, device_token, push_token}; 404 tolerated
+    unlink:      "POST /v1/mfa/push/devices/{id}/unlink"          # {user_id, device_token}
+  push_payload: {type: sign_in_request, challenge_id: uuid, action: sign_in, thread_id: sign-in, interruption_level: time-sensitive, mutable_content: 1}
+
+storage:
+  provider: Keychain
+  accessibility: {accounts: WhenUnlockedThisDeviceOnly, device_link: AfterFirstUnlockThisDeviceOnly}
+  synchronizable: false
+  items:
+    - "service com.qeetgroup.qeetid.account, one item per account: secret in the value, metadata in kSecAttrGeneric"
+    - "service com.qeetgroup.qeetid.device-link, one item: user id, device id, device credential, name, email"
+  preferences: UserDefaults (lock, hidden codes, onboarding); App Group defaults (Debug API override only)
+
+commands:
+  build: "xcodebuild build -project QeetID.xcodeproj -scheme QeetID -destination 'platform=iOS Simulator,name=iPhone 17'"
+  test:  "xcodebuild test -project QeetID.xcodeproj -scheme QeetID -destination 'platform=iOS Simulator,name=iPhone 17'"
+  lint:  "xcrun swift-format lint --strict --recursive Core Shared QeetID AutoFill NotificationService QeetIDTests QeetIDUITests"
+
+ci:
+  workflows: [ci.yml, security.yml]
+  triggers: [pull_request into main, push to main, workflow_dispatch]   # macOS minutes are scarce
+  gates: [build, unit tests, UI tests, swift-format lint, gitleaks CLI]
+  codeql: off while the repository is private
+
+security:
+  sensitive_paths:
+    - Core/Keychain/            # accessibility, access group, synchronizable
+    - Core/Accounts/            # secrets
+    - Core/Link/                # the device credential
+    - Core/API/                 # credentials in request bodies, error mapping
+    - Shared/Security/          # device-owner authentication
+    - QeetID/Approvals/         # number matching, Face ID before approving
+    - QeetID/Lock/              # app lock, privacy cover
+    - AutoFill/                 # Face ID before filling
+  never: [secret in UI state or logs, synchronizable or backed-up secrets, approve without number and Face ID, bearer on respond, localhost default, link without a tap]
+
+llm_context:
+  primary_instructions: AGENTS.md
+  canonical: docs/llm/context.md
+  boundaries: docs/llm/boundaries.md
+  workflows: docs/llm/workflows.md
+  architecture_map: docs/llm/architecture-map.md
+  adapters: [CLAUDE.md, GEMINI.md, .github/copilot-instructions.md]

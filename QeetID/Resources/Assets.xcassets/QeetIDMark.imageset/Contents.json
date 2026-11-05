@@ -1,0 +1,18 @@
+{
+  "images" : [
+    {
+      "filename" : "qeet-id-app-icon-light-rounded.svg",
+      "idiom" : "universal"
+    },
+    {
+      "appearances" : [ { "appearance" : "luminosity", "value" : "dark" } ],
+      "filename" : "qeet-id-app-icon-dark-rounded.svg",
+      "idiom" : "universal"
+    }
+  ],
+  "info" : { "author" : "xcode", "version" : 1 },
+  "properties" : {
+    "preserves-vector-representation" : true,
+    "template-rendering-intent" : "original"
+  }
+}

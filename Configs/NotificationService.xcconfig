@@ -1,0 +1,13 @@
+// NotificationService.xcconfig — the notification service extension that adds where a sign-in comes
+// from to the request's notification.
+
+PRODUCT_NAME = QeetIDNotificationService
+PRODUCT_MODULE_NAME = QeetIDNotificationService
+PRODUCT_BUNDLE_IDENTIFIER = $(QEETID_APP_BUNDLE_IDENTIFIER).notification-service
+INFOPLIST_FILE = Configs/NotificationService-Info.plist
+GENERATE_INFOPLIST_FILE = YES
+CODE_SIGN_ENTITLEMENTS = Configs/NotificationService.entitlements
+INFOPLIST_KEY_CFBundleDisplayName = Qeet ID
+SKIP_INSTALL = YES
+APPLICATION_EXTENSION_API_ONLY = YES
+LD_RUNPATH_SEARCH_PATHS = $(inherited) @executable_path/Frameworks @executable_path/../../Frameworks

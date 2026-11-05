@@ -1,0 +1,15 @@
+{
+  "originHash" : "d0e32fcc1fa83d4011352614b061b412029cc4f5f0cd57925c47063e715e4404",
+  "pins" : [
+    {
+      "identity" : "qeetrix-ios",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/qeetgroup/qeetrix-ios.git",
+      "state" : {
+        "revision" : "2fa88e09a45c0f0016d490ab5da14643f1342ed5",
+        "version" : "0.1.0"
+      }
+    }
+  ],
+  "version" : 3
+}

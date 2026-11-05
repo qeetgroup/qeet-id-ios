@@ -1,0 +1,16 @@
+// Signing.xcconfig — code signing for every target.
+//
+// Qeet Group has no Apple Developer team in this repository yet. Simulator builds sign to run locally
+// and need nothing here. To build for a device or for the App Store, put the team in a local file that
+// git ignores, Configs/Signing.xcconfig.local:
+//
+//     DEVELOPMENT_TEAM = ABCDE12345
+//
+// Never commit a team ID with a certificate, a provisioning profile or an App Store Connect key.
+
+CODE_SIGN_STYLE = Automatic
+DEVELOPMENT_TEAM =
+CODE_SIGN_IDENTITY = Apple Development
+CODE_SIGN_IDENTITY[sdk=iphonesimulator*] = -
+
+#include? "Signing.xcconfig.local"

@@ -1,0 +1,62 @@
+// Project.xcconfig — settings every target shares. Each target's own file includes nothing: Xcode layers
+// it over this one (project level, then target level).
+
+#include "Signing.xcconfig"
+
+// Platform: iPhone only, iOS 17 or later (the Qeetrix for iOS minimum).
+SDKROOT = iphoneos
+SUPPORTED_PLATFORMS = iphoneos iphonesimulator
+IPHONEOS_DEPLOYMENT_TARGET = 17.0
+TARGETED_DEVICE_FAMILY = 1
+SUPPORTS_MACCATALYST = NO
+SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO
+SUPPORTS_XR_DESIGNED_FOR_IPHONE_IPAD = NO
+
+// Swift 6 language mode: complete strict concurrency checking, warnings as errors.
+SWIFT_VERSION = 6.0
+SWIFT_STRICT_CONCURRENCY = complete
+SWIFT_TREAT_WARNINGS_AS_ERRORS = YES
+GCC_TREAT_WARNINGS_AS_ERRORS = YES
+SWIFT_EMIT_LOC_STRINGS = YES
+LOCALIZATION_PREFERS_STRING_CATALOGS = YES
+ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES
+ENABLE_USER_SCRIPT_SANDBOXING = YES
+ENABLE_STRICT_OBJC_MSGSEND = YES
+CLANG_ENABLE_MODULES = YES
+CLANG_ENABLE_OBJC_ARC = YES
+ALWAYS_SEARCH_USER_PATHS = NO
+DEAD_CODE_STRIPPING = YES
+ENABLE_PREVIEWS = YES
+
+// Versions. The app and its extensions must match, so they are set once, here.
+MARKETING_VERSION = 1.0.0
+CURRENT_PROJECT_VERSION = 1
+
+// Identity shared by the app and its extensions. The keychain access group and the App Group let the
+// AutoFill extension read codes and the notification extension read the API address.
+QEETID_APP_BUNDLE_IDENTIFIER = com.qeetgroup.qeetid
+QEETID_APP_GROUP = group.com.qeetgroup.qeetid
+QEETID_KEYCHAIN_GROUP = $(AppIdentifierPrefix)com.qeetgroup.qeetid.shared
+
+// Debug and Release.
+SWIFT_ACTIVE_COMPILATION_CONDITIONS[config=Debug] = DEBUG $(inherited)
+SWIFT_OPTIMIZATION_LEVEL[config=Debug] = -Onone
+SWIFT_OPTIMIZATION_LEVEL[config=Release] = -O
+SWIFT_COMPILATION_MODE[config=Release] = wholemodule
+GCC_OPTIMIZATION_LEVEL[config=Debug] = 0
+GCC_PREPROCESSOR_DEFINITIONS[config=Debug] = DEBUG=1 $(inherited)
+DEBUG_INFORMATION_FORMAT[config=Debug] = dwarf
+DEBUG_INFORMATION_FORMAT[config=Release] = dwarf-with-dsym
+ONLY_ACTIVE_ARCH[config=Debug] = YES
+ENABLE_TESTABILITY[config=Debug] = YES
+ENABLE_NS_ASSERTIONS[config=Release] = NO
+VALIDATE_PRODUCT[config=Release] = YES
+COPY_PHASE_STRIP = NO
+
+// Push: the APNs sandbox for Debug builds, production for Release (the entitlement reads this).
+QEETID_APS_ENVIRONMENT[config=Debug] = development
+QEETID_APS_ENVIRONMENT[config=Release] = production
+
+// Info.plist preprocessing, so Debug alone allows plain HTTP to a local server (Release never does).
+INFOPLIST_PREPROCESS = YES
+INFOPLIST_PREPROCESSOR_DEFINITIONS[config=Debug] = QEETID_DEBUG=1

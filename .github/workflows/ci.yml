@@ -1,0 +1,69 @@
+name: CI
+
+# macOS minutes are scarce, so CI runs on pull requests into main, on main after each merge, and on request.
+# Pushes to develop run nothing: run the same commands locally first (AGENTS.md).
+on:
+  pull_request:
+    branches: [main]
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  # The Xcode the app is verified with, on GitHub's xcode-27 runner image (as Qeetrix for iOS pins it). If the image
+  # stops carrying it, the select step fails loudly: update the pin and re-verify locally.
+  XCODE_VERSION: "27.1"
+
+jobs:
+  app:
+    name: Build and test
+    runs-on: xcode-27
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+
+      - name: Select Xcode
+        run: |
+          sudo xcode-select -s "/Applications/Xcode_${XCODE_VERSION}.app"
+          xcodebuild -version
+
+      - name: Format (swift-format)
+        run: Scripts/lint.sh
+
+      - name: Pick a simulator
+        id: simulator
+        run: echo "id=$(Scripts/ci-simulator.sh)" >> "$GITHUB_OUTPUT"
+
+      # Warnings are errors in every target (Configs/Project.xcconfig). Simulator builds sign to run locally and
+      # need no team.
+      - name: Build for testing
+        run: |
+          xcodebuild build-for-testing -project QeetID.xcodeproj -scheme QeetID \
+            -destination "platform=iOS Simulator,id=${{ steps.simulator.outputs.id }}" \
+            -derivedDataPath .build/xcode
+
+      - name: Unit tests
+        run: |
+          xcodebuild test-without-building -project QeetID.xcodeproj -scheme QeetID -only-testing:QeetIDTests \
+            -destination "platform=iOS Simulator,id=${{ steps.simulator.outputs.id }}" \
+            -derivedDataPath .build/xcode
+
+      - name: UI tests
+        run: |
+          xcodebuild test-without-building -project QeetID.xcodeproj -scheme QeetID -only-testing:QeetIDUITests \
+            -destination "platform=iOS Simulator,id=${{ steps.simulator.outputs.id }}" \
+            -derivedDataPath .build/xcode
+
+      # The Release configuration for devices, unsigned: it has no team yet (Configs/Signing.xcconfig).
+      - name: Release build for devices (unsigned)
+        run: |
+          xcodebuild build -project QeetID.xcodeproj -scheme QeetID -configuration Release \
+            -destination 'generic/platform=iOS' -derivedDataPath .build/xcode \
+            CODE_SIGNING_ALLOWED=NO

@@ -1,7 +1,7 @@
 # macOS
 .DS_Store
 
-# Xcode
+# Xcode: per-user state and build output
 xcuserdata/
 *.xcuserstate
 *.xcscmblueprint
@@ -13,11 +13,14 @@ build/
 *.ipa
 *.dSYM.zip
 *.dSYM
+*.xcresult
+*.xcarchive
 
-# Swift Package Manager
+# Swift Package Manager: the resolved versions are committed (Package.resolved); checkouts are not
 .build/
 .swiftpm/
 Packages/
+SourcePackages/
 
 # fastlane
 fastlane/report.xml
@@ -25,8 +28,15 @@ fastlane/Preview.html
 fastlane/screenshots/**/*.png
 fastlane/test_output
 
-# Local secrets and signing
-*.p12
-*.mobileprovision
+# Local signing and secrets: never committed
+Configs/Signing.xcconfig.local
 *.xcconfig.local
+*.p8
+*.p12
+*.cer
+*.mobileprovision
+*.provisionprofile
+*.pem
+*.key
 .env
+.env.*

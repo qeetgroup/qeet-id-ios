@@ -1,0 +1,24 @@
+// App.xcconfig — the Qeet ID app.
+
+PRODUCT_NAME = QeetID
+PRODUCT_MODULE_NAME = QeetID
+PRODUCT_BUNDLE_IDENTIFIER = $(QEETID_APP_BUNDLE_IDENTIFIER)
+INFOPLIST_FILE = Configs/QeetID-Info.plist
+GENERATE_INFOPLIST_FILE = YES
+CODE_SIGN_ENTITLEMENTS = Configs/QeetID.entitlements
+
+INFOPLIST_KEY_CFBundleDisplayName = Qeet ID
+INFOPLIST_KEY_LSApplicationCategoryType = public.app-category.utilities
+INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES
+INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES
+INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = UIInterfaceOrientationPortrait
+INFOPLIST_KEY_UIRequiresFullScreen = YES
+INFOPLIST_KEY_NSCameraUsageDescription = Qeet ID uses the camera to scan the QR code that adds an account or links this iPhone.
+INFOPLIST_KEY_NSFaceIDUsageDescription = Qeet ID uses Face ID to unlock the app and to confirm it's you before approving a sign-in.
+
+ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon
+ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor
+ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS = NO
+
+LD_RUNPATH_SEARCH_PATHS = $(inherited) @executable_path/Frameworks
+ENABLE_PREVIEWS = YES
