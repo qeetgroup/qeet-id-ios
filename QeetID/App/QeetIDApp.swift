@@ -7,7 +7,7 @@ struct QeetIDApp: App {
 
     var body: some Scene {
         WindowGroup {
-            RootView()
+            RootView(model: appDelegate.model)
         }
     }
 }

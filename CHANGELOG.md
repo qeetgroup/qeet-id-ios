@@ -19,3 +19,7 @@ All notable changes to Qeet ID for iPhone are documented here. The format follow
   `otpauth://` links; pairing codes; the API client for `/v1/mfa/push/*` with the server's clock correction; the
   device link; Face ID, Touch ID or passcode checks and the app lock; String Catalogs for every target
   (`Scripts/sync-strings.sh`).
+- Getting started: Welcome, Lock Qeet ID (step 1 of 2) and the notifications primer (step 2 of 2).
+- The Locked screen, asking for Face ID by itself when the app opens or returns from the background, and a privacy
+  cover whenever the app isn't active, both in a window of their own above sheets and alerts, so the app switcher
+  never shows a code.

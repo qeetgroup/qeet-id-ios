@@ -91,3 +91,25 @@ struct LocalDeviceOwnerAuthenticator: DeviceOwnerAuthenticating {
         func authenticate(reason: String) async -> AuthenticationOutcome { outcome }
     }
 #endif
+
+extension Biometry {
+    /// The lock's name in Settings and onboarding: "Face ID lock".
+    var lockTitle: String {
+        switch self {
+        case .faceID: String(localized: "Face ID lock")
+        case .touchID: String(localized: "Touch ID lock")
+        case .opticID: String(localized: "Optic ID lock")
+        case .passcode: String(localized: "Passcode lock")
+        }
+    }
+
+    /// The Locked screen's button: "Unlock with Face ID".
+    var unlockTitle: String {
+        switch self {
+        case .faceID: String(localized: "Unlock with Face ID")
+        case .touchID: String(localized: "Unlock with Touch ID")
+        case .opticID: String(localized: "Unlock with Optic ID")
+        case .passcode: String(localized: "Unlock with passcode")
+        }
+    }
+}
