@@ -7,6 +7,9 @@
     "%@ deleted" : {
 
     },
+    "%@ didn't confirm it's you, so nothing was sent. Try again." : {
+
+    },
     "%@ didn't confirm it's you. Try again, or turn it on later in Settings." : {
 
     },
@@ -21,6 +24,9 @@
         }
       }
     },
+    "%@ · link again to extend" : {
+
+    },
     "%lld digits · every %lld seconds · %@" : {
       "localizations" : {
         "en" : {
@@ -32,6 +38,12 @@
       }
     },
     "%lld seconds" : {
+
+    },
+    "%lld seconds left to answer" : {
+
+    },
+    "180 days after you last link it" : {
 
     },
     "Account" : {
@@ -55,6 +67,12 @@
     "Approve sign-ins" : {
 
     },
+    "Approve the sign-in to Qeet ID." : {
+
+    },
+    "Approving a sign-in needs Face ID or the passcode. Set a passcode in iOS Settings, then try again." : {
+
+    },
     "AutoFill codes" : {
 
     },
@@ -64,7 +82,19 @@
     "Cancel" : {
 
     },
+    "Choose Link a phone" : {
+
+    },
     "Clears from the clipboard after 1 minute" : {
+
+    },
+    "Close" : {
+
+    },
+    "Codes still work. Approvals arrive when you reconnect." : {
+
+    },
+    "Come to this iPhone" : {
 
     },
     "Confirm it's you with Face ID when you sign in on a computer." : {
@@ -76,10 +106,19 @@
     "Copied" : {
 
     },
+    "Couldn't load the request" : {
+
+    },
     "Delete %@?" : {
 
     },
     "Digits" : {
+
+    },
+    "Done" : {
+
+    },
+    "Enter the 10-character code shown in Qeet ID, like KM7QX-4TRWP." : {
 
     },
     "Enter the setup key from the site's setup page." : {
@@ -109,19 +148,58 @@
     "Get sign-in requests on this iPhone" : {
 
     },
+    "Give this iPhone a name, so you can tell it apart in Qeet ID." : {
+
+    },
+    "Go back to your computer. %@ is signing in to Qeet ID." : {
+
+    },
+    "Go back to your computer. It's signing in to Qeet ID." : {
+
+    },
+    "Go to Account, then Security" : {
+
+    },
+    "It was already answered. Nothing more to do here." : {
+
+    },
+    "It works once, for a few minutes" : {
+
+    },
     "Kept on this iPhone" : {
 
     },
-    "Link this iPhone from Settings to approve sign-ins." : {
+    "Link this iPhone" : {
+
+    },
+    "Link this iPhone to approve Qeet ID sign-ins" : {
+
+    },
+    "Linked · %@" : {
+
+    },
+    "Loading the request" : {
 
     },
     "New code every" : {
 
     },
+    "Nobody got in. But whoever tried has your password." : {
+
+    },
     "Not now" : {
 
     },
+    "Notifications are off for Qeet ID, so requests won't reach this iPhone." : {
+
+    },
+    "Number on your sign-in screen" : {
+
+    },
     "Only changes how it's shown on this iPhone." : {
+
+    },
+    "Open Qeet ID on your computer" : {
 
     },
     "Open iOS Settings" : {
@@ -139,6 +217,9 @@
     "Point the camera at the QR code" : {
 
     },
+    "Point the camera at the code on the Qeet ID setup page" : {
+
+    },
     "Qeet ID asks you to approve each sign-in to your account. Allow notifications so the requests reach you." : {
 
     },
@@ -148,10 +229,25 @@
     "Qeet ID couldn't save to this iPhone's Keychain. Try again." : {
 
     },
+    "Qeet ID no longer accepts this iPhone's link. Link it again to approve sign-ins." : {
+
+    },
+    "Qeet ID no longer has this request. Nothing was approved." : {
+
+    },
     "Rename account" : {
 
     },
     "Save" : {
+
+    },
+    "Scan the code" : {
+
+    },
+    "Scan the code it shows" : {
+
+    },
+    "Scan the code on the Link a phone page in Qeet ID, under Account, then Security." : {
 
     },
     "Search" : {
@@ -172,7 +268,19 @@
     "Setup key" : {
 
     },
+    "Shown in Qeet ID, in the list of your phones." : {
+
+    },
+    "Sign-in approved" : {
+
+    },
+    "Sign-in blocked" : {
+
+    },
     "Sign-in codes" : {
+
+    },
+    "Sign-in request" : {
 
     },
     "Step 1 of 2" : {
@@ -181,10 +289,19 @@
     "Step 2 of 2" : {
 
     },
+    "That code is wrong, already used or expired. Ask for a new one in Qeet ID, under Account, then Security." : {
+
+    },
+    "That isn't a Qeet ID pairing code" : {
+
+    },
     "That key has letters or digits a setup key can't have. Check it against the site's setup page." : {
 
     },
     "That key is too short. Check that you typed all of it." : {
+
+    },
+    "The number didn't match, so the sign-in was refused. Nothing was approved." : {
 
     },
     "This QR code isn't for sign-in codes. Scan the code on the site's 2-step verification page." : {
@@ -202,10 +319,19 @@
     "This account's codes use settings Qeet ID doesn't support." : {
 
     },
+    "This iPhone" : {
+
+    },
+    "This iPhone can't answer for that account any more. Nothing was approved." : {
+
+    },
+    "This iPhone couldn't register for notifications. Check your connection and try again." : {
+
+    },
     "This iPhone has no passcode, so Qeet ID can't be locked. Set one in iOS Settings, then turn on the lock in Qeet ID's Settings." : {
 
     },
-    "This is a Qeet ID pairing code" : {
+    "This request has ended" : {
 
     },
     "Touch ID" : {
@@ -223,10 +349,25 @@
     "Turn on the lock for Qeet ID." : {
 
     },
+    "Two minutes passed without an answer, so it expired. Nothing was approved." : {
+
+    },
+    "Type the 2-digit number shown on your sign-in screen." : {
+
+    },
+    "Type the code instead" : {
+
+    },
     "Type the key instead" : {
 
     },
+    "Under Two-step verification" : {
+
+    },
     "Under “AutoFill From” and Verification Codes" : {
+
+    },
+    "Unknown browser" : {
 
     },
     "Unlock Qeet ID to see your codes and sign-in requests." : {
@@ -244,7 +385,13 @@
     "Unlock with passcode" : {
 
     },
+    "Using Qeet ID? " : {
+
+    },
     "Verification code" : {
+
+    },
+    "Wait %lld min, then ask for a new code in Qeet ID and try again." : {
 
     },
     "You'll stop getting codes for %@. Turn off 2-step verification on %@ first, or you may be locked out." : {
@@ -264,6 +411,9 @@
 
     },
     "passcode" : {
+
+    },
+    "your Qeet ID account" : {
 
     }
   },

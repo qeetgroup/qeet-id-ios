@@ -19,34 +19,41 @@ struct RootView: View {
             .qeetrixRootTheme()
             .onChange(of: scenePhase, initial: true) { _, phase in model.scenePhaseChanged(to: phase) }
             .onChange(of: model.shield) { _, shield in shieldWindow.update(shield) }
-            .task { model.accounts.load() }
+            .onChange(of: model.lock.isLocked) { wasLocked, isLocked in
+                if wasLocked && !isLocked { model.didUnlock() }
+            }
+            .onOpenURL { model.open($0) }
     }
 
     @ViewBuilder private var content: some View {
         if model.preferences.hasCompletedOnboarding {
             NavigationStack(path: Binding(get: { model.path }, set: { model.path = $0 })) {
                 AccountsView(model: model)
-                    .navigationDestination(for: Route.self) { route in
-                        switch route {
-                        case .settings: SettingsView()
-                        case .autoFill: AutoFillSetupView()
-                        }
-                    }
+                    .navigationDestination(for: Route.self) { route in destination(route) }
             }
             .fullScreenCover(item: Binding(get: { model.modal }, set: { model.modal = $0 })) { modal in
-                switch modal {
-                case .addAccount: AddAccountView(model: model).qeetrixRootTheme()
+                Group {
+                    switch modal {
+                    case .addAccount: AddAccountView(model: model)
+                    case .scanPairing: PairingScannerView(model: model)
+                    case .signInRequest(let id):
+                        SignInRequestView(model: model.requestModel(for: id)) { model.closeSignInRequest() }
+                    }
                 }
+                .qeetrixRootTheme()
             }
         } else {
             OnboardingFlow(model: model)
         }
     }
-}
 
-/// The screens pushed onto the accounts list.
-enum Route: Hashable {
-    case settings
-    /// Screen 25, AutoFill codes (iOS 18 and later).
-    case autoFill
+    @ViewBuilder private func destination(_ route: Route) -> some View {
+        switch route {
+        case .settings: SettingsView()
+        case .autoFill: AutoFillSetupView()
+        case .linkIntro: LinkIntroView(model: model)
+        case .linkName(let code): NameAndLinkView(model: model, scannedCode: code)
+        case .linked: LinkedView(model: model)
+        }
+    }
 }

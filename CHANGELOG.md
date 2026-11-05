@@ -30,3 +30,16 @@ All notable changes to Qeet ID for iPhone are documented here. The format follow
 - AutoFill (iOS 18 and later): the AutoFill codes page and the credential provider's "Choose a code" sheet, with the
   site's codes first, Face ID before any code is shown or filled, and sites remembered only once the person chose an
   account there.
+- Sign-in approvals: Link this iPhone, the pairing-code scanner (refusing anything that isn't a pairing code), Name
+  this iPhone (scanned or typed code) and iPhone linked, showing the account's email when the server returns it;
+  `qeetidauth://pair?code=…` links fill in the code and wait for the person's tap.
+- APNs registration (the token in hex, sent again when it changes, tolerating a server without the route),
+  notification taps and requests arriving in the foreground, and a notification service extension that writes the
+  request's text and adds the browser and system, keeping the server's text on any failure.
+- The request screen: where and what, the 2-digit number on the number pad, the countdown, Deny or Approve with a
+  fresh Face ID or passcode check, and the outcomes (approved, blocked with the next step, ended for a wrong number,
+  an expired or answered request) and a load error with Try again.
+- Waiting requests are fetched when the app comes to the foreground and on pull to refresh, and the newest opens as a
+  notification tap would.
+- The Accounts screen's Sign-in approvals row, and the problems that stop requests reaching the iPhone: notifications
+  off, offline, and a link the server no longer accepts.
