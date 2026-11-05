@@ -43,3 +43,6 @@ All notable changes to Qeet ID for iPhone are documented here. The format follow
   notification tap would.
 - The Accounts screen's Sign-in approvals row, and the problems that stop requests reaching the iPhone: notifications
   off, offline, and a link the server no longer accepts.
+- Settings: the linked account (its email, this iPhone's name and how long it stays linked) with Unlink this iPhone
+  behind the system alert, the lock switch (which asks for Face ID to turn it on or off), Hide codes until tapped,
+  AutoFill codes with its status (iOS 18 and later), and Help and privacy with the version.

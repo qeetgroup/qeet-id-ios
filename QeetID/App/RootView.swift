@@ -49,7 +49,7 @@ struct RootView: View {
 
     @ViewBuilder private func destination(_ route: Route) -> some View {
         switch route {
-        case .settings: SettingsView()
+        case .settings: SettingsView(model: model)
         case .autoFill: AutoFillSetupView()
         case .linkIntro: LinkIntroView(model: model)
         case .linkName(let code): NameAndLinkView(model: model, scannedCode: code)

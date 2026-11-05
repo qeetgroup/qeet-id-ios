@@ -1,6 +1,9 @@
 {
   "sourceLanguage" : "en",
   "strings" : {
+    "%@ The link stays until Qeet ID removes it." : {
+
+    },
     "%@ added" : {
 
     },
@@ -24,8 +27,21 @@
         }
       }
     },
+    "%@ or passcode to open" : {
+
+    },
     "%@ · link again to extend" : {
 
+    },
+    "%@ · until %@" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "%1$@ · until %2$@"
+          }
+        }
+      }
     },
     "%lld digits · every %lld seconds · %@" : {
       "localizations" : {
@@ -134,6 +150,9 @@
 
     },
     "For Qeet ID and any site with 2-step verification. They work offline." : {
+
+    },
+    "For screens others can see" : {
 
     },
     "From" : {
@@ -271,6 +290,9 @@
     "Shown in Qeet ID, in the list of your phones." : {
 
     },
+    "Sign-in approvals" : {
+
+    },
     "Sign-in approved" : {
 
     },
@@ -281,6 +303,9 @@
 
     },
     "Sign-in request" : {
+
+    },
+    "Sign-in requests for %@ will stop coming here. Your sign-in codes stay on this iPhone." : {
 
     },
     "Step 1 of 2" : {
@@ -329,6 +354,12 @@
 
     },
     "This iPhone has no passcode, so Qeet ID can't be locked. Set one in iOS Settings, then turn on the lock in Qeet ID's Settings." : {
+
+    },
+    "This iPhone has no passcode, so Qeet ID can't be locked. Set one in iOS Settings." : {
+
+    },
+    "This iPhone is unlinked" : {
 
     },
     "This request has ended" : {
