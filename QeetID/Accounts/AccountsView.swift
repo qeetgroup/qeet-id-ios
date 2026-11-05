@@ -173,6 +173,14 @@ struct AccountsView: View {
                 .background(QeetrixColor.surfaceRaised)
                 .qeetrixRootTheme()
         }
+        .accessibilityElement(children: .contain)
+        .accessibilityActions {
+            if let code {
+                Button("Copy Code") { copy(code) }
+            }
+            Button("Rename") { startRenaming(account) }
+            Button("Delete Account") { confirmDelete(account) }
+        }
         .accessibilityIdentifier("account.\(account.issuer)")
     }
 

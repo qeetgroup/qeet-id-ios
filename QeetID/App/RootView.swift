@@ -10,9 +10,13 @@ struct RootView: View {
 
     var body: some View {
         content
+            .accessibilityHidden(model.shield != .none)
             .overlay {
-                // The same cover in this window, so nothing shows before the shield window is up at launch.
-                if model.shield != .none { ShieldView(model: model) }
+                // A plain cover in this window too, so nothing shows before the shield window is up at launch; the
+                // shield window above draws the Locked screen.
+                if model.shield != .none {
+                    Rectangle().fill(QeetrixColor.surfaceCanvas).ignoresSafeArea().accessibilityHidden(true)
+                }
             }
             .background { WindowReader { window in shieldWindow.install(over: window, model: model) } }
             .qeetrixToast(Binding(get: { model.toast }, set: { model.toast = $0 }))

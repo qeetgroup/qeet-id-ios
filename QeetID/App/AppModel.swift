@@ -94,6 +94,7 @@ final class AppModel {
 
     /// Loads what's stored and starts watching the network. Called once, at launch.
     func start() {
+        if lock.isLocked { accounts.suspend() }
         accounts.load()
         link.load()
         network.start()
@@ -114,7 +115,7 @@ final class AppModel {
         case .background:
             wasInBackground = true
             lock.lock()
-            accounts.forgetSecrets()
+            accounts.suspend()
             endEditing()
         case .active:
             if wasInBackground {
@@ -125,6 +126,7 @@ final class AppModel {
                 if lock.isLocked {
                     Task { await lock.unlock() }
                 } else {
+                    accounts.resume()
                     Task { await checkPendingRequests() }
                 }
             }
@@ -135,6 +137,7 @@ final class AppModel {
 
     /// The app was unlocked: open a request that arrived meanwhile, or look for one.
     func didUnlock() {
+        accounts.resume()
         if let queued = queuedRequest {
             queuedRequest = nil
             openSignInRequest(queued.id, prefetched: queued.prefetched)

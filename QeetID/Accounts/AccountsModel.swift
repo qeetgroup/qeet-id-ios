@@ -14,6 +14,8 @@ final class AccountsModel {
     private(set) var storageError: AccountStoreError?
     var query = ""
 
+    /// While locked or in the background, no secret is read and no code is kept.
+    @ObservationIgnored private(set) var isSuspended = false
     @ObservationIgnored let store: any AccountStore
     @ObservationIgnored let codeBook: CodeBook
     @ObservationIgnored private let identities: OneTimeCodeIdentities
@@ -47,6 +49,10 @@ final class AccountsModel {
 
     /// Recomputes every code for now.
     func refreshCodes() {
+        guard !isSuspended else {
+            if !codes.isEmpty { codes = [:] }
+            return
+        }
         let date = now()
         var next: [UUID: GeneratedCode] = [:]
         for account in accounts {
@@ -97,9 +103,16 @@ final class AccountsModel {
         load()
     }
 
-    /// Forgets the secrets held in memory: the app was locked.
-    func forgetSecrets() {
+    /// Forgets the secrets held in memory and stops making codes: the app was locked or left.
+    func suspend() {
+        isSuspended = true
         codeBook.forgetAll()
         codes = [:]
+    }
+
+    /// Makes codes again: the app is open and unlocked.
+    func resume() {
+        isSuspended = false
+        refreshCodes()
     }
 }
