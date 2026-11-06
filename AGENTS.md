@@ -69,8 +69,10 @@ or encrypted backup, and never sync.
 
 ### 3. The device credential is a long-lived credential
 It approves sign-ins for 180 days after the iPhone was last linked, with no signed-in session. Treat it as a password.
-It travels only in JSON bodies (`respond`, `unlink`, `push-token`). Unlinking removes it on the server first; a 401
-`mfa.push_unauthorized` means the server already forgot it, so it is cleared here too.
+It travels only in JSON bodies (`respond`, `unlink`, `pending`, `push-token`). Unlinking removes it on the server
+first; a 401 carrying Qeet ID's own `mfa.push_unauthorized` means the server already forgot it, so it is cleared here
+too. **A 401 without that code (a proxy, a captive portal, a gateway) is a network problem and never costs the iPhone
+its link.**
 
 ### 4. There is no localhost default
 Every build talks to `https://api.id.qeet.in`. Only a Debug build accepts `-api-url <url>` at launch, stored in the App
@@ -113,7 +115,10 @@ xcodebuild test  -project QeetID.xcodeproj -scheme QeetID -destination '…' -on
 xcrun swift-format lint --strict --recursive Core Shared QeetID AutoFill NotificationService QeetIDTests QeetIDUITests
 ```
 
-UI tests launch the app with `-ui-testing`, which (Debug builds only) starts from empty storage and stubs Face ID.
+UI tests launch the app with `-ui-testing`, which (Debug builds only) starts from empty storage and stubs Face ID;
+`-ui-scan <text>` stands in for the camera, and `QeetIDUITests/StubServer.swift` answers the API on localhost. The
+end-to-end test against a local server runs only with `TEST_RUNNER_QEETID_E2E_URL=http://localhost:4001`
+([workflows](docs/llm/workflows.md)).
 
 ## What CI runs
 

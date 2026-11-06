@@ -36,8 +36,8 @@ struct KeychainAccountStore: AccountStore {
 
     private let keychain: Keychain
 
-    init(accessGroup: String? = AppIdentity.keychainGroup) {
-        keychain = Keychain(service: Self.service, accessGroup: accessGroup, accessibility: .whenUnlocked)
+    init(service: String = Self.service, accessGroup: String? = AppIdentity.keychainGroup) {
+        keychain = Keychain(service: service, accessGroup: accessGroup, accessibility: .whenUnlocked)
     }
 
     func accounts() throws(AccountStoreError) -> [OTPAccount] {
@@ -88,9 +88,10 @@ struct KeychainAccountStore: AccountStore {
         do { try keychain.deleteAll() } catch { throw .storage(error) }
     }
 
+    /// The metadata as stored: JSON with the default date encoding, which keeps sub-second order, read back by
+    /// `accounts()` with the same.
     private static func encode(_ account: OTPAccount) throws -> Data {
         let encoder = JSONEncoder()
-        encoder.dateEncodingStrategy = .iso8601
         encoder.outputFormatting = .sortedKeys
         return try encoder.encode(account)
     }

@@ -154,6 +154,13 @@ private struct ReviewView: View {
                     }
                 }
                 NumberEntry(model: model)
+                #if DEBUG
+                    // The request's id for the end-to-end test, which sends its notification with `simctl push`.
+                    Text(verbatim: fetched.challenge.id.uuidString)
+                        .font(.system(size: 1))
+                        .opacity(0.01)
+                        .accessibilityIdentifier("request.id")
+                #endif
             }
             .padding(QeetrixSpace.insetLg)
         }

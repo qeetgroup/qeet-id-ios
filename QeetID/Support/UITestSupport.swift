@@ -31,6 +31,8 @@
 
         @MainActor
         static func makeModel() -> AppModel {
+            // Each UI test names its API, or uses production; nothing carries over from an earlier run.
+            if !arguments.contains("-api-url") { AppIdentity.sharedDefaults?.removeObject(forKey: APIEnvironment.overrideKey) }
             let defaults = UserDefaults.standard
             let preferences = Preferences(defaults: defaults)
             preferences.reset()

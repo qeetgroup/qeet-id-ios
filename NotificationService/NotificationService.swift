@@ -39,18 +39,7 @@ final class NotificationService: UNNotificationServiceExtension {
         configuration.timeoutIntervalForResource = 10
         let client = APIClient(baseURL: APIEnvironment.baseURL, session: URLSession(configuration: configuration))
         guard let fetched = try? await client.challenge(id), fetched.challenge.status == .pending else { return nil }
-        return (
-            String(localized: "Sign-in request"),
-            NotificationText.body(browser: UserAgentDescription.describe(fetched.challenge.context.userAgent))
-        )
-    }
-}
-
-/// The notification's words.
-enum NotificationText {
-    static func body(browser: String?) -> String {
-        guard let browser else { return String(localized: "Someone is signing in to your Qeet ID account. Tap to review.") }
-        return String(localized: "Someone is signing in to your Qeet ID account from \(browser). Tap to review.")
+        return (NotificationText.title, NotificationText.body(userAgent: fetched.challenge.context.userAgent))
     }
 }
 

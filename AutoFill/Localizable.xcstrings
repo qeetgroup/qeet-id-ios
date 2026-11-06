@@ -57,6 +57,15 @@
     "Shows this account's code" : {
 
     },
+    "Sign-in request" : {
+
+    },
+    "Someone is signing in to your Qeet ID account from %@. Tap to review." : {
+
+    },
+    "Someone is signing in to your Qeet ID account. Tap to review." : {
+
+    },
     "That key has letters or digits a setup key can't have. Check it against the site's setup page." : {
 
     },

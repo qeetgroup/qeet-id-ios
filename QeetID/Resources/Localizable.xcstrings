@@ -122,10 +122,16 @@
     "Copied" : {
 
     },
+    "Copy Code" : {
+
+    },
     "Couldn't load the request" : {
 
     },
     "Delete %@?" : {
+
+    },
+    "Delete Account" : {
 
     },
     "Digits" : {
@@ -254,6 +260,9 @@
     "Qeet ID no longer has this request. Nothing was approved." : {
 
     },
+    "Rename" : {
+
+    },
     "Rename account" : {
 
     },
@@ -306,6 +315,12 @@
 
     },
     "Sign-in requests for %@ will stop coming here. Your sign-in codes stay on this iPhone." : {
+
+    },
+    "Someone is signing in to your Qeet ID account from %@. Tap to review." : {
+
+    },
+    "Someone is signing in to your Qeet ID account. Tap to review." : {
 
     },
     "Step 1 of 2" : {

@@ -125,6 +125,12 @@ xcrun swift-format lint --strict --recursive Core Shared QeetID AutoFill Notific
 
 Warnings are errors in every target. CI runs on pull requests into `main` and pushes to `main`.
 
+| | |
+|:--|:--|
+| 🧪 **Unit tests** | 69 Swift Testing tests in 14 suites: RFC 6238 and RFC 4226 vectors, RFC 4648 Base32, `otpauth://` links, pairing codes, the Keychain stores and their accessibility, the API client against `URLProtocol` stubs, and the models behind the screens |
+| 🤖 **UI tests** | 29 XCUITests, one or more per flow, against a stub of the API that runs on localhost inside the test runner |
+| 🔁 **End to end** | Against a local [qeet-id-server](https://github.com/qeetgroup/qeet-id-server): sign-up, the console's pairing code, link, approve with the number, deny, a wrong number, expiry, unlink, and a simulated push ([workflows](docs/llm/workflows.md)) |
+
 ## 🛡️ Security model
 
 - **Secrets stay in the Keychain**, `…ThisDeviceOnly`, in a Keychain access group the app and its AutoFill extension

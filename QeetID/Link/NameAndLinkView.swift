@@ -83,7 +83,10 @@ struct NameAndLinkView: View {
             defer { isLinking = false }
             model.lock.beginSystemPrompt()
             let permission = await NotificationPermission.current()
-            if permission == .notDetermined { _ = await NotificationPermission.request() }
+            if permission == .notDetermined {
+                Log.push.info("Linking: asking for notifications")
+                _ = await NotificationPermission.request()
+            }
             model.lock.endSystemPrompt()
             do throws(LinkError) {
                 try await model.link.link(code: code, name: name)

@@ -72,7 +72,7 @@ struct APIClient: Sendable {
         let response = try await send("POST", "v1/mfa/push/devices/\(link.deviceID.uuidString.lowercased())/push-token", body: body)
         switch response.status {
         case 200, 204: return
-        case 401: throw .unauthorized
+        case 401 where response.isDeviceCredentialRefused: throw .unauthorized
         case 404, 405: throw .unsupported
         default: throw response.unexpected
         }
@@ -84,7 +84,7 @@ struct APIClient: Sendable {
             "POST", "v1/mfa/push/devices/\(link.deviceID.uuidString.lowercased())/unlink", body: Credential(link))
         switch response.status {
         case 200, 204: return .removed
-        case 401: return .alreadyRemoved
+        case 401 where response.isDeviceCredentialRefused: return .alreadyRemoved
         default: throw response.unexpected
         }
     }
@@ -115,7 +115,7 @@ struct APIClient: Sendable {
         case 200:
             let pending = try decode(Pending.self, from: response.data)
             return pending.challenges.map { FetchedChallenge(challenge: $0, clockOffset: response.clockOffset) }
-        case 401: throw .unauthorized
+        case 401 where response.isDeviceCredentialRefused: throw .unauthorized
         case 404, 405: throw .unsupported
         default: throw response.unexpected
         }
@@ -143,7 +143,7 @@ struct APIClient: Sendable {
         case 403 where response.errorCode == "mfa.push_number_mismatch": throw .numberMismatch
         case 404, 410: throw .challengeExpired
         case 409: throw .challengeAnswered
-        case 401: throw .unauthorized
+        case 401 where response.isDeviceCredentialRefused: throw .unauthorized
         default: throw response.unexpected
         }
     }
@@ -178,6 +178,10 @@ struct APIClient: Sendable {
         }
 
         var errorCode: String? { envelope?.code }
+
+        /// Qeet ID itself refused the device credential: a 401 with its own `mfa.push_unauthorized`. A bare 401 — from a
+        /// proxy, a captive portal or a gateway — is not that, and must never make the iPhone forget its link.
+        var isDeviceCredentialRefused: Bool { errorCode == "mfa.push_unauthorized" }
 
         /// Seconds to wait, from the error's metadata or the `Retry-After` header.
         var retryAfter: Int? {

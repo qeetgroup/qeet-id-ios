@@ -49,8 +49,8 @@ struct DeviceLinkStore: Sendable {
 
     private let keychain: Keychain
 
-    init(accessGroup: String? = AppIdentity.keychainGroup) {
-        keychain = Keychain(service: Self.service, accessGroup: accessGroup, accessibility: .afterFirstUnlock)
+    init(service: String = Self.service, accessGroup: String? = AppIdentity.keychainGroup) {
+        keychain = Keychain(service: service, accessGroup: accessGroup, accessibility: .afterFirstUnlock)
     }
 
     func load() throws(KeychainError) -> DeviceLink? {

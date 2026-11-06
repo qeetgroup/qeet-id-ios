@@ -20,7 +20,8 @@ enum APIError: Error, Equatable, Sendable {
     case challengeAnswered
     /// The number typed isn't the one on the sign-in screen, so the server denied the request.
     case numberMismatch
-    /// The device credential isn't valid for this account: the iPhone was unlinked or its link expired.
+    /// Qeet ID refused the device credential (a 401 carrying `mfa.push_unauthorized`): the iPhone was unlinked or its
+    /// link expired. A 401 without that code is `.server`, and never costs the iPhone its link.
     case unauthorized
     /// The server doesn't have this endpoint yet.
     case unsupported

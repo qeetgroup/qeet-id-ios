@@ -39,7 +39,12 @@ final class LinkModel {
     /// so that account stops sending requests here.
     @discardableResult
     func link(code: String, name: String) async throws(LinkError) -> LinkSummary {
-        guard let pushToken = await push.currentToken() else { throw .noPushToken }
+        Log.push.info("Linking: waiting for the APNs token")
+        guard let pushToken = await push.currentToken() else {
+            Log.push.notice("Linking stopped: no APNs token")
+            throw .noPushToken
+        }
+        Log.push.info("Linking: claiming the pairing code")
         let previous = storedLink()
         let claim: PairingClaim
         do {

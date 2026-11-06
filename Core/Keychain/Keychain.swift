@@ -94,10 +94,11 @@ struct Keychain: Sendable {
         let status = SecItemCopyMatching(request as CFDictionary, &result)
         switch status {
         case errSecSuccess:
-            let rows = result as? [[CFString: Any]] ?? []
+            // Bridged from CFDictionary, the keys arrive as Strings.
+            let rows = result as? [[String: Any]] ?? []
             return rows.compactMap { row in
-                guard let account = row[kSecAttrAccount] as? String else { return nil }
-                return Item(account: account, generic: row[kSecAttrGeneric] as? Data, value: nil)
+                guard let account = row[kSecAttrAccount as String] as? String else { return nil }
+                return Item(account: account, generic: row[kSecAttrGeneric as String] as? Data, value: nil)
             }
         case errSecItemNotFound:
             return []

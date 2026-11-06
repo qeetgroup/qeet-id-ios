@@ -50,3 +50,9 @@ All notable changes to Qeet ID for iPhone are documented here. The format follow
   hidden from VoiceOver under the shield; VoiceOver actions on each account (Copy Code, Rename, Delete Account); a
   privacy manifest (no tracking, no data collected); Release builds have no App Transport Security exception and none
   of the Debug hooks; signing placeholders for the owner's team in `Configs/Signing.xcconfig`.
+- Tests: unit tests in Swift Testing (RFC 6238 and RFC 4226 vectors, RFC 4648 Base32, `otpauth://` links, pairing
+  codes, site matching, user agents and server dates, the Keychain stores and their accessibility, the API client
+  against `URLProtocol` stubs, and the models behind the screens); UI tests for every flow, with a stub of the API on
+  localhost; and an end-to-end test against a local Qeet ID server (skipped unless `TEST_RUNNER_QEETID_E2E_URL` is set).
+- Only a 401 carrying Qeet ID's own `mfa.push_unauthorized` reads as "this iPhone is no longer linked"; a bare 401 from
+  a proxy, captive portal or gateway is a network problem and keeps the link.

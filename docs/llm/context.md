@@ -61,3 +61,37 @@ The server sends an APNs alert, `interruption-level` time-sensitive, `mutable-co
 `type: sign_in_request`, `challenge_id` and `action` beside `aps`. The notification service extension reads the
 request and adds the browser and system ("from Chrome on macOS") to the body; on any failure the server's text stands.
 Tapping the notification opens the request after the app lock.
+
+## How the pieces work
+
+- **Codes.** `AccountsModel` lists accounts from the Keychain without reading any secret; `CodeBook` reads each secret
+  once into a CryptoKit key in memory and makes codes; a clock task wakes when the earliest code ends. While the app is
+  locked or in the background the model is suspended: no secret is read and no code is kept.
+- **The shield.** `AppModel.shield` is the Locked screen while locked, and a privacy cover whenever the scene isn't
+  active (except during the app's own Face ID and permission prompts). It is drawn in a window above the app's
+  (`ShieldWindowController`), so it covers sheets, alerts and full-screen covers, and the app switcher never shows a
+  code. Returning from the background locks (when the lock is on) and asks for Face ID by itself.
+- **Requests.** A notification tap or a foreground arrival opens the request (queued behind the lock). Without push, the
+  app asks the server for waiting requests on returning to the foreground and on pull to refresh, and opens the newest.
+  The request's countdown uses the server's clock (the `Date` header), so a phone with a wrong clock still counts right.
+- **Linking.** The APNs token (hex) goes with the claim. Debug simulator builds, which get no token without a team's
+  push key, stand in a fixed one, so linking works against a local server. Linking to a different account unlinks the
+  old one. A new APNs token is sent to the server; a server without that route is tolerated.
+- **AutoFill.** The extension lists the requesting site's accounts first (remembered sites, then issuer names that match
+  a label of the host), asks for Face ID before any code shows, and fills on a tap. Accounts for other sites open first,
+  a deliberate second step. An account is tied to a site, and registered with `ASCredentialIdentityStore` for the
+  QuickType bar, only after the person chose it there.
+
+## Decisions
+
+| Decision | Why |
+|---|---|
+| Folder-synchronised groups, settings in xcconfig files | A small, reviewable project file; the folders are the truth |
+| One project, shared folders (`Core/`, `Shared/`) instead of a local package | The extensions compile what they need without public-API boilerplate; tests reach everything with `@testable import QeetID` |
+| Keychain metadata in `kSecAttrGeneric`, secret in the value | Listing and renaming never read a secret |
+| `WhenUnlockedThisDeviceOnly` for codes, `AfterFirstUnlockThisDeviceOnly` for the link | Codes are only needed unlocked; a token refresh may run in the background |
+| Approve needs the number and a fresh device-owner check; deny needs neither | Number matching stops push-fatigue approvals; denying can't hurt the person |
+| The lock switch needs a device-owner check both ways | Someone with the unlocked phone can't simply turn it off |
+| Lock and privacy cover in their own window | SwiftUI overlays can't cover sheets, alerts and full-screen covers |
+| A Debug-only `-api-url`, kept in the App Group | Lets a developer and the notification extension use a local server; Release has no override and no ATS exception |
+| Nearest Qeetrix catalogue icons where the mockup's are missing | Qeetrix components accept only catalogue icons; the gaps are recorded for Qeetrix |
