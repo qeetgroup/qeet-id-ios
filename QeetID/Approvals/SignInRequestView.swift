@@ -218,6 +218,6 @@ extension SignInRequestModel.Phase {
 enum QeetIDLinks {
     /// The console's Security page: change the password, see linked phones.
     static let accountSecurity = URL(string: "https://console.id.qeet.in/account/security")!
-    /// Help and privacy.
-    static let helpAndPrivacy = URL(string: "https://id.qeet.in/security")!
+    /// Help and privacy: Qeet ID's privacy policy, the same page the Android app opens.
+    static let helpAndPrivacy = URL(string: "https://id.qeet.in/legal/privacy")!
 }

@@ -123,9 +123,10 @@ final class ScanUITests: QeetIDUITestCase {
     func testScanningASitesQRCodeAddsTheAccount() {
         launch(arguments: ["-ui-scan", "otpauth://totp/AWS:billing@brightleaffoods.in?secret=JBSWY3DPEHPK3PXP&issuer=AWS"])
         app.buttons["accounts.add"].tap()
+        // The toast first: it dismisses itself, and a busy machine can spend its lifetime on the checks below.
+        XCTAssertTrue(textContaining("AWS added", timeout: 10).exists)
         XCTAssertTrue(element("AWS").waitForExistence(timeout: 5))
         XCTAssertTrue(element("billing@brightleaffoods.in").exists)
-        XCTAssertTrue(textContaining("AWS added", timeout: 10).exists)
     }
 
     @MainActor

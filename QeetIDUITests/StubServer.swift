@@ -40,7 +40,8 @@ final class StubServer: @unchecked Sendable {
         guard ready.wait(timeout: .now() + 5) == .success, let port = listener.port?.rawValue else {
             throw URLError(.cannotConnectToHost)
         }
-        return "http://localhost:\(port)"
+        // The address the listener is bound to. `localhost` would try ::1 first, where nothing listens.
+        return "http://127.0.0.1:\(port)"
     }
 
     func stop() {

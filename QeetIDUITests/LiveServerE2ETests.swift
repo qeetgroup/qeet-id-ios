@@ -32,7 +32,7 @@ final class LiveServerE2ETests: QeetIDUITestCase {
         type(code, into: app.textFields["Pairing code"])
         app.buttons["Link iPhone"].tap()
         allowSystemAlertIfShown(timeout: 3)
-        XCTAssertTrue(waitAllowingAlerts(for: "iPhone linked", timeout: 40))
+        XCTAssertTrue(waitAllowingAlerts(for: "iPhone linked", timeout: Self.linkTimeout))
         XCTAssertTrue(element(email).exists, "The server's account email is shown")
         app.buttons["Done"].tap()
         XCTAssertTrue(textContaining("Linked ·").exists)
@@ -99,7 +99,7 @@ final class LiveServerE2ETests: QeetIDUITestCase {
         type(code, into: app.textFields["Pairing code"])
         app.buttons["Link iPhone"].tap()
         allowSystemAlertIfShown(timeout: 3)
-        XCTAssertTrue(waitAllowingAlerts(for: "iPhone linked", timeout: 40))
+        XCTAssertTrue(waitAllowingAlerts(for: "iPhone linked", timeout: Self.linkTimeout))
         app.buttons["Done"].tap()
 
         // Start a sign-in, and read its request's id from the app (the browser never learns it), then leave the app.

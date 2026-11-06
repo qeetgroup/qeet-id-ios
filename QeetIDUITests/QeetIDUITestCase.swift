@@ -6,6 +6,10 @@ class QeetIDUITestCase: XCTestCase {
     var app: XCUIApplication!
     @MainActor var springboard: XCUIApplication { XCUIApplication(bundleIdentifier: "com.apple.springboard") }
 
+    /// How long a link may take on screen. Linking first asks iOS for the notification settings, and a heavily loaded
+    /// simulator has taken over 30 s to answer that, before the app sends anything.
+    static let linkTimeout: TimeInterval = 90
+
     override func setUp() async throws {
         continueAfterFailure = false
     }

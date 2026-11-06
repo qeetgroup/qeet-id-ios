@@ -40,7 +40,7 @@ final class ApprovalsUITests: QeetIDUITestCase {
     func linkAndOpenARequest(expiresIn seconds: TimeInterval = 120) {
         launchAgainstStub()
         linkByTyping()
-        XCTAssertTrue(waitAllowingAlerts(for: "iPhone linked", timeout: 30))
+        XCTAssertTrue(waitAllowingAlerts(for: "iPhone linked", timeout: Self.linkTimeout))
         app.buttons["Done"].tap()
         server.route("POST", "/v1/mfa/push/devices/\(StubAPI.deviceID)/pending") { _ in StubAPI.pending(expiresIn: seconds) }
         XCTAssertTrue(openWaitingRequest(), "The waiting request didn't open")
@@ -58,7 +58,7 @@ final class ApprovalsUITests: QeetIDUITestCase {
     func testLinkingShowsTheAccountAndThisIPhone() throws {
         launchAgainstStub()
         linkByTyping()
-        XCTAssertTrue(waitAllowingAlerts(for: "iPhone linked", timeout: 30))
+        XCTAssertTrue(waitAllowingAlerts(for: "iPhone linked", timeout: Self.linkTimeout))
         XCTAssertTrue(element("meera@brightleaffoods.in").exists)
         XCTAssertTrue(textContaining("link again to extend").exists)
         let claim = try XCTUnwrap(server.requests("POST", pathSuffix: "/pairing/claim").first)
@@ -77,7 +77,7 @@ final class ApprovalsUITests: QeetIDUITestCase {
         }
         launchAgainstStub()
         linkByTyping()
-        XCTAssertTrue(textContaining("That code is wrong, already used or expired", timeout: 20).exists)
+        XCTAssertTrue(textContaining("That code is wrong, already used or expired", timeout: Self.linkTimeout).exists)
     }
 
     @MainActor
@@ -168,7 +168,7 @@ final class ApprovalsUITests: QeetIDUITestCase {
         server.route("POST", "/v1/mfa/push/devices/\(StubAPI.deviceID)/unlink") { _ in .init(status: 204) }
         launchAgainstStub()
         linkByTyping()
-        XCTAssertTrue(waitAllowingAlerts(for: "iPhone linked", timeout: 30))
+        XCTAssertTrue(waitAllowingAlerts(for: "iPhone linked", timeout: Self.linkTimeout))
         app.buttons["Done"].tap()
         app.buttons["accounts.settings"].tap()
         XCTAssertTrue(element("meera@brightleaffoods.in").exists)
