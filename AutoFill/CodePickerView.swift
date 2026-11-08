@@ -20,7 +20,7 @@ struct CodePickerView: View {
                 }
                 if model.isEmpty {
                     QeetrixEmptyState(
-                        "No accounts yet", description: "Add an account in the Qeet ID app, then its codes appear here.", icon: .keyRound,
+                        "No accounts yet", description: "Add an account in Qeet ID, then its codes appear here.", icon: .keyRound,
                         size: .section
                     )
                     .listRowBackground(Color.clear)
