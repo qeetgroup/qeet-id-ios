@@ -101,25 +101,26 @@ struct SetupKeySheet: View {
         }
     }
 
-    /// Code settings: digits, period and algorithm, with today's choice summarised under the title.
+    /// Code settings: digits, period and algorithm, with today's choice summarised under the title. Each is a row, as the
+    /// mockup draws it: the name at the start and a small segmented choice at the end.
     private var advanced: some View {
         QeetrixAccordionItem("Code settings", description: advancedSummary, isExpanded: $showsAdvanced) {
-            VStack(alignment: .leading, spacing: QeetrixSpace.gapLg) {
+            VStack(alignment: .leading, spacing: QeetrixSpace.gapMd) {
                 QeetrixText("Change these only if the site says to.", size: .sm, tone: .subtle)
-                labelled("Digits") {
+                setting("Digits") {
                     QeetrixSegmentedControl(
                         "Digits", selection: $parameters.digits,
-                        options: OTPParameters.supportedDigits.map { QeetrixOption(QeetrixFormat.number($0), value: $0) })
+                        options: OTPParameters.supportedDigits.map { QeetrixOption(QeetrixFormat.number($0), value: $0) }, size: .sm)
                 }
-                labelled("New code every") {
+                setting("New code every") {
                     QeetrixSegmentedControl(
                         "New code every", selection: $parameters.period,
-                        options: OTPParameters.supportedPeriods.map { QeetrixOption(title: Text("\($0) seconds"), value: $0) })
+                        options: OTPParameters.supportedPeriods.map { QeetrixOption(title: Text("\($0) s"), value: $0) }, size: .sm)
                 }
-                labelled("Algorithm") {
+                setting("Algorithm") {
                     QeetrixSegmentedControl(
                         "Algorithm", selection: $parameters.algorithm,
-                        options: OTPAlgorithm.allCases.map { QeetrixOption($0.displayName, value: $0) })
+                        options: OTPAlgorithm.allCases.map { QeetrixOption($0.displayName, value: $0) }, size: .sm)
                 }
             }
         }
@@ -131,13 +132,25 @@ struct SetupKeySheet: View {
         Text("\(parameters.digits) digits · every \(parameters.period) s · \(parameters.algorithm.displayName)")
     }
 
-    private func labelled<Content: View>(_ title: LocalizedStringKey, @ViewBuilder content: () -> Content) -> some View {
-        VStack(alignment: .leading, spacing: QeetrixSpace.gapXs) {
-            Text(title)
-                .qeetrixTextStyle(.labelSm)
-                .foregroundStyle(QeetrixColor.textSubtle)
-                .accessibilityHidden(true)
-            content()
+    /// One code setting: its name at the start and the choice, at its own width, at the end; the choice moves under the
+    /// name when the line is too narrow for both (a small iPhone, large text). The control's own label names it for
+    /// VoiceOver, so the name shown isn't read twice.
+    private func setting<Control: View>(_ title: LocalizedStringKey, @ViewBuilder control: () -> Control) -> some View {
+        let name = Text(title)
+            .qeetrixTextStyle(.labelMd)
+            .foregroundStyle(QeetrixColor.textDefault)
+            .accessibilityHidden(true)
+        let choice = control()
+        return ViewThatFits(in: .horizontal) {
+            HStack(spacing: QeetrixSpace.gapLg) {
+                name
+                Spacer(minLength: 0)
+                choice.fixedSize(horizontal: true, vertical: false)
+            }
+            VStack(alignment: .leading, spacing: QeetrixSpace.gapSm) {
+                name
+                choice
+            }
         }
     }
 

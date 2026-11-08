@@ -58,7 +58,9 @@ struct LockSetupView: View {
         .scrollBounceBehavior(.basedOnSize)
         .background(QeetrixColor.surfaceCanvas)
         .safeAreaInset(edge: .top, spacing: 0) {
-            QeetrixProgress("Setting up: step 1 of 2", value: 0.5)
+            // The bar alone, as the mockup draws it; the step is in the bar's title, and VoiceOver reads the label.
+            QeetrixProgress(label: nil, value: 0.5)
+                .accessibilityLabel(Text("Setting up: step 1 of 2"))
         }
         .screenBar(Text("Step 1 of 2"))
         .actionFooter(

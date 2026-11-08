@@ -19,6 +19,13 @@ All notable changes to Qeet ID for iPhone are documented here. The format follow
 - Every screen redrawn to the Qeet ID mockups: the keyhole icon on Qeet orange (app icon and in-app mark), its rings
   and seals, settings-style ruled groups, result pages for approved, denied, ended and linked, scanning that shows what
   was found before adding it, and a notification that names the browser and place.
+- **Launch** as the mockup draws it: the 112 pt app icon in the middle and "from Qeet Group" at the foot, in light
+  and dark, on every iPhone and iPad (`LaunchScreen.storyboard`; the images come from
+  `Scripts/generate-launch-screen.py`, the words as Qeet Sans's outlines).
+- Settings' switches (the lock, hidden codes) are the bare Qeetrix switch at the row's end, so each label shows
+  once; the setup steps show the progress bar alone, with the step for VoiceOver.
+- Type the setup key's code settings as the mockup draws them: each setting is a row with its name at the start and
+  a small segmented choice at the end ("30 s", not "30 seconds"), under the name only when the line is too narrow.
 
 - The Xcode project: the app, an AutoFill credential provider, a notification service extension, unit tests and UI
   tests, on folder-synchronised groups with every build setting in `Configs/*.xcconfig`. Swift 6 language mode with

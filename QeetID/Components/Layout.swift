@@ -327,6 +327,22 @@ struct SettingsGroup<Content: View>: View {
     }
 }
 
+/// The Qeetrix switch on its own, at the end of a settings row whose label says what it sets, as the mockup draws it.
+/// Qeetrix's switch always draws its label beside the track and stretches across the row, so the row's label showed
+/// twice; this keeps the track at its own width (switch.css, 32 pt) and gives VoiceOver the label instead.
+struct RowSwitch: View {
+    let label: Text
+    @Binding var isOn: Bool
+
+    var body: some View {
+        Toggle(isOn: $isOn) { EmptyView() }
+            .toggleStyle(.qeetrixSwitch)
+            // The switch's empty label column falls outside the track's width.
+            .frame(width: 32, alignment: .leading)
+            .accessibilityLabel(label)
+    }
+}
+
 /// The rule between two rows of a `SettingsGroup`.
 struct SettingsRule: View {
     var body: some View { QeetrixSeparator() }

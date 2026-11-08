@@ -19,11 +19,8 @@
 	<string>$(QEETID_APP_GROUP)</string>
 	<key>QeetIDKeychainGroup</key>
 	<string>$(QEETID_KEYCHAIN_GROUP)</string>
-	<key>UILaunchScreen</key>
-	<dict>
-		<key>UIColorName</key>
-		<string>LaunchBackground</string>
-	</dict>
+	<key>UILaunchStoryboardName</key>
+	<string>LaunchScreen</string>
 #ifdef QEETID_DEBUG
 	<key>NSAppTransportSecurity</key>
 	<dict>

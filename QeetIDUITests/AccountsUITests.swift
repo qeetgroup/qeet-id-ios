@@ -44,6 +44,13 @@ final class AccountsUITests: QeetIDUITestCase {
         launch()
         app.buttons["empty.type"].tap()
         XCTAssertTrue(textContaining("6 digits · every 30 s · SHA-1").exists)
+        // Each setting is a small segmented choice in its row; the summary follows the choices.
+        app.buttons["setup.advanced"].tap()
+        XCTAssertTrue(app.buttons["SHA-256"].waitForExistence(timeout: 5), "Code settings opened")
+        app.buttons["8"].tap()
+        app.buttons["60 s"].tap()
+        app.buttons["SHA-256"].tap()
+        XCTAssertTrue(textContaining("8 digits · every 60 s · SHA-256").exists)
     }
 
     @MainActor

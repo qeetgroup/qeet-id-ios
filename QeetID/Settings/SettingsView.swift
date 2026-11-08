@@ -23,10 +23,6 @@ struct SettingsView: View {
                     SettingsRow(Text("About and help"), value: Text("Version \(AppIdentity.version)")) { model.path.append(.about) }
                         .accessibilityIdentifier("settings.about")
                 }
-                #if DEBUG
-                    QeetrixText(APIEnvironment.baseURL.absoluteString, size: .sm, tone: .subtlest, mono: true, align: .center)
-                        .accessibilityIdentifier("settings.api")
-                #endif
             }
             .padding(.top, 20)
         }
@@ -130,20 +126,18 @@ struct SettingsView: View {
                 Text("Lock with \(biometry.name)"), detail: Text("Asks each time you open Qeet ID, and after 30 seconds away"),
                 accessory: .none
             ) {
-                Toggle(isOn: Binding(get: { model.preferences.isLockEnabled }, set: { setLock($0) })) {
-                    Text("Lock with \(biometry.name)")
-                }
-                .labelsHidden()
-                .toggleStyle(.qeetrixSwitch)
+                RowSwitch(
+                    label: Text("Lock with \(biometry.name)"),
+                    isOn: Binding(get: { model.preferences.isLockEnabled }, set: { setLock($0) })
+                )
                 .accessibilityIdentifier("settings.lock")
             }
             SettingsRule()
             SettingsRow(Text("Hide codes until tapped"), detail: Text("For when people can see your screen"), accessory: .none) {
-                Toggle(isOn: Binding(get: { model.preferences.hidesCodes }, set: { model.preferences.hidesCodes = $0 })) {
-                    Text("Hide codes until tapped")
-                }
-                .labelsHidden()
-                .toggleStyle(.qeetrixSwitch)
+                RowSwitch(
+                    label: Text("Hide codes until tapped"),
+                    isOn: Binding(get: { model.preferences.hidesCodes }, set: { model.preferences.hidesCodes = $0 })
+                )
                 .accessibilityIdentifier("settings.hide-codes")
             }
         }

@@ -57,6 +57,7 @@ The mockups' modules (`qeetgroup/qeet-mockups`, `products/qeet-id/screens/`).
 | UI-test launch arguments (Debug only) | `QeetID/Support/UITestSupport.swift` |
 | App-level pieces Qeetrix lacks | `QeetID/Components/` (`Brand`: the mark, rings, washes; `Layout`: page, panel, facts, steps, results, settings rows; `ActionFooter`, which picks Qeetrix's bottom action bar) |
 | App icon and its renderer | `QeetID/Resources/Assets.xcassets/AppIcon.appiconset`, `Scripts/render-app-icon.swift` |
+| Launch screen and its images | `QeetID/Resources/LaunchScreen.storyboard`, `LaunchMark` and `LaunchBranding` in `Assets.xcassets`, `Scripts/generate-launch-screen.py` |
 | Administration: passkeys, session, API | `QeetID/Admin/Passkeys.swift`, `AdminSession.swift`, `AdminAPI.swift` |
 
 ## Core (app + both extensions)

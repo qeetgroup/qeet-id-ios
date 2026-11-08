@@ -149,7 +149,7 @@
     "%lld running in this organisation" : {
 
     },
-    "%lld seconds" : {
+    "%lld s" : {
 
     },
     "%lld waiting" : {
@@ -764,6 +764,12 @@
 
     },
     "Set up the new iPhone" : {
+
+    },
+    "Setting up: step 1 of 2" : {
+
+    },
+    "Setting up: step 2 of 2" : {
 
     },
     "Settings" : {
