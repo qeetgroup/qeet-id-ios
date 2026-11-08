@@ -27,12 +27,12 @@ final class LiveServerE2ETests: QeetIDUITestCase {
 
         // Link this iPhone by typing the code, as from the console's text.
         launch(arguments: ["-api-url", server.baseURL])
-        app.buttons["empty.link"].tap()
-        app.buttons["Type the code instead"].tap()
+        app.buttons["accounts.link"].tap()
+        app.buttons["Type the code"].tap()
         type(code, into: app.textFields["Pairing code"])
-        app.buttons["Link iPhone"].tap()
+        app.otherElements["link.name-screen"].buttons["Link this iPhone"].tap()
         allowSystemAlertIfShown(timeout: 3)
-        XCTAssertTrue(waitAllowingAlerts(for: "iPhone linked", timeout: Self.linkTimeout))
+        XCTAssertTrue(waitAllowingAlerts(for: "This iPhone is linked", timeout: Self.linkTimeout))
         XCTAssertTrue(element(email).exists, "The server's account email is shown")
         app.buttons["Done"].tap()
         XCTAssertTrue(textContaining("Linked ·").exists)
@@ -53,18 +53,17 @@ final class LiveServerE2ETests: QeetIDUITestCase {
         signIn = try await server.startSignIn(email: email)
         openRequest()
         app.buttons["Deny"].tap()
-        XCTAssertTrue(element("Sign-in blocked", timeout: 15).exists)
+        XCTAssertTrue(element("Sign-in denied", timeout: 15).exists)
         result = try await server.poll(signIn)
         XCTAssertEqual(result, "mfa.code_invalid")
         app.buttons["Done"].tap()
 
-        // 3. A wrong number: the server refuses the sign-in, and the app says the request ended.
+        // 3. A wrong number: the server refuses the sign-in, and the app says so with the request still on screen.
         signIn = try await server.startSignIn(email: email)
         openRequest()
         typeNumber(signIn.number == "99" ? "98" : "99")
         app.buttons["Approve"].tap()
-        XCTAssertTrue(element("This request has ended", timeout: 15).exists)
-        XCTAssertTrue(textContaining("The number didn't match").exists)
+        XCTAssertTrue(textContaining("So the sign-in was stopped", timeout: 15).exists)
         result = try await server.poll(signIn)
         XCTAssertEqual(result, "mfa.code_invalid")
         app.buttons["Done"].tap()
@@ -72,8 +71,8 @@ final class LiveServerE2ETests: QeetIDUITestCase {
         // 4. No answer for two minutes: the request expires on screen.
         signIn = try await server.startSignIn(email: email)
         openRequest()
-        XCTAssertTrue(element("This request has ended", timeout: 150).exists)
-        XCTAssertTrue(textContaining("Two minutes passed").exists)
+        XCTAssertTrue(element("This request ended", timeout: 150).exists)
+        XCTAssertTrue(textContaining("within 2 minutes").exists)
         app.buttons["Done"].tap()
 
         // 5. Unlink: the server forgets this iPhone, and the codes stay.
@@ -94,12 +93,12 @@ final class LiveServerE2ETests: QeetIDUITestCase {
         let code = try await server.pairingCode(token: account.token)
 
         launch(arguments: ["-api-url", server.baseURL])
-        app.buttons["empty.link"].tap()
-        app.buttons["Type the code instead"].tap()
+        app.buttons["accounts.link"].tap()
+        app.buttons["Type the code"].tap()
         type(code, into: app.textFields["Pairing code"])
-        app.buttons["Link iPhone"].tap()
+        app.otherElements["link.name-screen"].buttons["Link this iPhone"].tap()
         allowSystemAlertIfShown(timeout: 3)
-        XCTAssertTrue(waitAllowingAlerts(for: "iPhone linked", timeout: Self.linkTimeout))
+        XCTAssertTrue(waitAllowingAlerts(for: "This iPhone is linked", timeout: Self.linkTimeout))
         app.buttons["Done"].tap()
 
         // Start a sign-in, and read its request's id from the app (the browser never learns it), then leave the app.
@@ -120,10 +119,10 @@ final class LiveServerE2ETests: QeetIDUITestCase {
         print("E2E-BANNER \(banner.label)")
         banner.tap()
 
-        XCTAssertTrue(element("Are you signing in to Qeet ID?", timeout: 15).exists)
+        XCTAssertTrue(element("Is this you signing in?", timeout: 15).exists)
         let field =
-            app.textFields["Number on your sign-in screen"].exists
-            ? app.textFields["Number on your sign-in screen"] : app.textFields.firstMatch
+            app.textFields["Number from the sign-in screen"].exists
+            ? app.textFields["Number from the sign-in screen"] : app.textFields.firstMatch
         type(signIn.number, into: field)
         app.buttons["Approve"].tap()
         XCTAssertTrue(element("Sign-in approved", timeout: 15).exists)
@@ -140,8 +139,8 @@ final class LiveServerE2ETests: QeetIDUITestCase {
     @MainActor
     private func typeNumber(_ number: String) {
         let field =
-            app.textFields["Number on your sign-in screen"].exists
-            ? app.textFields["Number on your sign-in screen"] : app.textFields.firstMatch
+            app.textFields["Number from the sign-in screen"].exists
+            ? app.textFields["Number from the sign-in screen"] : app.textFields.firstMatch
         type(number, into: field)
     }
 }

@@ -3,7 +3,7 @@ import SwiftUI
 
 /// A full-screen QR scanner: the camera under the status bar, guidance, the target, the torch and the typed way in
 /// underneath (screens 6, 7 and 12). Its owner decides what a code means.
-struct ScannerScreen: View {
+struct ScannerScreen<Result: View>: View {
     let title: LocalizedStringKey
     let guidance: Text
     let typeInstead: Text
@@ -11,6 +11,8 @@ struct ScannerScreen: View {
     let onPayload: @MainActor (String) -> Void
     let onTypeInstead: @MainActor () -> Void
     let onCancel: @MainActor () -> Void
+    /// What was found, over the foot of the camera (Add this account?, Already added, Not a sign-in code).
+    @ViewBuilder var result: () -> Result
     @State private var camera = QRCamera()
 
     var body: some View {
@@ -23,6 +25,7 @@ struct ScannerScreen: View {
         ) {
             CameraPreview(session: camera.session)
         }
+        .overlay(alignment: .bottom) { result() }
         .background(camera.state == .scanning ? Color.black : Color.clear)
         .background(QeetrixColor.surfaceCanvas)
         .navigationTitle(title)
@@ -59,5 +62,16 @@ struct ScannerScreen: View {
             try? await Task.sleep(for: .milliseconds(600))
             camera.deliver(payload)
         #endif
+    }
+}
+
+extension ScannerScreen where Result == EmptyView {
+    init(
+        title: LocalizedStringKey, guidance: Text, typeInstead: Text, lock: AppLock, onPayload: @escaping @MainActor (String) -> Void,
+        onTypeInstead: @escaping @MainActor () -> Void, onCancel: @escaping @MainActor () -> Void
+    ) {
+        self.init(
+            title: title, guidance: guidance, typeInstead: typeInstead, lock: lock, onPayload: onPayload, onTypeInstead: onTypeInstead,
+            onCancel: onCancel, result: { EmptyView() })
     }
 }

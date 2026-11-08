@@ -24,6 +24,9 @@ final class AppLock {
 
     var biometry: Biometry { authenticator.biometry() }
 
+    /// Whether the iPhone can check its owner at all: `false` with no passcode set.
+    var canAuthenticate: Bool { authenticator.canAuthenticate() }
+
     /// Locks, if the lock is on: the app went to the background.
     func lock() {
         guard preferences.isLockEnabled else { return }

@@ -1,8 +1,9 @@
 import Qeetrix
 import SwiftUI
 
-/// Screens 22 and 23, Settings: titled cards for the linked account (with Unlink, a quiet red action), the lock and
-/// hidden codes, AutoFill, and help and privacy.
+/// Settings: the iPhone's link to the account (by its email), whether requests can reach it, and Unlink; the app lock
+/// and hidden codes; AutoFill codes and moving to a new iPhone; administration; About and help. Same look as Accounts:
+/// titles in caps, full-width ruled rows.
 struct SettingsView: View {
     let model: AppModel
     @Environment(\.openURL) private var openURL
@@ -13,56 +14,87 @@ struct SettingsView: View {
 
     var body: some View {
         ScrollView {
-            VStack(alignment: .leading, spacing: QeetrixSpace.gapLg) {
+            VStack(spacing: 0) {
                 approvals
                 security
-                more
-                about
+                codes
+                administration
+                SettingsGroup("About") {
+                    SettingsRow(Text("About and help"), value: Text("Version \(AppIdentity.version)")) { model.path.append(.about) }
+                        .accessibilityIdentifier("settings.about")
+                }
+                #if DEBUG
+                    QeetrixText(APIEnvironment.baseURL.absoluteString, size: .sm, tone: .subtlest, mono: true, align: .center)
+                        .accessibilityIdentifier("settings.api")
+                #endif
             }
-            .padding(QeetrixSpace.insetLg)
+            .padding(.top, 20)
         }
         .background(QeetrixColor.surfaceCanvas)
-        .navigationTitle("Settings")
-        .navigationBarTitleDisplayMode(.inline)
-        .qeetrixNavigationBar(background: .canvas, title: .qeetrix)
+        .screenBar(Text("Settings"))
         .qeetrixAlertDialog($alert)
-        .task(id: scenePhase) { isAutoFillOn = await OneTimeCodeIdentities.isEnabled() }
+        .task(id: scenePhase) {
+            isAutoFillOn = await OneTimeCodeIdentities.isEnabled()
+            await model.refreshNotificationPermission()
+            await model.admin.load()
+        }
+        .accessibilityElement(children: .contain)
         .accessibilityIdentifier("settings")
     }
 
     // MARK: - Sign-in approvals
 
-    private var approvals: some View {
-        let summary = model.link.summary
-        return QeetrixCard(title: Text("Sign-in approvals")) {
-            if let summary {
-                QeetrixDescriptionList {
-                    QeetrixDescriptionItem("Account", value: summary.accountEmail ?? String(localized: "your Qeet ID account"))
-                    QeetrixDescriptionItem(
-                        "This iPhone",
-                        value: String(localized: "\(summary.deviceName) · until \(QeetrixFormat.date(summary.linkedUntil, style: .long))"))
+    @ViewBuilder private var approvals: some View {
+        let notificationsOn = model.notifications != .denied
+        SettingsGroup("Sign-in approvals") {
+            if let summary = model.link.summary {
+                SettingsRow(
+                    label: Text(verbatim: summary.accountEmail ?? String(localized: "Your Qeet ID account")),
+                    detail: Text("\(summary.deviceName) · linked until \(QeetrixFormat.date(summary.linkedUntil, style: .long))")
+                ) {
+                    BrandMark(size: 40)
+                } end: {
+                    QeetrixBadge(notificationsOn ? "On" : "Off", tone: notificationsOn ? .success : .warning)
                 }
+                SettingsRule()
+                SettingsRow(
+                    Text("Notifications"),
+                    detail: notificationsOn ? nil : Text("Sign-in requests can’t reach this iPhone. Turn notifications on in Settings."),
+                    accessory: .none
+                ) {
+                    if notificationsOn {
+                        QeetrixText("Allowed", size: .sm, tone: .subtle)
+                    } else {
+                        QeetrixButton("Open Settings", variant: .soft, size: .sm) { openNotificationSettings() }
+                    }
+                }
+                SettingsRule()
+                SettingsRow(Text("Unlink this iPhone"), danger: true) {
+                    if !isUnlinking { confirmUnlink() }
+                }
+                .accessibilityIdentifier("settings.unlink")
             } else {
-                QeetrixText("Link this iPhone to approve Qeet ID sign-ins with \(model.lock.biometry.name).", tone: .subtle)
-            }
-        } actions: {
-            QeetrixBadge(summary == nil ? "Off" : "On", tone: summary == nil ? .neutral : .success)
-        } footer: {
-            if summary != nil {
-                QeetrixButton("Unlink this iPhone", variant: .ghost, tone: .danger, size: .sm, isLoading: isUnlinking) { confirmUnlink() }
-                    .accessibilityIdentifier("settings.unlink")
-            } else {
-                QeetrixButton("Link this iPhone", icon: .chevronRight, variant: .ghost, size: .sm) { model.path.append(.linkIntro) }
-                    .accessibilityIdentifier("settings.link")
+                SettingsRow(
+                    label: Text("Not linked"), detail: Text("Approve Qeet ID sign-ins here instead of typing a code.")
+                ) {
+                    BrandMark(size: 40)
+                } end: {
+                    QeetrixButton("Link", size: .sm) { model.path.append(.linkIntro) }
+                        .accessibilityIdentifier("settings.link")
+                }
             }
         }
     }
 
+    /// Unlink this iPhone: Qeetrix's danger dialog. What stops (requests, at once) and what stays (the codes), and to
+    /// have another way to confirm sign-ins first.
     private func confirmUnlink() {
-        let account = model.link.summary?.accountEmail ?? String(localized: "your Qeet ID account")
+        let from = model.link.summary?.accountEmail.map { String(localized: "From \($0). ") } ?? ""
         alert = QeetrixAlertDialog(
             "Unlink this iPhone?",
-            message: Text("Sign-in requests for \(account) will stop coming here. Your sign-in codes stay on this iPhone."),
+            message: Text(
+                "\(from)Sign-in requests stop coming here, at once. Your codes stay on this iPhone. Have another way to confirm sign-ins first, such as a passkey or another phone."
+            ),
             actions: [
                 QeetrixDialogAction("Cancel", role: .cancel),
                 QeetrixDialogAction("Unlink", role: .destructive) { unlink() },
@@ -80,27 +112,40 @@ struct SettingsView: View {
             } catch {
                 QeetrixFeedback.error.play()
                 alert = QeetrixAlertDialog(
-                    "Couldn't unlink this iPhone", message: Text("\(error.connectionMessage) The link stays until Qeet ID removes it."))
+                    "Couldn’t unlink this iPhone", message: Text("\(error.connectionMessage) This iPhone is still linked; try again."))
             }
         }
+    }
+
+    private func openNotificationSettings() {
+        if let url = URL(string: UIApplication.openNotificationSettingsURLString) { openURL(url) }
     }
 
     // MARK: - Security
 
     private var security: some View {
-        QeetrixCard(title: Text("Security")) {
-            QeetrixSwitch(
-                isOn: Binding(get: { model.preferences.isLockEnabled }, set: { setLock($0) }),
-                description: Text("\(model.lock.biometry.name) or passcode to open")
+        let biometry = model.lock.biometry
+        return SettingsGroup("Security") {
+            SettingsRow(
+                Text("Lock with \(biometry.name)"), detail: Text("Asks each time you open Qeet ID, and after 30 seconds away"),
+                accessory: .none
             ) {
-                Text(model.lock.biometry.lockTitle)
+                Toggle(isOn: Binding(get: { model.preferences.isLockEnabled }, set: { setLock($0) })) {
+                    Text("Lock with \(biometry.name)")
+                }
+                .labelsHidden()
+                .toggleStyle(.qeetrixSwitch)
+                .accessibilityIdentifier("settings.lock")
             }
-            .accessibilityIdentifier("settings.lock")
-            QeetrixSwitch(
-                "Hide codes until tapped", isOn: Binding(get: { model.preferences.hidesCodes }, set: { model.preferences.hidesCodes = $0 }),
-                description: Text("For screens others can see")
-            )
-            .accessibilityIdentifier("settings.hide-codes")
+            SettingsRule()
+            SettingsRow(Text("Hide codes until tapped"), detail: Text("For when people can see your screen"), accessory: .none) {
+                Toggle(isOn: Binding(get: { model.preferences.hidesCodes }, set: { model.preferences.hidesCodes = $0 })) {
+                    Text("Hide codes until tapped")
+                }
+                .labelsHidden()
+                .toggleStyle(.qeetrixSwitch)
+                .accessibilityIdentifier("settings.hide-codes")
+            }
         }
     }
 
@@ -111,48 +156,42 @@ struct SettingsView: View {
             if outcome == .passcodeNotSet {
                 alert = QeetrixAlertDialog(
                     "Set a passcode first",
-                    message: Text("This iPhone has no passcode, so Qeet ID can't be locked. Set one in iOS Settings."))
+                    message: Text("This iPhone has no passcode, so Qeet ID can’t be locked. Set one in iOS Settings."))
             }
         }
     }
 
-    // MARK: - AutoFill, help
+    // MARK: - Codes, administration
 
-    private var more: some View {
-        VStack(spacing: 0) {
+    private var codes: some View {
+        SettingsGroup("Codes") {
             if #available(iOS 18, *) {
-                QeetrixListItem("AutoFill codes", value: Route.autoFill) {
-                    QeetrixListItemIcon(.keyboard)
-                } trailing: {
-                    QeetrixBadge(isAutoFillOn ? "On" : "Off", tone: isAutoFillOn ? .success : .neutral)
-                }
-                .accessibilityIdentifier("settings.autofill")
-                QeetrixSeparator()
+                SettingsRow(Text("AutoFill codes"), value: isAutoFillOn ? Text("On") : Text("Off")) { model.path.append(.autoFill) }
+                    .accessibilityIdentifier("settings.autofill")
+                SettingsRule()
             }
-            QeetrixListItem("Help and privacy", metadata: Text(verbatim: AppIdentity.version), accessory: .chevron) {
-                openURL(QeetIDLinks.helpAndPrivacy)
-            } leading: {
-                QeetrixListItemIcon(.info)
-            }
-            .accessibilityIdentifier("settings.help")
-        }
-        .background(QeetrixColor.surfaceRaised)
-        .clipShape(RoundedRectangle(cornerRadius: QeetrixRadius.surface))
-        .overlay {
-            RoundedRectangle(cornerRadius: QeetrixRadius.surface)
-                .strokeBorder(QeetrixColor.borderDefault, lineWidth: QeetrixBorderWidth.default)
+            SettingsRow(Text("Move to a new iPhone")) { model.path.append(.move) }
+                .accessibilityIdentifier("settings.move")
         }
     }
 
-    private var about: some View {
-        VStack(spacing: QeetrixSpace.gapXs) {
-            QeetrixText("Qeet ID \(AppIdentity.version) (\(AppIdentity.build)) · by Qeet Group", size: .sm, tone: .subtle, align: .center)
-            #if DEBUG
-                QeetrixText(APIEnvironment.baseURL.absoluteString, size: .sm, tone: .subtlest, mono: true, align: .center)
-                    .accessibilityIdentifier("settings.api")
-            #endif
+    private var administration: some View {
+        let signedIn = model.admin.summary
+        return SettingsGroup("Administration") {
+            SettingsRow(
+                Text("Administration"),
+                detail: signedIn?.organizationName.map { Text("Signed in · \($0)") }
+                    ?? Text("Access requests, emergencies and critical events")
+            ) {
+                if signedIn?.organizationId != nil {
+                    model.path.append(.adminHome)
+                } else if signedIn != nil {
+                    model.path.append(.adminOrganizations)
+                } else {
+                    model.path.append(.adminSignIn)
+                }
+            }
+            .accessibilityIdentifier("settings.admin")
         }
-        .frame(maxWidth: .infinity)
-        .padding(.top, QeetrixSpace.gapSm)
     }
 }

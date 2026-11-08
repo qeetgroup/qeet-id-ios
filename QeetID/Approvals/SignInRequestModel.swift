@@ -34,6 +34,8 @@ final class SignInRequestModel {
 
     let id: UUID
     private(set) var phase: Phase = .loading
+    /// The request as last read, to name the sign-in on its outcome (browser, place, time).
+    private(set) var request: SignInChallenge?
     /// The number as typed. Not a secret: it's on the sign-in screen.
     var number = "" {
         didSet { if number != oldValue { numberError = nil } }
@@ -56,8 +58,14 @@ final class SignInRequestModel {
         self.link = link
         self.lock = lock
         self.client = client
-        if let prefetched { phase = Self.phase(for: prefetched, isLinked: link.isLinked) }
+        if let prefetched {
+            request = prefetched.challenge
+            phase = Self.phase(for: prefetched, isLinked: link.isLinked)
+        }
     }
+
+    /// The account the request is for, as the link names it.
+    var accountEmail: String? { link.summary?.accountEmail }
 
     /// Reads the request from the server.
     func load() async {
@@ -66,6 +74,7 @@ final class SignInRequestModel {
         phase = .loading
         do {
             let fetched = try await client().challenge(id)
+            request = fetched.challenge
             phase = Self.phase(for: fetched, isLinked: link.isLinked)
         } catch .notFound {
             phase = .outcome(.ended(.notFound))
@@ -105,7 +114,13 @@ final class SignInRequestModel {
         }
         isApproving = true
         defer { isApproving = false }
-        let outcome = await lock.authenticate(reason: String(localized: "Approve the sign-in to Qeet ID."))
+        let reason =
+            switch (fetched.challenge.context.browser, fetched.challenge.context.location.flatMap { $0.isEmpty ? nil : $0 }) {
+            case (let browser?, let place?): String(localized: "\(browser), near \(place)")
+            case (let browser?, nil): browser
+            default: String(localized: "Approve the sign-in to Qeet ID.")
+            }
+        let outcome = await lock.authenticate(reason: reason)
         switch outcome {
         case .success:
             break

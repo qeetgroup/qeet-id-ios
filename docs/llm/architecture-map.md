@@ -1,6 +1,6 @@
 # Architecture Map — qeet-id-ios
 
-**Level:** L2 · **Last verified:** 2026-11-06
+**Level:** L2 · **Last verified:** 2026-11-08
 **Verification scope:** every path confirmed to exist; screen numbers are the approved mockup's.
 
 ## Project
@@ -22,21 +22,23 @@
 
 ## Screens
 
+The mockups' modules (`qeetgroup/qeet-mockups`, `products/qeet-id/screens/`).
+
 | Screen (mockup) | Path |
 |---|---|
-| 1 Welcome · 2 Lock Qeet ID · 3 Get sign-in requests | `QeetID/Onboarding/` |
-| 4 Accounts · 5 No accounts yet · 9 Context menu · 10 Delete · 26 Rename · 24 Problems | `QeetID/Accounts/AccountsView.swift`, `AccountRow.swift` |
-| 6 Scan a QR code · 7 Camera access is off | `QeetID/AddAccount/AddAccountView.swift`, `QeetID/Scanning/` |
-| 8 Type the setup key | `QeetID/AddAccount/SetupKeySheet.swift` |
-| 11 Link this iPhone · 12 Scan the pairing code | `QeetID/Link/LinkIntroView.swift` |
-| 13 Name this iPhone | `QeetID/Link/NameAndLinkView.swift` |
-| 14 iPhone linked | `QeetID/Link/LinkedView.swift` |
-| 15 A request arrives (notification) | `NotificationService/NotificationService.swift` |
-| 16 Review and type the number · 17 Face ID · 18–20 Outcomes | `QeetID/Approvals/` |
-| 21 Locked (and the privacy cover) | `QeetID/Lock/LockedView.swift`, `ShieldWindow.swift` |
-| 22 Settings · 23 Unlink | `QeetID/Settings/SettingsView.swift` |
-| 25 AutoFill codes | `QeetID/AutoFillSetup/AutoFillSetupView.swift` |
-| 27 AutoFill: choose a code | `AutoFill/CodePickerView.swift`, `CodePickerModel.swift`, `CredentialProviderViewController.swift` |
+| 01 Welcome · Lock Qeet ID · Get sign-in requests | `QeetID/Onboarding/` |
+| 01 Locked (and the privacy cover) | `QeetID/Lock/LockedView.swift`, `ShieldWindow.swift` |
+| 02 Accounts, account actions (context menu), Rename, Remove | `QeetID/Accounts/AccountsView.swift`, `AccountRow.swift` |
+| 02 Add an account (sheet) · Scan a QR code · Type the setup key | `QeetID/AddAccount/`, `QeetID/Scanning/` |
+| 03 Link this iPhone · Scan the code | `QeetID/Link/LinkIntroView.swift` |
+| 03 Name this iPhone · iPhone linked | `QeetID/Link/NameAndLinkView.swift`, `LinkedView.swift` |
+| 03 A request arrives (notification) | `NotificationService/NotificationService.swift`, `Core/Approvals/NotificationText.swift` |
+| 03 Review · Confirm it's you · Approved · Denied · Request ended | `QeetID/Approvals/SignInRequestView.swift` |
+| 03 Requests waiting | `QeetID/Approvals/RequestsWaitingView.swift` |
+| 04 Settings · Unlink | `QeetID/Settings/SettingsView.swift` |
+| 04 AutoFill codes · Choose a code | `QeetID/AutoFillSetup/AutoFillSetupView.swift`, `AutoFill/CodePickerView.swift` |
+| 04 About and help · Move to a new iPhone · Update required | `QeetID/Settings/` |
+| 05 Administration (sign-in, organisations, home, requests, people, suspend, agents, events) | `QeetID/Admin/` |
 
 ## App structure
 
@@ -45,7 +47,7 @@
 | Entry, APNs callbacks, notification delegate | `QeetID/App/QeetIDApp.swift`, `AppDelegate.swift`, `QeetID/Notifications/NotificationRouter.swift` |
 | App state: shield, routes, modals, pending check, deep links | `QeetID/App/AppModel.swift`, `RootView.swift` |
 | Accounts and the code clock | `QeetID/Accounts/AccountsModel.swift` |
-| Copy a code (local-only, 60 s) from the menu | `QeetID/Accounts/SensitiveCopy.swift` |
+| Copy a code (local-only, 60 s) from the menu | `QeetrixCopy.copy` in `QeetID/Accounts/AccountsView.swift` |
 | The device link: link, unlink, pending, respond, new push token | `QeetID/Link/LinkModel.swift` |
 | APNs token | `QeetID/Notifications/PushRegistrar.swift` |
 | A sign-in request, number, Face ID, outcomes | `QeetID/Approvals/SignInRequestModel.swift` |
@@ -53,7 +55,9 @@
 | Preferences (no secrets) | `QeetID/Support/Preferences.swift` |
 | Offline state | `QeetID/Support/NetworkMonitor.swift` |
 | UI-test launch arguments (Debug only) | `QeetID/Support/UITestSupport.swift` |
-| App-level pieces Qeetrix lacks | `QeetID/Components/` (`ActionFooter`, `FeatureRow`/`StepNumber`, `QeetIDMark`) |
+| App-level pieces Qeetrix lacks | `QeetID/Components/` (`Brand`: the mark, rings, washes; `Layout`: page, panel, facts, steps, results, settings rows; `ActionFooter`, which picks Qeetrix's bottom action bar; `AppIcons`, generated) |
+| App icon and its renderer | `QeetID/Resources/Assets.xcassets/AppIcon.appiconset`, `Scripts/render-app-icon.swift` |
+| Administration: passkeys, session, API | `QeetID/Admin/Passkeys.swift`, `AdminSession.swift`, `AdminAPI.swift` |
 
 ## Core (app + both extensions)
 
@@ -74,7 +78,6 @@
 |---|---|
 | Face ID / Touch ID / passcode | `Shared/Security/DeviceOwnerAuthentication.swift` |
 | One-time-code identities for AutoFill | `Shared/AutoFill/OneTimeCodeIdentities.swift` |
-| Issuer tile, account title, list-row styling | `Shared/Design/` |
 
 ## Tests
 

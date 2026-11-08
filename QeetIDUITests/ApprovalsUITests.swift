@@ -28,11 +28,11 @@ final class ApprovalsUITests: QeetIDUITestCase {
     /// Links by typing the code, as from the empty state's "Link this iPhone".
     @MainActor
     func linkByTyping(_ code: String = "km7qx 4trwp") {
-        app.buttons["empty.link"].tap()
-        XCTAssertTrue(element("Approve Qeet ID sign-ins here instead of typing a code. You need Qeet ID open on a computer.").exists)
-        app.buttons["Type the code instead"].tap()
+        app.buttons["accounts.link"].tap()
+        XCTAssertTrue(element("Approve sign-ins here").exists)
+        app.buttons["Type the code"].tap()
         type(code, into: app.textFields["Pairing code"])
-        app.buttons["Link iPhone"].tap()
+        app.otherElements["link.name-screen"].buttons["Link this iPhone"].tap()
         allowSystemAlertIfShown(timeout: 3)
     }
 
@@ -40,7 +40,7 @@ final class ApprovalsUITests: QeetIDUITestCase {
     func linkAndOpenARequest(expiresIn seconds: TimeInterval = 120) {
         launchAgainstStub()
         linkByTyping()
-        XCTAssertTrue(waitAllowingAlerts(for: "iPhone linked", timeout: Self.linkTimeout))
+        XCTAssertTrue(waitAllowingAlerts(for: "This iPhone is linked", timeout: Self.linkTimeout))
         app.buttons["Done"].tap()
         server.route("POST", "/v1/mfa/push/devices/\(StubAPI.deviceID)/pending") { _ in StubAPI.pending(expiresIn: seconds) }
         XCTAssertTrue(openWaitingRequest(), "The waiting request didn't open")
@@ -58,15 +58,15 @@ final class ApprovalsUITests: QeetIDUITestCase {
     func testLinkingShowsTheAccountAndThisIPhone() throws {
         launchAgainstStub()
         linkByTyping()
-        XCTAssertTrue(waitAllowingAlerts(for: "iPhone linked", timeout: Self.linkTimeout))
+        XCTAssertTrue(waitAllowingAlerts(for: "This iPhone is linked", timeout: Self.linkTimeout))
         XCTAssertTrue(element("meera@brightleaffoods.in").exists)
-        XCTAssertTrue(textContaining("link again to extend").exists)
+        XCTAssertTrue(textContaining("a request comes to this iPhone").exists)
         let claim = try XCTUnwrap(server.requests("POST", pathSuffix: "/pairing/claim").first)
         XCTAssertEqual(claim.json["code"] as? String, "KM7QX-4TRWP")
         XCTAssertEqual(claim.json["platform"] as? String, "ios")
         XCTAssertFalse((claim.json["push_token"] as? String ?? "").isEmpty)
         app.buttons["Done"].tap()
-        XCTAssertTrue(textContaining("Linked ·").exists)
+        XCTAssertTrue(textContaining("For meera@brightleaffoods.in").exists)
         XCTAssertTrue(element("On").exists)
     }
 
@@ -91,19 +91,20 @@ final class ApprovalsUITests: QeetIDUITestCase {
     @MainActor
     func testScanningThePairingCodeFillsItIn() {
         launchAgainstStub(["-ui-scan", "qeetidauth://pair?code=KM7QX-4TRWP"])
-        app.buttons["empty.link"].tap()
+        app.buttons["accounts.link"].tap()
         app.buttons["Scan the code"].tap()
-        XCTAssertTrue(textContaining("KM7QX-4TRWP", timeout: 8).exists)
-        XCTAssertTrue(element("Name for this iPhone").exists)
+        XCTAssertTrue(element("Name this iPhone", timeout: 8).exists)
+        XCTAssertFalse(app.textFields["Pairing code"].exists, "A scanned code isn't typed again")
         XCTAssertTrue(server.requests("POST", pathSuffix: "/pairing/claim").isEmpty, "Linking waits for the tap")
     }
 
     @MainActor
     func testTheScannerRefusesOtherCodes() {
         launchAgainstStub(["-ui-scan", "otpauth://totp/A:b?secret=JBSWY3DPEHPK3PXP"])
-        app.buttons["empty.link"].tap()
+        app.buttons["accounts.link"].tap()
         app.buttons["Scan the code"].tap()
-        XCTAssertTrue(element("That isn't a Qeet ID pairing code", timeout: 8).exists)
+        XCTAssertTrue(textContaining("sign-in code", timeout: 8).exists)
+        XCTAssertTrue(app.buttons["Add to Accounts"].exists)
     }
 
     @MainActor
@@ -113,15 +114,16 @@ final class ApprovalsUITests: QeetIDUITestCase {
         }
         linkAndOpenARequest()
         XCTAssertTrue(element("Chrome on macOS").exists)
-        XCTAssertTrue(element("Hyderabad, India").exists)
-        XCTAssertTrue(element("49.205.143.27").exists)
+        XCTAssertTrue(element("Near Hyderabad, India").exists)
+        XCTAssertTrue(element("IP address 49.205.143.27").exists)
+        XCTAssertTrue(textContaining("To meera@brightleaffoods.in").exists)
 
-        app.buttons["Approve"].tap()
-        XCTAssertTrue(textContaining("Type the 2-digit number").exists, "Approve needs the number")
+        XCTAssertFalse(app.buttons["Approve"].isEnabled, "Approve waits for the number")
         typeNumber("47")
         app.buttons["Approve"].tap()
         XCTAssertTrue(element("Sign-in approved", timeout: 10).exists)
-        XCTAssertTrue(textContaining("Chrome on macOS is signing in to Qeet ID").exists)
+        XCTAssertTrue(textContaining("Go back to the computer").exists)
+        XCTAssertTrue(element("Chrome on macOS").exists)
         let respond = try XCTUnwrap(server.requests("POST", pathSuffix: "/respond").first)
         XCTAssertEqual(respond.json["approved"] as? Bool, true)
         XCTAssertEqual(respond.json["number"] as? Int, 47)
@@ -138,8 +140,8 @@ final class ApprovalsUITests: QeetIDUITestCase {
         linkAndOpenARequest()
         typeNumber("12")
         app.buttons["Approve"].tap()
-        XCTAssertTrue(element("This request has ended", timeout: 10).exists)
-        XCTAssertTrue(textContaining("The number didn't match").exists)
+        XCTAssertTrue(textContaining("So the sign-in was stopped", timeout: 10).exists)
+        XCTAssertTrue(element("Chrome on macOS").exists, "The request stays on screen")
     }
 
     @MainActor
@@ -149,9 +151,8 @@ final class ApprovalsUITests: QeetIDUITestCase {
         }
         linkAndOpenARequest()
         app.buttons["Deny"].tap()
-        XCTAssertTrue(element("Sign-in blocked", timeout: 10).exists)
-        XCTAssertTrue(element("Change your Qeet ID password").exists)
-        XCTAssertTrue(app.buttons["Open security"].exists)
+        XCTAssertTrue(element("Sign-in denied", timeout: 10).exists)
+        XCTAssertTrue(app.buttons["Change password"].exists)
         let respond = try XCTUnwrap(server.requests("POST", pathSuffix: "/respond").first)
         XCTAssertEqual(respond.json["approved"] as? Bool, false)
     }
@@ -159,8 +160,8 @@ final class ApprovalsUITests: QeetIDUITestCase {
     @MainActor
     func testARequestExpiresOnScreen() {
         linkAndOpenARequest(expiresIn: 6)
-        XCTAssertTrue(element("This request has ended", timeout: 15).exists)
-        XCTAssertTrue(textContaining("Two minutes passed").exists)
+        XCTAssertTrue(element("This request ended", timeout: 15).exists)
+        XCTAssertTrue(textContaining("within 2 minutes").exists)
     }
 
     @MainActor
@@ -168,7 +169,7 @@ final class ApprovalsUITests: QeetIDUITestCase {
         server.route("POST", "/v1/mfa/push/devices/\(StubAPI.deviceID)/unlink") { _ in .init(status: 204) }
         launchAgainstStub()
         linkByTyping()
-        XCTAssertTrue(waitAllowingAlerts(for: "iPhone linked", timeout: Self.linkTimeout))
+        XCTAssertTrue(waitAllowingAlerts(for: "This iPhone is linked", timeout: Self.linkTimeout))
         app.buttons["Done"].tap()
         app.buttons["accounts.settings"].tap()
         XCTAssertTrue(element("meera@brightleaffoods.in").exists)
@@ -193,7 +194,8 @@ final class SettingsUITests: QeetIDUITestCase {
         XCTAssertTrue(element("Sign-in approvals").exists)
         XCTAssertTrue(element("Security").exists)
         XCTAssertTrue(element("Hide codes until tapped").exists)
-        XCTAssertTrue(element("Help and privacy").exists)
+        XCTAssertTrue(element("About and help").exists)
+        XCTAssertTrue(element("Administration").exists)
         XCTAssertTrue(app.buttons["settings.link"].exists)
     }
 
@@ -202,8 +204,8 @@ final class SettingsUITests: QeetIDUITestCase {
         launch()
         app.buttons["accounts.settings"].tap()
         element("AutoFill codes").tap()
-        XCTAssertTrue(element("Open iOS Settings").exists)
-        XCTAssertTrue(element("Turn on Qeet ID").exists)
-        XCTAssertTrue(textContaining("Tap to fill; nothing to copy.").exists)
+        XCTAssertTrue(element("Fill in codes with a tap").exists)
+        XCTAssertTrue(app.buttons["Turn on AutoFill"].exists)
+        XCTAssertTrue(textContaining("No copying.").exists)
     }
 }

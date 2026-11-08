@@ -13,7 +13,7 @@ final class ShieldWindowController {
         self.mainWindow = mainWindow
         let window = UIWindow(windowScene: scene)
         window.windowLevel = .alert + 1
-        let host = UIHostingController(rootView: ShieldView(model: model).qeetrixRootTheme())
+        let host = UIHostingController(rootView: ShieldView(model: model).qeetrixRootTheme().measuresScreenHeight())
         host.view.backgroundColor = .clear
         window.rootViewController = host
         window.isHidden = true
@@ -39,7 +39,7 @@ struct ShieldView: View {
 
     var body: some View {
         switch model.shield {
-        case .locked: LockedView(lock: model.lock)
+        case .locked: LockedView(lock: model.lock, requestWaiting: model.hasQueuedRequest)
         case .privacy: PrivacyCoverView()
         case .none: Color.clear
         }

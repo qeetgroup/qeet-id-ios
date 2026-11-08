@@ -21,6 +21,7 @@ struct RootView: View {
             .background { WindowReader { window in shieldWindow.install(over: window, model: model) } }
             .qeetrixToast(Binding(get: { model.toast }, set: { model.toast = $0 }))
             .qeetrixRootTheme()
+            .measuresScreenHeight()
             .onChange(of: scenePhase, initial: true) { _, phase in model.scenePhaseChanged(to: phase) }
             .onChange(of: model.shield) { _, shield in shieldWindow.update(shield) }
             .onChange(of: model.lock.isLocked) { wasLocked, isLocked in
@@ -42,9 +43,14 @@ struct RootView: View {
                     case .scanPairing: PairingScannerView(model: model)
                     case .signInRequest(let id):
                         SignInRequestView(model: model.requestModel(for: id)) { model.closeSignInRequest() }
+                    case .requestsWaiting:
+                        RequestsWaitingView(model: model)
+                    case .updateRequired:
+                        UpdateRequiredView { model.modal = nil }
                     }
                 }
                 .qeetrixRootTheme()
+                .measuresScreenHeight()
             }
         } else {
             OnboardingFlow(model: model)
@@ -54,10 +60,22 @@ struct RootView: View {
     @ViewBuilder private func destination(_ route: Route) -> some View {
         switch route {
         case .settings: SettingsView(model: model)
-        case .autoFill: AutoFillSetupView()
+        case .autoFill: AutoFillSetupView(biometry: model.lock.biometry) { _ = model.path.popLast() }
         case .linkIntro: LinkIntroView(model: model)
         case .linkName(let code): NameAndLinkView(model: model, scannedCode: code)
         case .linked: LinkedView(model: model)
+        case .move: MoveView(model: model)
+        case .about: AboutView()
+        case .adminSignIn: AdminSignInView(model: model)
+        case .adminOrganizations: AdminOrganizationsView(model: model)
+        case .adminHome: AdminHomeView(model: model)
+        case .adminRequests: AdminRequestsView(model: model)
+        case .adminRequest(let id): AdminRequestView(model: model, id: id)
+        case .adminPeople: AdminPeopleView(model: model)
+        case .adminSuspend(let id): AdminSuspendView(model: model, userId: id)
+        case .adminAgents: AdminAgentsView(model: model)
+        case .adminEvents: AdminEventsView(model: model)
+        case .adminEvent(let id): AdminEventView(model: model, id: id)
         }
     }
 }

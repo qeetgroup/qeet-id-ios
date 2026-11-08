@@ -18,7 +18,7 @@ final class AccountsUITests: QeetIDUITestCase {
         let add = app.buttons["setup.add"]
         XCTAssertTrue(add.waitForExistence(timeout: 5))
         XCTAssertFalse(add.isEnabled, "Add waits for a valid key")
-        type("Razorpay", into: app.textFields["Service"])
+        type("Razorpay", into: app.textFields["Site or app"])
         type("accounts@brightleaffoods.in", into: app.textFields["Account"])
         type("JBSW Y3DP EHPK 3PXP", into: app.textFields["Setup key"])
         XCTAssertTrue(add.isEnabled)
@@ -33,10 +33,9 @@ final class AccountsUITests: QeetIDUITestCase {
     func testABadKeyIsExplained() {
         launch()
         app.buttons["empty.type"].tap()
-        type("GitHub", into: app.textFields["Service"])
+        type("GitHub", into: app.textFields["Site or app"])
         type("JBSW1", into: app.textFields["Setup key"])
-        app.textFields["Service"].tap()
-        XCTAssertTrue(textContaining("a setup key can't have").exists)
+        XCTAssertTrue(textContaining("Keys use only A–Z and 2–7").exists, "A wrong character is said at once")
         XCTAssertFalse(app.buttons["setup.add"].isEnabled)
     }
 
@@ -44,25 +43,25 @@ final class AccountsUITests: QeetIDUITestCase {
     func testAdvancedSettingsShowTodaysChoice() {
         launch()
         app.buttons["empty.type"].tap()
-        XCTAssertTrue(textContaining("6 digits · every 30 seconds · SHA-1").exists)
+        XCTAssertTrue(textContaining("6 digits · every 30 s · SHA-1").exists)
     }
 
     @MainActor
     func testTapToCopyShowsTheToast() {
         launch()
         addAccountByTyping(service: "GitHub", account: "brightleaf-foods")
-        textContaining("GitHub, brightleaf-foods,").tap()
+        tapCode(inRowContaining: "GitHub, brightleaf-foods,")
         XCTAssertTrue(element("Copied").waitForExistence(timeout: 5))
     }
 
     @MainActor
-    func testRenameAndDeleteFromTheContextMenu() {
+    func testRenameAndRemoveFromTheContextMenu() {
         launch()
         addAccountByTyping(service: "GitHub", account: "brightleaf-foods")
         element("GitHub").press(forDuration: 1.2)
         app.buttons["Rename"].tap()
 
-        let alert = app.alerts["Rename account"]
+        let alert = app.alerts["Rename"]
         XCTAssertTrue(alert.waitForExistence(timeout: 5))
         let service = alert.textFields.element(boundBy: 0)
         service.tap()
@@ -71,9 +70,13 @@ final class AccountsUITests: QeetIDUITestCase {
         XCTAssertTrue(element("GitHub (work)").exists)
 
         element("GitHub (work)").press(forDuration: 1.2)
-        app.buttons["Delete Account"].tap()
-        XCTAssertTrue(textContaining("Turn off 2-step verification on GitHub (work) first").waitForExistence(timeout: 5))
-        app.sheets.buttons["Delete Account"].firstMatch.tap()
+        app.buttons["Remove from this iPhone"].tap()
+        let remove = app.alerts["Remove GitHub (work)?"]
+        XCTAssertTrue(remove.waitForExistence(timeout: 5))
+        XCTAssertTrue(
+            remove.staticTexts.containing(NSPredicate(format: "label CONTAINS %@", "Turn off 2-step verification there first")).firstMatch
+                .exists)
+        remove.buttons["Remove"].tap()
         XCTAssertTrue(element("No accounts yet").exists)
     }
 
@@ -89,7 +92,7 @@ final class AccountsUITests: QeetIDUITestCase {
         XCTAssertTrue(element("AWS").exists)
         XCTAssertFalse(app.staticTexts["GitHub"].waitForExistence(timeout: 1))
         search.typeText("zzz")
-        XCTAssertTrue(element("No results").exists)
+        XCTAssertTrue(textContaining("No accounts match").exists)
     }
 
     @MainActor
@@ -97,8 +100,8 @@ final class AccountsUITests: QeetIDUITestCase {
         launch()
         addAccountByTyping(service: "GitHub")
         app.buttons["accounts.add"].tap()
-        app.buttons["Type the key instead"].tap()
-        type("GitHub copy", into: app.textFields["Service"])
+        app.buttons["add.type"].tap()
+        type("GitHub copy", into: app.textFields["Site or app"])
         type("JBSW Y3DP EHPK 3PXP", into: app.textFields["Setup key"])
         app.buttons["setup.add"].tap()
         XCTAssertTrue(element("This account is already on this iPhone.").exists)
@@ -109,10 +112,10 @@ final class AccountsUITests: QeetIDUITestCase {
         launch()
         addAccountByTyping(service: "GitHub")
         app.buttons["accounts.settings"].tap()
-        element("Hide codes until tapped").tap()
+        app.switches["settings.hide-codes"].tap()
         app.navigationBars.buttons.element(boundBy: 0).tap()
         XCTAssertTrue(textContaining("Code hidden").exists)
-        textContaining("Code hidden").tap()
+        tapCode(inRowContaining: "Code hidden")
         XCTAssertFalse(textContaining("Code hidden").waitForExistence(timeout: 1))
     }
 }
@@ -120,9 +123,13 @@ final class AccountsUITests: QeetIDUITestCase {
 /// Screens 6 and 7: scanning (the simulator has no camera, so the app is handed what the camera would read).
 final class ScanUITests: QeetIDUITestCase {
     @MainActor
-    func testScanningASitesQRCodeAddsTheAccount() {
+    func testScanningASitesQRCodeAsksBeforeAdding() {
         launch(arguments: ["-ui-scan", "otpauth://totp/AWS:billing@brightleaffoods.in?secret=JBSWY3DPEHPK3PXP&issuer=AWS"])
         app.buttons["accounts.add"].tap()
+        app.buttons["add.scan"].tap()
+        XCTAssertTrue(element("Add this account?", timeout: 10).exists, "What was found is shown before adding")
+        XCTAssertTrue(textContaining("AWS · billing@brightleaffoods.in").exists)
+        app.buttons["scan.add"].tap()
         // The toast first: it dismisses itself, and a busy machine can spend its lifetime on the checks below.
         XCTAssertTrue(textContaining("AWS added", timeout: 10).exists)
         XCTAssertTrue(element("AWS").waitForExistence(timeout: 5))
@@ -131,10 +138,11 @@ final class ScanUITests: QeetIDUITestCase {
 
     @MainActor
     func testAQRCodeThatIsNotForCodesIsRefused() {
-        launch(arguments: ["-ui-scan", "https://brightleaffoods.in"])
+        launch(arguments: ["-ui-scan", "https://brightleaffoods.in/settings"])
         app.buttons["accounts.add"].tap()
-        XCTAssertTrue(element("Can't add this account").exists)
-        XCTAssertTrue(element("Point the camera at the QR code").exists)
+        app.buttons["add.scan"].tap()
+        XCTAssertTrue(textContaining("a sign-in code", timeout: 10).exists)
+        XCTAssertTrue(textContaining("It opens a web page, brightleaffoods.in/settings").exists)
         app.buttons["scanner.cancel"].tap()
         XCTAssertTrue(element("No accounts yet").exists)
     }
@@ -144,9 +152,13 @@ final class ScanUITests: QeetIDUITestCase {
         // No camera on the simulator: the scanner's way to type the key is there in every state.
         launch()
         app.buttons["accounts.add"].tap()
-        app.buttons["Type the key instead"].tap()
+        app.buttons["add.scan"].tap()
+        // The scanner's own button: the empty Accounts screen under it has one with the same words.
+        let typeInstead = app.otherElements["add-account"].buttons["Type the key instead"]
+        XCTAssertTrue(typeInstead.waitForExistence(timeout: 8))
+        typeInstead.tap()
         XCTAssertTrue(element("Setup key").exists)
         app.buttons["setup.cancel"].tap()
-        XCTAssertTrue(element("Add account").exists)
+        XCTAssertTrue(element("Scan a QR code").exists)
     }
 }

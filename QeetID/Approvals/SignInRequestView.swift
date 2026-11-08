@@ -1,7 +1,9 @@
 import Qeetrix
 import SwiftUI
 
-/// Screens 16 to 20: review a sign-in and type the number from the sign-in screen, Face ID, then the outcome.
+/// A sign-in request: Review (is this you signing in, to which account, what's signing in from where and when, and the
+/// number from the sign-in screen), Confirm it's you (the system's Face ID), and how it ended: Approved, Denied,
+/// Request ended, Already answered. A wrong number keeps the request on screen with what happened.
 struct SignInRequestView: View {
     @State var model: SignInRequestModel
     let onClose: @MainActor () -> Void
@@ -10,10 +12,6 @@ struct SignInRequestView: View {
     var body: some View {
         NavigationStack {
             content
-                .navigationTitle("Sign-in request")
-                .navigationBarTitleDisplayMode(.inline)
-                .qeetrixNavigationBar(background: .canvas, title: .qeetrix)
-                .toolbar { toolbar }
         }
         .task { await model.load() }
         .qeetrixAlertDialog(Binding(get: { model.alert }, set: { model.alert = $0 }))
@@ -22,9 +20,11 @@ struct SignInRequestView: View {
             switch outcome {
             case .approved: return .success
             case .denied: return .warning
-            case .ended: return .error
+            case .ended(.numberMismatch): return .error
+            case .ended: return nil
             }
         }
+        .accessibilityElement(children: .contain)
         .accessibilityIdentifier("sign-in-request")
     }
 
@@ -34,92 +34,101 @@ struct SignInRequestView: View {
             QeetrixSpinner(size: .lg, tone: .brand, label: Text("Loading the request"))
                 .frame(maxWidth: .infinity, maxHeight: .infinity)
                 .background(QeetrixColor.surfaceCanvas)
+                .screenBar(Text("Sign-in request"))
+                .toolbar { closeButton }
         case .review(let fetched):
             ReviewView(model: model, fetched: fetched)
+                .toolbar { closeButton }
+        case .outcome(.ended(.numberMismatch)):
+            WrongNumberView(model: model, onClose: onClose)
         case .outcome(let outcome):
             outcomeView(outcome)
         case .failedToLoad(let error):
-            ScrollView {
-                QeetrixEmptyState(
-                    title: Text("Couldn't load the request"), description: Text(error.connectionMessage), icon: .circleAlert,
-                    tone: .danger, level: 1
-                ) {
-                    QeetrixButton("Try again", icon: .refreshCw) { Task { await model.load() } }
-                        .accessibilityIdentifier("request.retry")
-                }
-                .containerRelativeFrame(.vertical, alignment: .center)
+            ResultScreen(title: Text("Couldn’t open the request"), line: Text(error.connectionMessage)) {
+                QeetrixIcon(.circleAlert, size: .md, shape: .sharp)
+            } content: {
+                EmptyView()
             }
-            .background(QeetrixColor.surfaceCanvas)
+            .actionFooter(
+                primary: QeetrixScreenAction("Try again", icon: .refreshCw) { Task { await model.load() } },
+                tertiary: QeetrixScreenAction("Done", tone: .neutral) { onClose() }
+            )
+            .accessibilityElement(children: .contain)
             .accessibilityIdentifier("request.load-error")
         }
     }
 
-    @ToolbarContentBuilder private var toolbar: some ToolbarContent {
-        if !model.phase.isOutcome {
-            ToolbarItem(placement: .cancellationAction) {
-                Button("Close") { onClose() }
-                    .accessibilityIdentifier("request.close")
-            }
-        }
-        if case .review = model.phase {
-            ToolbarItem(placement: .primaryAction) {
-                TimelineView(.periodic(from: .now, by: 1)) { context in
-                    let seconds = model.secondsLeft(at: context.date)
-                    QeetrixBadge(
-                        Self.clock(seconds), tone: seconds <= 30 ? .warning : .neutral, icon: .clock
-                    )
-                    .accessibilityLabel(Text("\(seconds) seconds left to answer"))
-                    .onChange(of: seconds) { _, left in if left == 0 { model.expireIfDue() } }
-                }
-            }
+    @ToolbarContentBuilder private var closeButton: some ToolbarContent {
+        ToolbarItem(placement: .cancellationAction) {
+            Button("Close") { onClose() }
+                .accessibilityIdentifier("request.close")
         }
     }
 
     @ViewBuilder private func outcomeView(_ outcome: SignInRequestModel.Outcome) -> some View {
         switch outcome {
-        case .approved(let browser):
-            OutcomeView(
-                icon: .circleCheck, iconColor: .iconSuccess, title: Text("Sign-in approved"),
-                message: browser.map { Text("Go back to your computer. \($0) is signing in to Qeet ID.") }
-                    ?? Text("Go back to your computer. It's signing in to Qeet ID.")
-            )
-            .qeetrixBottomActionBar(primary: QeetrixScreenAction("Done", icon: .check) { onClose() })
+        case .approved:
+            ResultScreen(title: Text("Sign-in approved"), line: Text("Go back to the computer: it signs in by itself."), sealTone: .success)
+            {
+                QeetrixIcon(.check, size: .md, stroke: QeetrixIconStroke(2.5), shape: .sharp)
+            } content: {
+                RequestDetails(request: model.request, withPlace: true)
+                ResultNote(text: Text("Not you after all? On the computer, go to My account, then Sessions, and sign it out.")) {
+                    AppIcon(.shieldAlert, size: .sm)
+                }
+            }
+            .actionFooter(primary: QeetrixScreenAction("Done") { onClose() })
+            .accessibilityElement(children: .contain)
             .accessibilityIdentifier("request.approved")
         case .denied:
-            OutcomeView(
-                icon: .circleX, iconColor: .iconDanger, title: Text("Sign-in blocked"),
-                message: Text("Nobody got in. But whoever tried has your password.")
-            ) {
-                QeetrixAlert(
-                    "Change your Qeet ID password", description: "Use one you don't use anywhere else.", tone: .warning
-                ) {
-                    QeetrixButton("Open security", size: .sm) { openURL(QeetIDLinks.accountSecurity) }
-                }
+            DeniedResult(title: Text("Sign-in denied"), onDone: onClose) {
+                RequestDetails(request: model.request, withPlace: true)
             }
-            .actionFooter(tertiary: FooterAction("Done") { onClose() })
+            .accessibilityElement(children: .contain)
             .accessibilityIdentifier("request.denied")
+        case .ended(.answered):
+            ResultScreen(
+                title: Text("Already answered"),
+                line: Text("This sign-in was answered on another linked phone, or cancelled on the computer.")
+            ) {
+                QeetrixIcon(.smartphone, size: .md, shape: .sharp)
+            } content: {
+                RequestDetails(request: model.request, withPlace: false)
+            }
+            .actionFooter(primary: QeetrixScreenAction("Done") { onClose() })
+            .accessibilityElement(children: .contain)
+            .accessibilityIdentifier("request.ended")
+        case .ended(.notLinked):
+            ResultScreen(
+                title: Text("This iPhone can’t answer it"),
+                line: Text(
+                    "It isn’t linked to the account the request is for, or it was removed from the account. Link it again in Settings."),
+                sealTone: .danger
+            ) {
+                QeetrixIcon(.x, size: .md, stroke: QeetrixIconStroke(2.5), shape: .sharp)
+            } content: {
+                EmptyView()
+            }
+            .actionFooter(primary: QeetrixScreenAction("Done") { onClose() })
+            .accessibilityElement(children: .contain)
+            .accessibilityIdentifier("request.ended")
         case .ended(let reason):
-            OutcomeView(icon: .clock, iconColor: .iconSubtle, title: Text("This request has ended"), message: Self.message(reason)) {
-                if reason == .notLinked {
-                    QeetrixText("Link this iPhone again from Settings to approve sign-ins.", size: .sm, tone: .subtle, align: .center)
-                } else {
-                    QeetrixText(
-                        "Was it you? Start signing in again on your computer; a new request will come here.", size: .sm, tone: .subtle,
-                        align: .center)
+            ResultScreen(
+                title: Text("This request ended"),
+                line: reason == .notFound
+                    ? Text("It ran out of time, or it was answered already, so there’s nothing to do here.")
+                    : Text("It wasn’t answered within 2 minutes, so nobody was signed in.")
+            ) {
+                QeetrixIcon(.clock, size: .md, shape: .sharp)
+            } content: {
+                RequestDetails(request: model.request, withPlace: false)
+                ResultNote(text: Text("If it’s you, sign in again on the computer. A new request comes here.")) {
+                    AppIcon(.rotateCcw, size: .sm)
                 }
             }
-            .qeetrixBottomActionBar(primary: QeetrixScreenAction("Done", icon: .check) { onClose() })
+            .actionFooter(primary: QeetrixScreenAction("Done") { onClose() })
+            .accessibilityElement(children: .contain)
             .accessibilityIdentifier("request.ended")
-        }
-    }
-
-    static func message(_ reason: SignInRequestModel.EndReason) -> Text {
-        switch reason {
-        case .numberMismatch: Text("The number didn't match, so the sign-in was refused. Nothing was approved.")
-        case .expired: Text("Two minutes passed without an answer, so it expired. Nothing was approved.")
-        case .answered: Text("It was already answered. Nothing more to do here.")
-        case .notFound: Text("Qeet ID no longer has this request. Nothing was approved.")
-        case .notLinked: Text("This iPhone can't answer for that account any more. Nothing was approved.")
         }
     }
 
@@ -129,31 +138,39 @@ struct SignInRequestView: View {
     }
 }
 
-/// Screen 16: where and what, then the number on the iPhone number pad, then Deny or Approve.
+/// Review the request: the question, the account, the sign-in's facts with their icons, and the number, centred, on
+/// the number pad; Approve waits for both digits, then asks for Face ID. The time left counts down in the bar.
 private struct ReviewView: View {
-    let model: SignInRequestModel
+    @Bindable var model: SignInRequestModel
     let fetched: FetchedChallenge
+    @Environment(\.room) private var room
 
     var body: some View {
-        let context = fetched.challenge.context
         ScrollView {
-            VStack(alignment: .leading, spacing: QeetrixSpace.layoutSm) {
-                QeetrixHeading("Are you signing in to Qeet ID?", level: 1, size: .titleLg)
-                QeetrixCard {
-                    QeetrixDescriptionList(layout: .columns, columns: 2) {
-                        QeetrixDescriptionItem("Browser", value: context.browser ?? String(localized: "Unknown browser"))
-                        QeetrixDescriptionItem("Time", value: QeetrixFormat.time(fetched.challenge.signedInAt))
-                        if let location = context.location, !location.isEmpty {
-                            QeetrixDescriptionItem("Near", value: location)
-                        }
-                        if let ip = context.ip, !ip.isEmpty {
-                            QeetrixDescriptionItem("IP address") {
-                                Text(verbatim: ip).font(QeetrixTextMetrics(role: .codeSm).font)
-                            }
-                        }
+            PageColumn {
+                RequestHeading(action: fetched.challenge.action, email: model.accountEmail)
+                FactsCard(challenge: fetched.challenge)
+                    .padding(.top, room.isShort ? 12 : 20)
+                VStack(spacing: 0) {
+                    QeetrixText("Type the number on your sign-in screen", weight: .semibold, align: .center)
+                    // A number match: two square slots, centred at their own width, and no SMS or authenticator code
+                    // offered over the number pad.
+                    QeetrixOTPInput(code: $model.number, accessibilityLabel: Text("Number from the sign-in screen"), length: 2, size: .lg)
+                        .qeetrixOTPSlotWidth(.square)
+                        .qeetrixOTPAutoFill(false)
+                        .fixedSize(horizontal: true, vertical: false)
+                        .padding(.top, 12)
+                        .accessibilityIdentifier("request.number")
+                    if let error = model.numberError {
+                        QeetrixText(Text(error), size: .sm, tone: .danger, align: .center)
+                            .padding(.top, QeetrixSpace.gapSm)
+                            .accessibilityIdentifier("request.number-error")
                     }
+                    QeetrixText("Didn’t start this? Choose Deny.", size: .sm, tone: .subtle, align: .center)
+                        .padding(.top, 12)
                 }
-                NumberEntry(model: model)
+                .frame(maxWidth: .infinity)
+                .padding(.top, room.isShort ? QeetrixSpace.insetLg : QeetrixSpace.layoutSm)
                 #if DEBUG
                     // The request's id for the end-to-end test, which sends its notification with `simctl push`.
                     Text(verbatim: fetched.challenge.id.uuidString)
@@ -162,48 +179,196 @@ private struct ReviewView: View {
                         .accessibilityIdentifier("request.id")
                 #endif
             }
-            .padding(QeetrixSpace.insetLg)
         }
         .scrollDismissesKeyboard(.never)
         .background(QeetrixColor.surfaceCanvas)
-        .qeetrixBottomActionBar(
-            primary: QeetrixScreenAction("Approve", icon: .check, isLoading: model.isApproving) { Task { await model.approve() } },
-            secondary: QeetrixScreenAction("Deny", icon: .x, isLoading: model.isDenying) { Task { await model.deny() } }
+        .modifier(CountdownBar(model: model, fetched: fetched))
+        .actionFooter(
+            primary: QeetrixScreenAction("Approve", isLoading: model.isApproving, isDisabled: model.number.count < 2 || model.isDenying) {
+                Task { await model.approve() }
+            },
+            tertiary: QeetrixScreenAction("Deny", tone: .neutral, isLoading: model.isDenying, isDisabled: model.isApproving) {
+                Task { await model.deny() }
+            }
         )
         .task(id: fetched.expiresAtLocal) {
             let wait = fetched.expiresAtLocal.timeIntervalSinceNow
             if wait > 0 { try? await Task.sleep(for: .seconds(wait)) }
             if !Task.isCancelled { model.expireIfDue() }
         }
+        .accessibilityElement(children: .contain)
         .accessibilityIdentifier("request.review")
     }
 }
 
-/// The 2-digit number from the sign-in screen, in two slots, on the number pad.
-private struct NumberEntry: View {
-    @Bindable var model: SignInRequestModel
+/// The bar's title, with the time left under it, ticking each second.
+private struct CountdownBar: ViewModifier {
+    let model: SignInRequestModel
+    let fetched: FetchedChallenge
+
+    func body(content: Content) -> some View {
+        TimelineView(.periodic(from: .now, by: 1)) { context in
+            let seconds = model.secondsLeft(at: context.date)
+            content
+                .screenBar(Text("Sign-in request"), subtitle: Text("\(SignInRequestView.clock(seconds)) left"))
+                .onChange(of: seconds) { _, left in if left == 0 { model.expireIfDue() } }
+        }
+    }
+}
+
+/// The number didn't match: Qeet ID stopped the sign-in. The request stays on screen, so people see which one.
+private struct WrongNumberView: View {
+    let model: SignInRequestModel
+    let onClose: @MainActor () -> Void
+    @Environment(\.room) private var room
+
+    var body: some View {
+        ScrollView {
+            PageColumn {
+                QeetrixAlert(
+                    "The number didn’t match",
+                    description: "So the sign-in was stopped. If it was you, sign in again on the computer and type the new number here.",
+                    tone: .danger
+                )
+                .padding(.bottom, room.isShort ? QeetrixSpace.insetLg : QeetrixSpace.layoutSm)
+                if let request = model.request {
+                    RequestHeading(action: request.action, email: model.accountEmail)
+                    FactsCard(challenge: request)
+                        .padding(.top, room.isShort ? 12 : 20)
+                }
+            }
+        }
+        .background(QeetrixColor.surfaceCanvas)
+        .screenBar(Text("Sign-in request"))
+        .actionFooter(primary: QeetrixScreenAction("Done") { onClose() })
+        .accessibilityElement(children: .contain)
+        .accessibilityIdentifier("request.ended")
+    }
+}
+
+/// "Is this you signing in?" and, under it, the account it's for.
+private struct RequestHeading: View {
+    let action: String
+    let email: String?
+    @Environment(\.room) private var room
 
     var body: some View {
         VStack(alignment: .leading, spacing: QeetrixSpace.gapXs) {
-            Text("Number on your sign-in screen")
-                .qeetrixTextStyle(.labelSm)
-                .foregroundStyle(QeetrixColor.textSubtle)
-                .accessibilityHidden(true)
-            QeetrixOTPInput(code: $model.number, length: 2, size: .lg)
-                .frame(width: 128, alignment: .leading)
-                .accessibilityLabel(Text("Number on your sign-in screen"))
-                .accessibilityIdentifier("request.number")
-            if let error = model.numberError {
-                Label {
-                    Text(error)
-                } icon: {
-                    QeetrixIcon(.circleAlert, size: .sm, shape: .sharp)
-                }
-                .qeetrixTextStyle(.bodySm)
-                .foregroundStyle(QeetrixColor.textDanger)
-                .accessibilityIdentifier("request.number-error")
+            QeetrixHeading(question, level: 1, size: room.isShort ? .headingSm : .headingMd)
+            if let email, !email.isEmpty {
+                QeetrixText("To \(email)", tone: .subtle)
             }
         }
+        .frame(maxWidth: .infinity, alignment: .leading)
+    }
+
+    private var question: Text {
+        switch action {
+        case "sign_in": Text("Is this you signing in?")
+        case "step_up": Text("Is this you confirming it’s you?")
+        default: Text("Is this you?")
+        }
+    }
+}
+
+/// The sign-in's facts on ruled rows, each with its icon: laptop, pin, clock, globe; each only when the server knows it.
+private struct FactsCard: View {
+    let challenge: SignInChallenge
+    @Environment(\.room) private var room
+
+    var body: some View {
+        let context = challenge.context
+        let place = context.location.flatMap { $0.isEmpty ? nil : $0 }
+        let ip = context.ip.flatMap { $0.isEmpty ? nil : $0 }
+        VStack(spacing: 0) {
+            if let browser = context.browser {
+                row(Text(verbatim: browser)) { AppIcon(.laptop, size: .sm) }
+            }
+            if let place {
+                QeetrixSeparator()
+                row(Text("Near \(place)")) { QeetrixIcon(.mapPin, size: .sm, shape: .sharp) }
+            }
+            QeetrixSeparator()
+            row(Text(RequestDetails.day(challenge.signedInAt))) { QeetrixIcon(.clock, size: .sm, shape: .sharp) }
+            if let ip {
+                QeetrixSeparator()
+                row(Text("IP address \(ip)")) { AppIcon(.globe, size: .sm) }
+            }
+        }
+        .background(QeetrixColor.surfaceRaised, in: RoundedRectangle(cornerRadius: QeetrixRadius.surface))
+        .overlay {
+            RoundedRectangle(cornerRadius: QeetrixRadius.surface)
+                .strokeBorder(QeetrixColor.borderDefault, lineWidth: QeetrixBorderWidth.default)
+        }
+        .accessibilityElement(children: .contain)
+        .accessibilityLabel(Text("The sign-in"))
+    }
+
+    private func row<Icon: View>(_ text: Text, @ViewBuilder icon: () -> Icon) -> some View {
+        HStack(spacing: QeetrixSpace.gapMd) {
+            icon().foregroundStyle(QeetrixColor.iconSubtle)
+            text.qeetrixTextStyle(.bodyMd).foregroundStyle(QeetrixColor.textDefault)
+            Spacer(minLength: 0)
+        }
+        .padding(.horizontal, QeetrixSpace.insetLg)
+        .padding(.vertical, room.isShort ? QeetrixSpace.insetSm : 10)
+        .accessibilityElement(children: .combine)
+    }
+}
+
+/// Browser, where and time, label and value, for a result; where only when `withPlace`.
+struct RequestDetails: View {
+    let request: SignInChallenge?
+    let withPlace: Bool
+
+    var body: some View {
+        if let request {
+            let context = request.context
+            let place = context.location.flatMap { $0.isEmpty ? nil : $0 }
+            let rows: [(label: Text, value: Text)] =
+                [
+                    context.browser.map { (Text("Browser"), Text(verbatim: $0)) },
+                    withPlace ? place.map { (Text("Where"), Text("Near \($0)")) } : nil,
+                ]
+                .compactMap { $0 } + [(Text("Time"), Text(QeetrixFormat.time(request.signedInAt)))]
+            ResultDetails(rows: rows)
+        }
+    }
+
+    /// "Today, 10:42 am", or the date and time on another day.
+    static func day(_ date: Date) -> String {
+        Calendar.current.isDateInToday(date)
+            ? String(localized: "Today, \(QeetrixFormat.time(date))")
+            : QeetrixFormat.date(date, style: .medium) + ", " + QeetrixFormat.time(date)
+    }
+}
+
+/// Denied, for one request or for all of them: the icon with a red seal, nobody signed in, and the next step spelt
+/// out, since whoever tried got past the first step (usually the password). Change password opens the Security page.
+struct DeniedResult<Details: View>: View {
+    let title: Text
+    let onDone: @MainActor () -> Void
+    @ViewBuilder let details: Details
+    @Environment(\.openURL) private var openURL
+
+    var body: some View {
+        ResultScreen(
+            title: title, line: Text("Nobody was signed in. Whoever tried got past the first step, usually your password."),
+            sealTone: .danger
+        ) {
+            QeetrixIcon(.x, size: .md, stroke: QeetrixIconStroke(2.5), shape: .sharp)
+        } content: {
+            details
+            ResultNote(
+                text: Text("Change your password, in case someone knows it. If it was you, sign in again on the computer."), warning: true
+            ) {
+                QeetrixIcon(.keyRound, size: .sm, shape: .sharp)
+            }
+        }
+        .actionFooter(
+            primary: QeetrixScreenAction("Change password") { openURL(QeetIDLinks.accountSecurity) },
+            tertiary: QeetrixScreenAction("Done", tone: .neutral) { onDone() }
+        )
     }
 }
 
@@ -218,6 +383,12 @@ extension SignInRequestModel.Phase {
 enum QeetIDLinks {
     /// The console's Security page: change the password, see linked phones.
     static let accountSecurity = URL(string: "https://console.id.qeet.in/account/security")!
-    /// Help and privacy: Qeet ID's privacy policy, the same page the Android app opens.
-    static let helpAndPrivacy = URL(string: "https://id.qeet.in/legal/privacy")!
+    /// Qeet ID's privacy policy.
+    static let privacy = URL(string: "https://id.qeet.in/legal/privacy")!
+    /// The terms of use.
+    static let terms = URL(string: "https://id.qeet.in/legal/terms")!
+    /// The help centre.
+    static let help = URL(string: "https://docs.qeet.in/id")!
+    /// Support, by mail.
+    static let support = URL(string: "mailto:support@qeet.in")!
 }

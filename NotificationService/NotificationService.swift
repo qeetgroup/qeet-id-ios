@@ -39,7 +39,10 @@ final class NotificationService: UNNotificationServiceExtension {
         configuration.timeoutIntervalForResource = 10
         let client = APIClient(baseURL: APIEnvironment.baseURL, session: URLSession(configuration: configuration))
         guard let fetched = try? await client.challenge(id), fetched.challenge.status == .pending else { return nil }
-        return (NotificationText.title, NotificationText.body(userAgent: fetched.challenge.context.userAgent))
+        return (
+            NotificationText.title,
+            NotificationText.body(userAgent: fetched.challenge.context.userAgent, location: fetched.challenge.context.location)
+        )
     }
 }
 

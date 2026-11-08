@@ -1,35 +1,30 @@
 import Qeetrix
 import SwiftUI
 
-/// Screen 14, iPhone linked: a success alert and the facts — which account, which phone, until when.
+/// iPhone linked: the icon with a green seal, which account and the name the computer shows, and what happens next.
 struct LinkedView: View {
     let model: AppModel
 
     var body: some View {
-        ScrollView {
-            VStack(alignment: .leading, spacing: QeetrixSpace.gapLg) {
-                QeetrixAlert(
-                    "iPhone linked", description: "Sign-in requests for your account now come here.", tone: .success, announce: .polite)
-                if let summary = model.link.summary {
-                    QeetrixCard(title: Text("This iPhone")) {
-                        QeetrixDescriptionList {
-                            QeetrixDescriptionItem("Account", value: summary.accountEmail ?? String(localized: "your Qeet ID account"))
-                            QeetrixDescriptionItem("Name", value: summary.deviceName)
-                            QeetrixDescriptionItem(
-                                "Linked until",
-                                value: String(localized: "\(QeetrixFormat.date(summary.linkedUntil, style: .long)) · link again to extend"))
-                        }
-                    }
-                }
+        ResultScreen(
+            title: Text("This iPhone is linked"), line: Text("Sign-ins to your Qeet ID account can be approved here now."),
+            sealTone: .success
+        ) {
+            QeetrixIcon(.check, size: .md, stroke: QeetrixIconStroke(2.5), shape: .sharp)
+        } content: {
+            if let summary = model.link.summary {
+                ResultDetails(rows: [
+                    (Text("Account"), Text(verbatim: summary.accountEmail ?? String(localized: "your Qeet ID account"))),
+                    (Text("On the computer"), Text(verbatim: summary.deviceName)),
+                ])
             }
-            .padding(QeetrixSpace.insetLg)
+            ResultNote(text: Text("Next time you sign in on a computer, a request comes to this iPhone.")) {
+                AppIcon(.bellRing, size: .sm)
+            }
         }
-        .background(QeetrixColor.surfaceCanvas)
-        .navigationTitle("Link this iPhone")
-        .navigationBarTitleDisplayMode(.inline)
         .navigationBarBackButtonHidden()
-        .qeetrixNavigationBar(background: .canvas, title: .qeetrix)
-        .qeetrixBottomActionBar(primary: QeetrixScreenAction("Done", icon: .check) { model.path = [] })
+        .actionFooter(primary: QeetrixScreenAction("Done") { model.path = [] })
+        .accessibilityElement(children: .contain)
         .accessibilityIdentifier("link.linked")
     }
 }

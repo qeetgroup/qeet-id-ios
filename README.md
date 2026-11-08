@@ -9,7 +9,7 @@
 [![iOS](https://img.shields.io/badge/iOS-17%2B-000000?logo=apple&logoColor=white)](#-getting-started)
 [![Swift](https://img.shields.io/badge/Swift-6-F05138?logo=swift&logoColor=white)](#-getting-started)
 [![SwiftUI](https://img.shields.io/badge/UI-SwiftUI-147EFB)](#-screens)
-[![Qeetrix for iOS](https://img.shields.io/badge/Qeetrix%20for%20iOS-0.1.0-D04800)](https://github.com/qeetgroup/qeetrix-ios)
+[![Qeetrix for iOS](https://img.shields.io/badge/Qeetrix%20for%20iOS-0.2.0-D04800)](https://github.com/qeetgroup/qeetrix-ios)
 [![Keychain](https://img.shields.io/badge/secrets-Keychain%2C%20this%20device%20only-16A34A)](#-security-model)
 [![AutoFill](https://img.shields.io/badge/AutoFill-iOS%2018%2B-7C3AED)](#-screens)
 

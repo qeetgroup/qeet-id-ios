@@ -1,8 +1,10 @@
 import Qeetrix
 import SwiftUI
 
-/// Screen 8, Type the setup key: a form sheet, the iOS way, with Cancel and Add in the bar and Add enabled once the
-/// key is valid. Placeholders are examples; the rare settings sit under Advanced.
+/// Type the setup key: a form sheet, the iOS way, with Cancel and Add in the bar and Add enabled once there's a name and
+/// a whole key. The line at the top says where sites show the key; the key is grouped in fours as it's typed, spaces
+/// ignored, a wrong character explained at once, and a Paste button under it, as the key is usually copied. The rare
+/// code settings stay closed, saying what's set.
 struct SetupKeySheet: View {
     /// Stores the account; throws when it is already here or the Keychain refuses.
     let onAdd: @MainActor (AccountDraft) throws(AccountStoreError) -> Void
@@ -23,17 +25,20 @@ struct SetupKeySheet: View {
         NavigationStack {
             ScrollView {
                 VStack(alignment: .leading, spacing: QeetrixSpace.gapLg) {
+                    QeetrixText(
+                        "On the site, look under the QR code for a link like “Can’t scan it?”. It shows the setup key.", tone: .subtle)
                     if let saveError {
                         QeetrixAlert(saveError, tone: .danger)
                     }
-                    QeetrixTextField("Service", text: $service, prompt: Text(verbatim: "e.g. Razorpay"))
+                    QeetrixTextField("Site or app", text: $service, prompt: Text("For example, Razorpay"))
                         .textInputAutocapitalization(.words)
                         .submitLabel(.next)
                         .focused($focus, equals: .service)
                         .onSubmit { focus = .account }
                         .accessibilityIdentifier("setup.service")
                     QeetrixTextField(
-                        "Account", text: $accountName, prompt: Text(verbatim: "e.g. accounts@brightleaffoods.in"), isOptional: true
+                        "Account", text: $accountName, prompt: Text(verbatim: "you@example.com"),
+                        description: Text("Your email or username there, to tell accounts apart"), isOptional: true
                     )
                     .textInputAutocapitalization(.never)
                     .autocorrectionDisabled()
@@ -43,8 +48,8 @@ struct SetupKeySheet: View {
                     .onSubmit { focus = .key }
                     .accessibilityIdentifier("setup.account")
                     QeetrixTextField(
-                        "Setup key", text: $key, prompt: Text(verbatim: "e.g. JBSW Y3DP EHPK 3PXP"),
-                        description: Text("From the site's setup page. Spaces don't matter."), error: keyError
+                        "Setup key", text: $key, prompt: Text(verbatim: "XXXX XXXX XXXX XXXX"),
+                        description: Text("Letters A–Z and numbers 2–7. Spaces don’t matter."), error: keyError
                     )
                     .textInputAutocapitalization(.characters)
                     .autocorrectionDisabled()
@@ -55,13 +60,24 @@ struct SetupKeySheet: View {
                     .focused($focus, equals: .key)
                     .onSubmit { add() }
                     .accessibilityIdentifier("setup.key")
+                    .onChange(of: key) { _, typed in
+                        let grouped = SetupKeySheet.grouped(typed)
+                        if grouped != typed { key = grouped }
+                    }
+                    PasteButton(payloadType: String.self) { strings in
+                        Task { @MainActor in key = SetupKeySheet.grouped(strings.first ?? "") }
+                    }
+                    .labelStyle(.titleAndIcon)
+                    .buttonBorderShape(.roundedRectangle(radius: QeetrixRadius.control))
+                    .tint(QeetrixColor.bgBrandBold)
+                    .accessibilityIdentifier("setup.paste")
                     advanced
                 }
                 .padding(QeetrixSpace.insetLg)
             }
             .scrollDismissesKeyboard(.interactively)
             .background(QeetrixColor.surfaceOverlay)
-            .navigationTitle("Setup key")
+            .navigationTitle("Type the setup key")
             .navigationBarTitleDisplayMode(.inline)
             .qeetrixNavigationBar(title: .qeetrix)
             .toolbar {
@@ -85,10 +101,11 @@ struct SetupKeySheet: View {
         }
     }
 
-    /// Advanced: digits, period and algorithm, with today's choice summarised under the title.
+    /// Code settings: digits, period and algorithm, with today's choice summarised under the title.
     private var advanced: some View {
-        QeetrixAccordionItem(title: advancedTitle, isExpanded: $showsAdvanced) {
+        QeetrixAccordionItem("Code settings", description: advancedSummary, isExpanded: $showsAdvanced) {
             VStack(alignment: .leading, spacing: QeetrixSpace.gapLg) {
+                QeetrixText("Change these only if the site says to.", size: .sm, tone: .subtle)
                 labelled("Digits") {
                     QeetrixSegmentedControl(
                         "Digits", selection: $parameters.digits,
@@ -109,14 +126,9 @@ struct SetupKeySheet: View {
         .accessibilityIdentifier("setup.advanced")
     }
 
-    /// "Advanced" over "6 digits · every 30 seconds · SHA-1", in `body.sm`, `color.text.subtle`.
-    private var advancedTitle: Text {
-        let summary = String(
-            localized: "\(parameters.digits) digits · every \(parameters.period) seconds · \(parameters.algorithm.displayName)")
-        return Text("Advanced")
-            + Text(verbatim: "\n" + summary)
-            .font(QeetrixTextMetrics(role: .bodySm).font)
-            .foregroundStyle(QeetrixColor.textSubtle)
+    /// Today's choice under "Code settings": "6 digits · every 30 s · SHA-1".
+    private var advancedSummary: Text {
+        Text("\(parameters.digits) digits · every \(parameters.period) s · \(parameters.algorithm.displayName)")
     }
 
     private func labelled<Content: View>(_ title: LocalizedStringKey, @ViewBuilder content: () -> Content) -> some View {
@@ -138,8 +150,22 @@ struct SetupKeySheet: View {
         }
     }
 
+    /// A wrong character is said at once; a short key once the person moves on.
     private var keyError: String? {
-        showsKeyError ? keyProblem?.message : nil
+        let problem = keyProblem
+        if problem == .keyInvalid { return problem?.message }
+        return showsKeyError ? problem?.message : nil
+    }
+
+    /// The key in groups of four, upper case, as sites show it; spaces and dashes typed are ignored.
+    static func grouped(_ text: String) -> String {
+        let characters = text.uppercased().filter { !$0.isWhitespace && $0 != "-" }
+        var out = ""
+        for (index, character) in characters.enumerated() {
+            if index > 0 && index % 4 == 0 { out.append(" ") }
+            out.append(character)
+        }
+        return out
     }
 
     private var canAdd: Bool {

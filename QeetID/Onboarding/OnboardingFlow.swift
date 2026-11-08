@@ -8,7 +8,7 @@ struct OnboardingFlow: View {
 
     var body: some View {
         NavigationStack(path: $path) {
-            WelcomeView { path.append(.lock) }
+            WelcomeView(biometry: model.lock.biometry) { path.append(.lock) }
                 .navigationDestination(for: OnboardingStep.self) { step in
                     switch step {
                     case .lock:

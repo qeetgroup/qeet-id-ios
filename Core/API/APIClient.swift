@@ -221,6 +221,10 @@ struct APIClient: Sendable {
         }
         guard let http = urlResponse as? HTTPURLResponse else { throw .invalidResponse }
         Log.api.info("\(method, privacy: .public) \(Self.route(path), privacy: .public) → \(http.statusCode, privacy: .public)")
+        if http.statusCode == 426 {
+            // Qeet ID no longer accepts this version for sign-in approvals: the app says so, once.
+            NotificationCenter.default.post(name: .qeetIDUpdateRequired, object: nil)
+        }
         var offset: TimeInterval = 0
         if let serverNow = ServerDate.fromHTTPHeader(http.value(forHTTPHeaderField: "Date")) {
             // The midpoint of the request, against the server's second-resolution clock.
@@ -254,4 +258,9 @@ extension FetchedChallenge {
     init(challenge: SignInChallenge, clockOffset: TimeInterval) {
         self.init(challenge: challenge, expiresAtLocal: challenge.expiresAt.addingTimeInterval(-clockOffset))
     }
+}
+
+extension Notification.Name {
+    /// Posted when Qeet ID answers 426 Upgrade Required.
+    static let qeetIDUpdateRequired = Notification.Name("com.qeetgroup.qeetid.update-required")
 }

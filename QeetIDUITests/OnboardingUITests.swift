@@ -12,7 +12,7 @@ final class OnboardingUITests: QeetIDUITestCase {
         XCTAssertTrue(element("Lock Qeet ID").exists)
         XCTAssertTrue(element("Step 1 of 2").exists)
         XCTAssertTrue(textContaining("always asks for Face ID").exists)
-        app.buttons["Continue"].tap()
+        app.buttons["Use Face ID"].tap()
 
         XCTAssertTrue(element("Get sign-in requests on this iPhone").exists)
         XCTAssertTrue(element("Only sign-in requests. Nothing else, no marketing.").exists)

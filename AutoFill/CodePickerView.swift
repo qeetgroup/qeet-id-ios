@@ -5,7 +5,6 @@ import SwiftUI
 /// Accounts for other sites open first, a deliberate second step, so a code isn't filled on the wrong site by reflex.
 struct CodePickerView: View {
     let model: CodePickerModel
-    @Environment(\.colorScheme) private var colorScheme
 
     var body: some View {
         NavigationStack {
@@ -46,7 +45,7 @@ struct CodePickerView: View {
                                 ) {
                                     model.expanded.insert(account.id)
                                 } leading: {
-                                    IssuerTile(monogram: account.monogram)
+                                    QeetrixListItemIcon(monogram: account.monogram)
                                 }
                                 .accessibilityHint(Text("Shows this account's code"))
                             }
@@ -62,74 +61,34 @@ struct CodePickerView: View {
             .qeetrixNavigationBar(title: .qeetrix)
             .toolbar {
                 ToolbarItem(placement: .cancellationAction) {
-                    Button("Cancel") { model.cancel() }
+                    Button("Close") { model.cancel() }
                 }
             }
         }
         .task { await model.unlock() }
     }
 
+    /// An account and its code, to fill rather than copy: Qeetrix's code, whose tap runs the fill. It refreshes each
+    /// second, so the next code shows when the period ends.
     private func codeRow(_ account: OTPAccount) -> some View {
-        Button {
-            model.choose(account)
-        } label: {
-            TimelineView(.periodic(from: .now, by: 1)) { context in
-                AutoFillCodeRow(account: account, code: model.code(for: account, at: context.date), now: context.date)
+        TimelineView(.periodic(from: .now, by: 1)) { context in
+            let code = model.code(for: account, at: context.date)
+            QeetrixListItem(title: Text(verbatim: account.issuer), description: account.name.isEmpty ? nil : Text(verbatim: account.name)) {
+                QeetrixListItemIcon(monogram: account.monogram)
             }
-        }
-        .buttonStyle(.qeetrixListItem())
-        .disabled(model.access != .unlocked)
-        .qeetrixListRow(colorScheme: colorScheme)
-    }
-}
-
-/// An account and its code, to fill rather than copy: the tile, issuer and name, then the code in two groups with the
-/// ring and seconds left, amber in the last five seconds — `QeetrixOTPCode`'s look, whose tap can only copy.
-private struct AutoFillCodeRow: View {
-    let account: OTPAccount
-    let code: GeneratedCode?
-    let now: Date
-
-    var body: some View {
-        HStack(alignment: .top, spacing: QeetrixSpace.gapMd) {
-            IssuerTile(monogram: account.monogram)
-            VStack(alignment: .leading, spacing: QeetrixSpace.gapSm) {
-                AccountTitle(account: account)
-                HStack(spacing: QeetrixSpace.gapMd) {
-                    Text(verbatim: digits)
-                        .font(QeetrixTextMetrics(role: .codeMd, size: 20).font)
-                        .fontWeight(.medium)
-                        .monospacedDigit()
-                        .foregroundStyle(code == nil ? QeetrixColor.textSubtle : QeetrixColor.textDefault)
-                        .environment(\.layoutDirection, .leftToRight)
-                    if let code {
-                        let secondsLeft = max(0, Int(code.validity.upperBound.timeIntervalSince(now).rounded(.up)))
-                        let isUrgent = secondsLeft <= 5
-                        QeetrixCircularProgress(
-                            timerInterval: code.validity, countsDown: true, size: .lg, tone: isUrgent ? .warning : .brand)
-                        Text(verbatim: QeetrixFormat.number(secondsLeft))
-                            .qeetrixTextStyle(.labelMd)
-                            .monospacedDigit()
-                            .foregroundStyle(isUrgent ? QeetrixColor.textWarning : QeetrixColor.textSubtle)
-                    }
+            .qeetrixListItemContent {
+                if let code {
+                    QeetrixOTPCode(
+                        code.code, validity: code.validity, label: Text(verbatim: account.spokenName), size: .md,
+                        actionHint: Text("Fills this code")
+                    ) { _ in model.choose(account) }
+                } else {
+                    QeetrixText("Unlock to fill this code.", size: .sm, tone: .subtle)
                 }
             }
-            .frame(maxWidth: .infinity, alignment: .leading)
         }
-        .padding(.horizontal, QeetrixSpace.insetLg)
-        .padding(.vertical, QeetrixSpace.insetMd)
-        .accessibilityElement(children: .ignore)
-        .accessibilityLabel(Text(verbatim: account.spokenName))
-        .accessibilityValue(code.map { Text(verbatim: $0.code.map(String.init).joined(separator: " ")) } ?? Text("Locked"))
-        .accessibilityHint(Text("Fills this code"))
-        .privacySensitive()
-    }
-
-    /// "093 551", or dots while locked.
-    private var digits: String {
-        guard let code else { return "••• •••" }
-        let text = code.code
-        guard text.count >= 6, text.count.isMultiple(of: 2) else { return text }
-        return "\(text.prefix(text.count / 2)) \(text.suffix(text.count / 2))"
+        .disabled(model.access != .unlocked)
+        // The row's list look on the cell itself, outside the timeline.
+        .qeetrixListRow()
     }
 }

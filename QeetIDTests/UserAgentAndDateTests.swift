@@ -55,11 +55,13 @@ struct APIEnvironmentTests {
 }
 
 struct NotificationTextTests {
-    @Test func namesTheBrowserWhenItIsKnown() {
+    @Test func namesTheBrowserAndPlaceWhenTheyAreKnown() {
         let userAgent = "Mozilla/5.0 (Macintosh; Intel Mac OS X 15_0) AppleWebKit/537.36 Chrome/131 Safari/537.36"
         #expect(
-            NotificationText.body(userAgent: userAgent)
-                == "Someone is signing in to your Qeet ID account from Chrome on macOS. Tap to review.")
+            NotificationText.body(userAgent: userAgent, location: "Bengaluru, India")
+                == "Chrome on macOS, near Bengaluru, India, is signing in to your Qeet ID account. Tap to review.")
+        #expect(
+            NotificationText.body(userAgent: userAgent) == "Chrome on macOS is signing in to your Qeet ID account. Tap to review.")
         #expect(NotificationText.body(userAgent: nil) == "Someone is signing in to your Qeet ID account. Tap to review.")
         #expect(NotificationText.title == "Sign-in request")
     }

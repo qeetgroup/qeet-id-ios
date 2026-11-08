@@ -1,20 +1,71 @@
 {
   "sourceLanguage" : "en",
   "strings" : {
-    "%@ The link stays until Qeet ID removes it." : {
+    "%@ (%@) is already on this iPhone" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "%1$@ (%2$@) is already on this iPhone"
+          }
+        }
+      }
+    },
+    "%@ This iPhone is still linked; try again." : {
 
     },
     "%@ added" : {
 
     },
-    "%@ deleted" : {
+    "%@ again before anything that changes access" : {
+
+    },
+    "%@ can sign in again" : {
 
     },
     "%@ didn't confirm it's you, so nothing was sent. Try again." : {
 
     },
-    "%@ didn't confirm it's you. Try again, or turn it on later in Settings." : {
+    "%@ didn’t confirm it’s you. Try again, or turn it on later in Settings." : {
 
+    },
+    "%@ each time Qeet ID opens, and again after 30 seconds away" : {
+
+    },
+    "%@ first, every time" : {
+
+    },
+    "%@ is %@ until %@. It ends by itself." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "%1$@ is %2$@ until %3$@. It ends by itself."
+          }
+        }
+      }
+    },
+    "%@ is already on this iPhone" : {
+
+    },
+    "%@ is signing in to your Qeet ID account. Tap to review." : {
+
+    },
+    "%@ is suspended" : {
+
+    },
+    "%@ left" : {
+
+    },
+    "%@ now has %@." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "%1$@ now has %2$@."
+          }
+        }
+      }
     },
     "%@ on %@" : {
       "comment" : "A browser on a system: Chrome on macOS",
@@ -27,42 +78,117 @@
         }
       }
     },
-    "%@ or passcode to open" : {
+    "%@ removed" : {
 
     },
-    "%@ · link again to extend" : {
+    "%@ will see your reason" : {
 
     },
-    "%@ · until %@" : {
+    "%@ · linked until %@" : {
       "localizations" : {
         "en" : {
           "stringUnit" : {
             "state" : "new",
-            "value" : "%1$@ · until %2$@"
+            "value" : "%1$@ · linked until %2$@"
           }
         }
       }
     },
-    "%lld digits · every %lld seconds · %@" : {
+    "%@, near %@" : {
       "localizations" : {
         "en" : {
           "stringUnit" : {
             "state" : "new",
-            "value" : "%1$lld digits · every %2$lld seconds · %3$@"
+            "value" : "%1$@, near %2$@"
           }
         }
       }
+    },
+    "%@, near %@, is signing in to your Qeet ID account. Tap to review." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "%1$@, near %2$@, is signing in to your Qeet ID account. Tap to review."
+          }
+        }
+      }
+    },
+    "%@Sign-in requests stop coming here, at once. Your codes stay on this iPhone. Have another way to confirm sign-ins first, such as a passkey or another phone." : {
+
+    },
+    "%lld agents can’t act until they’re resumed in the console." : {
+
+    },
+    "%lld agents in %@" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "%1$lld agents in %2$@"
+          }
+        }
+      }
+    },
+    "%lld digits · every %lld s · %@" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "%1$lld digits · every %2$lld s · %3$@"
+          }
+        }
+      }
+    },
+    "%lld high" : {
+
+    },
+    "%lld on this iPhone" : {
+
+    },
+    "%lld running in this organisation" : {
+
     },
     "%lld seconds" : {
 
     },
-    "%lld seconds left to answer" : {
+    "%lld waiting" : {
 
     },
-    "180 days after you last link it" : {
+    "A browser" : {
+
+    },
+    "A sign-in request is waiting" : {
+
+    },
+    "About" : {
+
+    },
+    "About and help" : {
+
+    },
+    "Access" : {
+
+    },
+    "Access given" : {
+
+    },
+    "Access request" : {
+
+    },
+    "Access requests" : {
+
+    },
+    "Access requests, emergencies and critical events" : {
 
     },
     "Account" : {
+
+    },
+    "Account locked after failed sign-ins" : {
+
+    },
+    "Account may be compromised" : {
 
     },
     "Accounts" : {
@@ -71,16 +197,46 @@
     "Add" : {
 
     },
+    "Add a passkey in Qeet ID on the computer (My account, Security, Passkeys), or use one saved in your passwords. This iPhone needs a passcode for passkeys." : {
+
+    },
     "Add account" : {
 
     },
-    "Advanced" : {
+    "Add each account again" : {
+
+    },
+    "Add this account?" : {
+
+    },
+    "Administration" : {
+
+    },
+    "Administration is for people with an administrator role. You were signed out again." : {
 
     },
     "Algorithm" : {
 
     },
+    "All %lld stop at once: their tokens are refused" : {
+
+    },
+    "Already answered" : {
+
+    },
+    "And remove its codes, once the new one has them all" : {
+
+    },
+    "Approve Qeet ID sign-ins here instead of typing a code." : {
+
+    },
+    "Approve access, suspend an account in an emergency, and see critical events. Everything else stays in the console." : {
+
+    },
     "Approve sign-ins" : {
+
+    },
+    "Approve sign-ins here" : {
 
     },
     "Approve the sign-in to Qeet ID." : {
@@ -89,64 +245,143 @@
     "Approving a sign-in needs Face ID or the passcode. Set a passcode in iOS Settings, then try again." : {
 
     },
+    "Approving asks for %@ and the number on the sign-in screen" : {
+
+    },
+    "Approving still asks for %@" : {
+
+    },
+    "Ask for %@ each time the app opens. Someone holding your unlocked iPhone still can’t read your codes." : {
+
+    },
+    "Asked" : {
+
+    },
+    "Asks each time you open Qeet ID, and after 30 seconds away" : {
+
+    },
+    "Asks for" : {
+
+    },
+    "At each site, set up 2-step verification again and scan its new code" : {
+
+    },
+    "Authenticator app turned off" : {
+
+    },
     "AutoFill codes" : {
 
     },
-    "Can't add this account" : {
+    "Breaks a policy" : {
+
+    },
+    "Browser" : {
 
     },
     "Cancel" : {
 
     },
+    "Can’t sign in until reactivated" : {
+
+    },
+    "Change your password, in case someone knows it. If it was you, sign in again on the computer." : {
+
+    },
     "Choose Link a phone" : {
 
     },
-    "Clears from the clipboard after 1 minute" : {
+    "Choose organisation" : {
+
+    },
+    "Choosing" : {
 
     },
     "Close" : {
 
     },
-    "Codes still work. Approvals arrive when you reconnect." : {
+    "Codes" : {
 
     },
-    "Come to this iPhone" : {
+    "Codes for %@ will stop on this iPhone. %@ will still ask for a code when you sign in. Turn off 2-step verification there first, or set it up in another app, so you aren’t locked out." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "Codes for %1$@ will stop on this iPhone. %2$@ will still ask for a code when you sign in. Turn off 2-step verification there first, or set it up in another app, so you aren’t locked out."
+          }
+        }
+      }
+    },
+    "Codes hidden in the app switcher" : {
 
     },
-    "Confirm it's you with Face ID when you sign in on a computer." : {
+    "Codes never leave this iPhone" : {
 
     },
-    "Continue" : {
+    "Codes still work. Sign-in requests arrive when you’re back online." : {
 
     },
-    "Copied" : {
+    "Codes still work; link again to approve sign-ins." : {
+
+    },
+    "Confirm it’s you with %@ when you sign in on a computer." : {
+
+    },
+    "Contact support" : {
+
+    },
+    "Copies the version" : {
 
     },
     "Copy Code" : {
 
     },
-    "Couldn't load the request" : {
+    "Couldn’t confirm it’s you, so nothing changed. Try again." : {
 
     },
-    "Delete %@?" : {
+    "Couldn’t open the request" : {
 
     },
-    "Delete Account" : {
+    "Couldn’t reach Qeet ID. Check your connection and try again." : {
+
+    },
+    "Couldn’t sign in" : {
+
+    },
+    "Critical event" : {
+
+    },
+    "Critical events" : {
 
     },
     "Digits" : {
 
     },
-    "Done" : {
+    "Each one comes back only when resumed in the console" : {
+
+    },
+    "Emergency" : {
 
     },
     "Enter the 10-character code shown in Qeet ID, like KM7QX-4TRWP." : {
 
     },
-    "Enter the setup key from the site's setup page." : {
+    "Enter the setup key from the site." : {
 
     },
-    "Example: a code field, with Qeet ID's code offered above the keyboard" : {
+    "Every AI agent stopped" : {
+
+    },
+    "Every agent stopped" : {
+
+    },
+    "Everyone" : {
+
+    },
+    "Everything you do is in the audit log, with this iPhone named" : {
+
+    },
+    "Example: a code field, with Qeet ID’s code offered above the keyboard" : {
 
     },
     "Face ID" : {
@@ -155,19 +390,43 @@
     "Face ID lock" : {
 
     },
+    "Fill in codes with a tap" : {
+
+    },
+    "For" : {
+
+    },
+    "For %@" : {
+
+    },
+    "For %@. Nothing was changed." : {
+
+    },
+    "For %lld days" : {
+
+    },
+    "For %lld hours" : {
+
+    },
     "For Qeet ID and any site with 2-step verification. They work offline." : {
 
     },
-    "For screens others can see" : {
+    "For administrators, away from the desk" : {
 
     },
-    "From" : {
+    "For example, Razorpay" : {
 
     },
-    "From the site's setup page. Spaces don't matter." : {
+    "For when people can see your screen" : {
 
     },
-    "General, then AutoFill & Passwords" : {
+    "From %@. " : {
+
+    },
+    "From Qeet ID" : {
+
+    },
+    "From a website or app with 2-step verification" : {
 
     },
     "Get sign-in requests on this iPhone" : {
@@ -176,22 +435,109 @@
     "Give this iPhone a name, so you can tell it apart in Qeet ID." : {
 
     },
-    "Go back to your computer. %@ is signing in to Qeet ID." : {
+    "Gives" : {
 
     },
-    "Go back to your computer. It's signing in to Qeet ID." : {
+    "Go back to the computer: it signs in by itself." : {
 
     },
-    "Go to Account, then Security" : {
+    "Help" : {
 
     },
-    "It was already answered. Nothing more to do here." : {
+    "Help centre" : {
 
     },
-    "It works once, for a few minutes" : {
+    "Hide codes until tapped" : {
+
+    },
+    "How codes and sign-in approvals work" : {
+
+    },
+    "IP address %@" : {
+
+    },
+    "If it’s you, sign in again on the computer. A new request comes here." : {
+
+    },
+    "If you can’t scan, the site gives a key to type" : {
+
+    },
+    "In recent events" : {
+
+    },
+    "In the audit log, with this iPhone named" : {
+
+    },
+    "In the last 24 hours" : {
+
+    },
+    "Install Qeet ID on the new phone and link it" : {
+
+    },
+    "Instead of typing a code, approve each Qeet ID sign-in on this iPhone. You’ll need Qeet ID open on a computer." : {
+
+    },
+    "Is this you confirming it’s you?" : {
+
+    },
+    "Is this you signing in?" : {
+
+    },
+    "Is this you?" : {
+
+    },
+    "It adds an account to Accounts. To link this iPhone, scan the code under Link a phone on the computer." : {
+
+    },
+    "It can be linked alongside this one" : {
+
+    },
+    "It changed meanwhile. Look again." : {
+
+    },
+    "It isn’t linked to the account the request is for, or it was removed from the account. Link it again in Settings." : {
+
+    },
+    "It links one phone, once, within 5 minutes" : {
+
+    },
+    "It opens a web page, %@. Use the QR code on the site’s 2-step verification page." : {
+
+    },
+    "It ran out of time, or it was answered already, so there’s nothing to do here." : {
+
+    },
+    "It wasn’t answered within 2 minutes, so nobody was signed in." : {
+
+    },
+    "Its codes are in Accounts. Nothing was added twice." : {
+
+    },
+    "It’s how you’ll know it under Linked phones on the computer." : {
+
+    },
+    "It’s no longer there." : {
 
     },
     "Kept on this iPhone" : {
+
+    },
+    "Keys use only A–Z and 2–7. A 0, 1 or 8 is usually the letter O, I or B." : {
+
+    },
+    "Last 24 hours" : {
+
+    },
+    "Leaving the organisation" : {
+
+    },
+    "Legal" : {
+
+    },
+    "Letters A–Z and numbers 2–7. Spaces don’t matter." : {
+
+    },
+    "Licences" : {
 
     },
     "Link this iPhone" : {
@@ -203,31 +549,113 @@
     "Linked · %@" : {
 
     },
+    "Loading" : {
+
+    },
     "Loading the request" : {
+
+    },
+    "Loading the requests" : {
+
+    },
+    "Lock Qeet ID" : {
+
+    },
+    "Lock with %@" : {
+
+    },
+    "Move to a new iPhone" : {
+
+    },
+    "Name or email" : {
+
+    },
+    "Name this iPhone" : {
+
+    },
+    "Near %@" : {
+
+    },
+    "Near %@ · %@" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "Near %1$@ · %2$@"
+          }
+        }
+      }
+    },
+    "Needs you" : {
 
     },
     "New code every" : {
 
     },
-    "Nobody got in. But whoever tried has your password." : {
+    "Newest first" : {
 
     },
-    "Not now" : {
+    "Next time you sign in on a computer, a request comes to this iPhone." : {
 
     },
-    "Notifications are off for Qeet ID, so requests won't reach this iPhone." : {
+    "No AI agents running" : {
 
     },
-    "Number on your sign-in screen" : {
+    "No passkey for Qeet ID here" : {
 
     },
-    "Only changes how it's shown on this iPhone." : {
+    "Nobody was signed in. Whoever tried got past the first step, usually your password." : {
 
     },
-    "Open Qeet ID on your computer" : {
+    "None yet" : {
 
     },
-    "Open iOS Settings" : {
+    "Not linked" : {
+
+    },
+    "Not you after all? On the computer, go to My account, then Sessions, and sign it out." : {
+
+    },
+    "Nothing is deleted; reactivate any time" : {
+
+    },
+    "Nothing to stop in this organisation right now." : {
+
+    },
+    "Nothing was changed." : {
+
+    },
+    "Notifications" : {
+
+    },
+    "Notifications are off for Qeet ID." : {
+
+    },
+    "Number from the sign-in screen" : {
+
+    },
+    "Off" : {
+
+    },
+    "On" : {
+
+    },
+    "On the computer" : {
+
+    },
+    "On this iPhone (%lld)" : {
+
+    },
+    "Only changes how it shows on this iPhone. %@ isn’t told." : {
+
+    },
+    "Only sign-in requests. Nothing else, no marketing." : {
+
+    },
+    "Only the code for the site that’s open" : {
+
+    },
+    "Open Qeet ID and go to My account" : {
 
     },
     "Optic ID" : {
@@ -236,16 +664,34 @@
     "Optic ID lock" : {
 
     },
+    "Organisation suspended" : {
+
+    },
     "Passcode lock" : {
+
+    },
+    "People aren’t affected" : {
+
+    },
+    "Person" : {
+
+    },
+    "Person reactivated" : {
+
+    },
+    "Person suspended" : {
 
     },
     "Point the camera at the QR code" : {
 
     },
-    "Point the camera at the code on the Qeet ID setup page" : {
+    "Point the camera at the code on the computer" : {
 
     },
-    "Qeet ID asks you to approve each sign-in to your account. Allow notifications so the requests reach you." : {
+    "Privacy policy" : {
+
+    },
+    "Qeet ID asks you to approve each sign-in to your account. Allow notifications so the requests reach you, even when the app is closed." : {
 
     },
     "Qeet ID couldn't be reached. Check your connection and try again." : {
@@ -254,19 +700,43 @@
     "Qeet ID couldn't save to this iPhone's Keychain. Try again." : {
 
     },
-    "Qeet ID no longer accepts this iPhone's link. Link it again to approve sign-ins." : {
+    "Qeet ID didn’t accept it. Try again." : {
 
     },
-    "Qeet ID no longer has this request. Nothing was approved." : {
+    "Qeet ID is built with these, each under its own licence." : {
+
+    },
+    "Qeet ID is locked" : {
+
+    },
+    "Qeet ID needs your passkey again first. Try again." : {
+
+    },
+    "Recorded in the audit log, with this iPhone named." : {
+
+    },
+    "Recorded in the audit log, with your reason." : {
+
+    },
+    "Remove %@?" : {
+
+    },
+    "Remove from this iPhone" : {
 
     },
     "Rename" : {
 
     },
-    "Rename account" : {
+    "Results" : {
 
     },
-    "Save" : {
+    "Risk settings changed" : {
+
+    },
+    "Role given" : {
+
+    },
+    "Scan a QR code" : {
 
     },
     "Scan the code" : {
@@ -275,28 +745,40 @@
     "Scan the code it shows" : {
 
     },
-    "Scan the code on the Link a phone page in Qeet ID, under Account, then Security." : {
+    "Search accounts" : {
 
     },
-    "Search" : {
+    "Second step locked after failed tries" : {
 
     },
-    "Secrets stay in the Secure Enclave and the Keychain. Qeet ID never receives them." : {
+    "Second step reset by an administrator" : {
+
+    },
+    "Secrets stay in the Secure Enclave. Qeet ID never receives them." : {
 
     },
     "Security" : {
 
     },
-    "Service" : {
+    "Set a passcode on this iPhone first: it’s asked before every emergency action." : {
+
+    },
+    "Set up the new iPhone" : {
 
     },
     "Settings" : {
 
     },
-    "Setup key" : {
+    "Setup keys have at least 16 characters." : {
 
     },
-    "Shown in Qeet ID, in the list of your phones." : {
+    "Shown in Qeet ID under Link a phone." : {
+
+    },
+    "Sign in with your passkey, as on the computer" : {
+
+    },
+    "Sign out of administration" : {
 
     },
     "Sign-in approvals" : {
@@ -305,22 +787,52 @@
     "Sign-in approved" : {
 
     },
-    "Sign-in blocked" : {
+    "Sign-in codes" : {
 
     },
-    "Sign-in codes" : {
+    "Sign-in denied" : {
 
     },
     "Sign-in request" : {
 
     },
-    "Sign-in requests for %@ will stop coming here. Your sign-in codes stay on this iPhone." : {
+    "Sign-in requests" : {
 
     },
-    "Someone is signing in to your Qeet ID account from %@. Tap to review." : {
+    "Sign-in requests can’t reach this iPhone. Turn notifications on in Settings." : {
+
+    },
+    "Sign-ins denied" : {
+
+    },
+    "Sign-ins to your Qeet ID account can be approved here" : {
+
+    },
+    "Sign-ins to your Qeet ID account can be approved here now." : {
+
+    },
+    "Signed in as %@" : {
+
+    },
+    "Signed in · %@" : {
+
+    },
+    "Signed out everywhere by an administrator" : {
+
+    },
+    "Signed out everywhere, at once" : {
+
+    },
+    "Signed out everywhere. Reactivate when it’s safe." : {
+
+    },
+    "Signs them out everywhere and stops sign-in" : {
 
     },
     "Someone is signing in to your Qeet ID account. Tap to review." : {
+
+    },
+    "Something else" : {
 
     },
     "Step 1 of 2" : {
@@ -329,19 +841,49 @@
     "Step 2 of 2" : {
 
     },
+    "Stop all %lld agents" : {
+
+    },
+    "Stop all AI agents" : {
+
+    },
+    "Stop every AI agent in %@?" : {
+
+    },
+    "Suspend %@" : {
+
+    },
+    "Suspend %@?" : {
+
+    },
+    "Suspend a person" : {
+
+    },
+    "Suspicious activity" : {
+
+    },
+    "Switch" : {
+
+    },
+    "Terms of use" : {
+
+    },
     "That code is wrong, already used or expired. Ask for a new one in Qeet ID, under Account, then Security." : {
 
     },
-    "That isn't a Qeet ID pairing code" : {
+    "The sign-in" : {
 
     },
-    "That key has letters or digits a setup key can't have. Check it against the site's setup page." : {
+    "The site shows one when you turn on 2-step verification" : {
 
     },
-    "That key is too short. Check that you typed all of it." : {
+    "Their reason" : {
 
     },
-    "The number didn't match, so the sign-in was refused. Nothing was approved." : {
+    "Then Security" : {
+
+    },
+    "Then unlink this iPhone" : {
 
     },
     "This QR code isn't for sign-in codes. Scan the code on the site's 2-step verification page." : {
@@ -359,25 +901,55 @@
     "This account's codes use settings Qeet ID doesn't support." : {
 
     },
-    "This iPhone" : {
+    "This iPhone already approves sign-ins" : {
 
     },
-    "This iPhone can't answer for that account any more. Nothing was approved." : {
+    "This iPhone can’t answer it" : {
 
     },
     "This iPhone couldn't register for notifications. Check your connection and try again." : {
 
     },
-    "This iPhone has no passcode, so Qeet ID can't be locked. Set one in iOS Settings, then turn on the lock in Qeet ID's Settings." : {
+    "This iPhone has no passcode, so Qeet ID can’t be locked. Set one in iOS Settings." : {
 
     },
-    "This iPhone has no passcode, so Qeet ID can't be locked. Set one in iOS Settings." : {
+    "This iPhone is linked" : {
 
     },
     "This iPhone is unlinked" : {
 
     },
-    "This request has ended" : {
+    "This is a site’s sign-in code" : {
+
+    },
+    "This isn’t Qeet ID’s code" : {
+
+    },
+    "This isn’t a sign-in code" : {
+
+    },
+    "This request ended" : {
+
+    },
+    "This sign-in was answered on another linked phone, or cancelled on the computer." : {
+
+    },
+    "This version" : {
+
+    },
+    "This version can’t approve sign-ins any more. Your codes still work." : {
+
+    },
+    "Time" : {
+
+    },
+    "Time-sensitive, so they reach you in a Focus" : {
+
+    },
+    "To link this iPhone, scan the code under Link a phone on the computer." : {
+
+    },
+    "Today, %@" : {
 
     },
     "Touch ID" : {
@@ -389,13 +961,7 @@
     "Turn off the lock for Qeet ID." : {
 
     },
-    "Turn on Qeet ID" : {
-
-    },
     "Turn on the lock for Qeet ID." : {
-
-    },
-    "Two minutes passed without an answer, so it expired. Nothing was approved." : {
 
     },
     "Type the 2-digit number shown on your sign-in screen." : {
@@ -407,16 +973,25 @@
     "Type the key instead" : {
 
     },
-    "Under Two-step verification" : {
+    "Type the setup key" : {
 
     },
-    "Under “AutoFill From” and Verification Codes" : {
+    "Under Linked phones" : {
 
     },
-    "Unknown browser" : {
+    "Unlink it any time, here or on the computer" : {
+
+    },
+    "Unlink this iPhone" : {
 
     },
     "Unlock Qeet ID to see your codes and sign-in requests." : {
+
+    },
+    "Unlock to see who’s signing in, and approve or deny it." : {
+
+    },
+    "Unlock to see your codes and sign-in requests." : {
 
     },
     "Unlock with Face ID" : {
@@ -431,35 +1006,107 @@
     "Unlock with passcode" : {
 
     },
-    "Using Qeet ID? " : {
+    "Until it’s taken away" : {
+
+    },
+    "Unusual activity" : {
+
+    },
+    "Update Qeet ID" : {
+
+    },
+    "Updating keeps your codes and this iPhone’s link to your account." : {
+
+    },
+    "Use %@" : {
+
+    },
+    "Use the QR code on the site’s 2-step verification page." : {
 
     },
     "Verification code" : {
 
     },
-    "Wait %lld min, then ask for a new code in Qeet ID and try again." : {
+    "Version %@" : {
 
     },
-    "You'll stop getting codes for %@. Turn off 2-step verification on %@ first, or you may be locked out." : {
+    "Version %@ (%@)" : {
       "localizations" : {
         "en" : {
           "stringUnit" : {
             "state" : "new",
-            "value" : "You'll stop getting codes for %1$@. Turn off 2-step verification on %2$@ first, or you may be locked out."
+            "value" : "Version %1$@ (%2$@)"
           }
         }
       }
     },
+    "Wait %lld min, then ask for a new code in Qeet ID and try again." : {
+
+    },
+    "Waiting" : {
+
+    },
+    "Waiting for an administrator" : {
+
+    },
+    "Waiting requests" : {
+
+    },
+    "When" : {
+
+    },
+    "When a website or app asks for a code, the keyboard offers it from Qeet ID. No copying." : {
+
+    },
+    "Where" : {
+
+    },
+    "You don’t administer an organisation" : {
+
+    },
+    "You manage" : {
+
+    },
     "You're offline. Connect to the internet and try again." : {
 
     },
-    "Your passcode if %@ can't see you" : {
+    "Your Qeet ID account" : {
+
+    },
+    "Your codes never leave this iPhone, not even in a backup. So they’re set up again on the new one." : {
+
+    },
+    "Your email or username there, to tell accounts apart" : {
+
+    },
+    "Your passcode when Face ID can’t see you" : {
+
+    },
+    "Your passcode when Touch ID can’t read your finger" : {
+
+    },
+    "Your passkey couldn’t be checked, so nothing changed. Try again." : {
+
+    },
+    "Your role doesn’t allow this in this organisation." : {
+
+    },
+    "Your session" : {
+
+    },
+    "from" : {
+
+    },
+    "now" : {
 
     },
     "passcode" : {
 
     },
     "your Qeet ID account" : {
+
+    },
+    "© 2026 Qeet Group" : {
 
     }
   },

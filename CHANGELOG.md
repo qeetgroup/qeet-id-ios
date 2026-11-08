@@ -8,10 +8,24 @@ All notable changes to Qeet ID for iPhone are documented here. The format follow
 
 ### Added
 
+- **Administration**: an administrator signs in with their passkey and gets their own session, apart from the link:
+  access requests to approve (after a fresh passkey check) or deny with a reason, critical events of the last day, and
+  two emergency actions, suspend a person and stop all AI agents, each behind Face ID. Reached from Settings.
+- **Requests waiting**: when more than one sign-in is waiting, one list with each request's time left and Deny all.
+- **Move to a new iPhone**, **About and help** and **Update required** (shown when Qeet ID answers 426).
+
+### Changed
+
+- Every screen redrawn to the Qeet ID mockups: the keyhole icon on Qeet orange (app icon and in-app mark), its rings
+  and seals, settings-style ruled groups, result pages for approved, denied, ended and linked, scanning that shows what
+  was found before adding it, and a notification that names the browser and place.
+
 - The Xcode project: the app, an AutoFill credential provider, a notification service extension, unit tests and UI
   tests, on folder-synchronised groups with every build setting in `Configs/*.xcconfig`. Swift 6 language mode with
   complete concurrency checking and warnings as errors.
-- Qeetrix for iOS from 0.1.0 through Swift Package Manager.
+- Qeetrix for iOS from 0.2.0 through Swift Package Manager. Its bottom action bar, list rows with a code and a
+  monogram tile, flush-row card, copy, rename dialog with text fields, number-match input, accordion summary, AutoFill
+  code that fills on a tap, empty-state tones and icons replace the app's own stand-ins.
 - The app icon (light, dark and tinted) and the in-app Q-key mark.
 - CI on pull requests into `main` and pushes to `main`: build, tests, lint and a gitleaks scan.
 - Foundations: Keychain storage (`…ThisDeviceOnly`, never synchronizable, one item per account in the access group

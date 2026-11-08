@@ -38,11 +38,11 @@ enum SetupKeyError: Error, Equatable, Sendable {
         case .transferQR:
             String(localized: "This QR code moves accounts out of another app. Add each account from its own website instead.")
         case .keyMissing:
-            String(localized: "Enter the setup key from the site's setup page.")
+            String(localized: "Enter the setup key from the site.")
         case .keyInvalid:
-            String(localized: "That key has letters or digits a setup key can't have. Check it against the site's setup page.")
+            String(localized: "Keys use only A–Z and 2–7. A 0, 1 or 8 is usually the letter O, I or B.")
         case .keyTooShort:
-            String(localized: "That key is too short. Check that you typed all of it.")
+            String(localized: "Setup keys have at least 16 characters.")
         case .unsupportedSettings:
             String(localized: "This account's codes use settings Qeet ID doesn't support.")
         }

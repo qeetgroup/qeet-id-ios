@@ -74,6 +74,15 @@ class QeetIDUITestCase: XCTestCase {
         return match
     }
 
+    /// Taps an account's code. The row reads as one element (Qeetrix's list row), so this taps where the code sits:
+    /// under the title, towards the start.
+    @MainActor
+    func tapCode(inRowContaining text: String) {
+        let row = textContaining(text)
+        XCTAssertTrue(row.exists, "No account row reads \(text)")
+        row.coordinate(withNormalizedOffset: CGVector(dx: 0.3, dy: 0.75)).tap()
+    }
+
     @MainActor
     func type(_ text: String, into field: XCUIElement) {
         XCTAssertTrue(field.waitForExistence(timeout: 5), "No field \(field)")
@@ -85,7 +94,7 @@ class QeetIDUITestCase: XCTestCase {
     /// isn't enough — leaving the app and coming back to it, which checks too.
     @MainActor
     func openWaitingRequest(timeout: TimeInterval = 10) -> Bool {
-        let title = "Are you signing in to Qeet ID?"
+        let title = "Is this you signing in?"
         let list = app.collectionViews.firstMatch
         if list.waitForExistence(timeout: 5) {
             for _ in 0..<2 {
@@ -106,9 +115,9 @@ class QeetIDUITestCase: XCTestCase {
             app.buttons["empty.type"].tap()
         } else {
             app.buttons["accounts.add"].tap()
-            app.buttons["Type the key instead"].tap()
+            app.buttons["add.type"].tap()
         }
-        type(service, into: app.textFields["Service"])
+        type(service, into: app.textFields["Site or app"])
         if !account.isEmpty { type(account, into: app.textFields["Account"]) }
         type(key, into: app.textFields["Setup key"])
         app.buttons["setup.add"].tap()

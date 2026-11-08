@@ -17,12 +17,18 @@ enum AppModal: Identifiable, Equatable {
     case scanPairing
     /// Screens 16 to 20: a sign-in request.
     case signInRequest(UUID)
+    /// More than one sign-in request waiting for this iPhone.
+    case requestsWaiting
+    /// Qeet ID no longer accepts this version for approvals.
+    case updateRequired
 
     var id: String {
         switch self {
         case .addAccount: "add-account"
         case .scanPairing: "scan-pairing"
         case .signInRequest(let id): "sign-in-\(id.uuidString)"
+        case .requestsWaiting: "requests-waiting"
+        case .updateRequired: "update-required"
         }
     }
 }
@@ -32,6 +38,21 @@ enum Route: Hashable {
     case settings
     /// Screen 25, AutoFill codes (iOS 18 and later).
     case autoFill
+    /// Move to a new iPhone.
+    case move
+    /// About and help.
+    case about
+    /// Administration: sign in, choose an organisation, home, and what's reached from it.
+    case adminSignIn
+    case adminOrganizations
+    case adminHome
+    case adminRequests
+    case adminRequest(String)
+    case adminPeople
+    case adminSuspend(String)
+    case adminAgents
+    case adminEvents
+    case adminEvent(String)
     /// Screen 11, Link this iPhone.
     case linkIntro
     /// Screen 13: name and link, with the scanned code, or `nil` to type it.
@@ -49,6 +70,8 @@ final class AppModel {
     let lock: AppLock
     let accounts: AccountsModel
     let link: LinkModel
+    /// An administrator's own session, apart from the link.
+    let admin: AdminSession
     let network = NetworkMonitor()
     /// Whether notifications can reach this iPhone, for "Sign-in requests are off".
     private(set) var notifications: NotificationPermission = .allowed
@@ -64,9 +87,13 @@ final class AppModel {
     /// waiting requests.
     @ObservationIgnored private var wasInBackground = true
     /// A request to open once the app is unlocked.
-    @ObservationIgnored private var queuedRequest: (id: UUID, prefetched: FetchedChallenge?)?
+    private var queuedRequest: (id: UUID, prefetched: FetchedChallenge?)?
+    /// A sign-in request waits for the unlock: the Locked screen says so.
+    var hasQueuedRequest: Bool { queuedRequest != nil }
     @ObservationIgnored private var requestModels: [UUID: SignInRequestModel] = [:]
     @ObservationIgnored private var lastPendingCheck: Date?
+    /// The open request came from Requests waiting: closing it goes back there.
+    @ObservationIgnored private var cameFromWaiting = false
 
     init(
         preferences: Preferences, authenticator: any DeviceOwnerAuthenticating, accountStore: any AccountStore,
@@ -76,6 +103,7 @@ final class AppModel {
         lock = AppLock(preferences: preferences, authenticator: authenticator)
         accounts = AccountsModel(store: accountStore)
         link = LinkModel(store: linkStore, push: PushRegistrar())
+        admin = AdminSession()
         link.push.onTokenChange = { [weak self] token in
             guard let self else { return }
             Task { await self.link.pushTokenChanged(token) }
@@ -94,6 +122,9 @@ final class AppModel {
 
     /// Loads what's stored and starts watching the network. Called once, at launch.
     func start() {
+        NotificationCenter.default.addObserver(forName: .qeetIDUpdateRequired, object: nil, queue: .main) { [weak self] _ in
+            MainActor.assumeIsolated { self?.updateRequired() }
+        }
         if lock.isLocked { accounts.suspend() }
         accounts.load()
         link.load()
@@ -144,6 +175,14 @@ final class AppModel {
         } else {
             Task { await checkPendingRequests() }
         }
+    }
+
+    /// Qeet ID answered 426: say so once; codes still work.
+    @ObservationIgnored private var hasShownUpdate = false
+    private func updateRequired() {
+        guard !hasShownUpdate, preferences.hasCompletedOnboarding else { return }
+        hasShownUpdate = true
+        modal = .updateRequired
     }
 
     func completeOnboarding() {
@@ -200,6 +239,20 @@ final class AppModel {
     func closeSignInRequest() {
         if case .signInRequest(let id) = modal { requestModels[id] = nil }
         modal = nil
+        if cameFromWaiting {
+            cameFromWaiting = false
+            Task {
+                let open = await link.pendingRequests().filter { $0.isOpen(at: Date()) }
+                if !open.isEmpty && modal == nil { modal = .requestsWaiting }
+            }
+        }
+    }
+
+    /// Opens one of the requests on Requests waiting; closing it comes back to the list.
+    func openFromWaiting(_ fetched: FetchedChallenge) {
+        cameFromWaiting = true
+        requestModels[fetched.challenge.id] = SignInRequestModel(id: fetched.challenge.id, prefetched: fetched, link: link, lock: lock)
+        modal = .signInRequest(fetched.challenge.id)
     }
 
     /// Asks the server for requests waiting for this iPhone and opens the newest, as a notification tap would. The
@@ -207,11 +260,16 @@ final class AppModel {
     func checkPendingRequests(force: Bool = false) async {
         guard link.isLinked, !lock.isLocked else { return }
         if case .signInRequest = modal { return }
+        if modal == .requestsWaiting { return }
         if !force, let last = lastPendingCheck, Date().timeIntervalSince(last) < 2 { return }
         lastPendingCheck = Date()
-        let pending = await link.pendingRequests()
-        guard let newest = pending.first(where: { $0.isOpen(at: Date()) }) else { return }
-        openSignInRequest(newest.challenge.id, prefetched: newest)
+        let open = await link.pendingRequests().filter { $0.isOpen(at: Date()) }
+        if open.count > 1 {
+            // More than one at once is seen together, not one at a time.
+            modal = .requestsWaiting
+        } else if let newest = open.first {
+            openSignInRequest(newest.challenge.id, prefetched: newest)
+        }
     }
 
     func refreshNotificationPermission() async {

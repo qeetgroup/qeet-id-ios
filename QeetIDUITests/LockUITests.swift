@@ -7,7 +7,7 @@ final class LockUITests: QeetIDUITestCase {
         launch(arguments: ["-ui-lock-on", "-ui-auth", "failed"])
         XCTAssertTrue(element("Qeet ID is locked").exists)
         XCTAssertTrue(element("Unlock to see your codes and sign-in requests.").exists)
-        XCTAssertTrue(app.buttons["locked.unlock"].exists)
+        XCTAssertTrue(app.otherElements["locked"].buttons["Unlock with Face ID"].exists)
         XCTAssertTrue(app.descendants(matching: .any)["locked.failed"].waitForExistence(timeout: 5))
         XCTAssertFalse(element("Accounts", timeout: 1).isHittable)
     }
@@ -23,10 +23,10 @@ final class LockUITests: QeetIDUITestCase {
     func testTurningTheLockOnInSettings() {
         launch()
         app.buttons["accounts.settings"].tap()
-        let lock = element("Face ID lock")
-        XCTAssertTrue(lock.exists)
+        XCTAssertTrue(element("Lock with Face ID").exists)
+        let lock = app.switches["settings.lock"]
+        XCTAssertTrue(lock.waitForExistence(timeout: 5))
         lock.tap()
-        XCTAssertTrue(app.switches["Face ID lock"].waitForExistence(timeout: 5))
-        XCTAssertEqual(app.switches["Face ID lock"].value as? String, "1")
+        XCTAssertTrue(NSPredicate(format: "value == '1'").evaluate(with: lock) || lock.value as? String == "1")
     }
 }

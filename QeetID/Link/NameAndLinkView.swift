@@ -2,15 +2,18 @@ import Qeetrix
 import SwiftUI
 import UIKit
 
-/// Screen 13, Name this iPhone: the code (read-only when scanned, typed otherwise), the name the console will show,
-/// and what linking means. Linking happens only on the person's tap.
+/// Name this iPhone: the code (when it was typed), the name the computer will list it by, and what linking means;
+/// then Link this iPhone. Linking happens only on the person's tap. A scanned code that didn't work says so, with a way
+/// to scan a new one.
 struct NameAndLinkView: View {
     let model: AppModel
     let scannedCode: String?
+    @Environment(\.room) private var room
     @State private var typedCode = ""
     @State private var name = UIDevice.current.name
     @State private var codeError: String?
     @State private var nameError: String?
+    @State private var scannedCodeFailed = false
     @State private var isLinking = false
     @State private var alert: QeetrixAlertDialog?
     @FocusState private var focus: Field?
@@ -19,13 +22,25 @@ struct NameAndLinkView: View {
 
     var body: some View {
         ScrollView {
-            VStack(alignment: .leading, spacing: QeetrixSpace.gapLg) {
-                if let scannedCode {
-                    QeetrixTextField("Pairing code", text: .constant(scannedCode), isReadOnly: true)
-                        .font(QeetrixTextMetrics(role: .codeMd).font)
-                        .accessibilityIdentifier("link.code")
-                } else {
-                    QeetrixTextField("Pairing code", text: $typedCode, prompt: Text(verbatim: "e.g. KM7QX-4TRWP"), error: codeError)
+            PageColumn {
+                if scannedCodeFailed {
+                    QeetrixAlert(
+                        "This code didn’t work",
+                        description:
+                            "It may have been used already, or it’s older than 5 minutes. On the computer, choose Get a new code, then scan it.",
+                        tone: .danger
+                    )
+                    .padding(.bottom, QeetrixSpace.insetLg)
+                    .accessibilityElement(children: .contain)
+                    .accessibilityIdentifier("link.code-failed")
+                }
+                PageTitle(title: Text("Name this iPhone"), line: Text("It’s how you’ll know it under Linked phones on the computer."))
+                VStack(alignment: .leading, spacing: QeetrixSpace.gapLg) {
+                    if scannedCode == nil {
+                        QeetrixTextField(
+                            "Pairing code", text: $typedCode, prompt: Text(verbatim: "e.g. KM7QX-4TRWP"),
+                            description: Text("Shown in Qeet ID under Link a phone."), error: codeError
+                        )
                         .textInputAutocapitalization(.characters)
                         .autocorrectionDisabled()
                         .keyboardType(.asciiCapable)
@@ -35,34 +50,36 @@ struct NameAndLinkView: View {
                         .onSubmit { focus = .name }
                         .onChange(of: typedCode) { codeError = nil }
                         .accessibilityIdentifier("link.code")
-                }
-                QeetrixTextField(
-                    "Name for this iPhone", text: $name, description: Text("Shown in Qeet ID, in the list of your phones."),
-                    error: nameError
-                )
-                .textInputAutocapitalization(.words)
-                .submitLabel(.done)
-                .focused($focus, equals: .name)
-                .onSubmit { link() }
-                .onChange(of: name) { nameError = nil }
-                .accessibilityIdentifier("link.name")
-                QeetrixCard {
-                    QeetrixDescriptionList {
-                        QeetrixDescriptionItem("Sign-in requests", value: String(localized: "Come to this iPhone"))
-                        QeetrixDescriptionItem("Stays linked", value: String(localized: "180 days after you last link it"))
                     }
+                    QeetrixTextField("Name", text: $name, error: nameError)
+                        .textInputAutocapitalization(.words)
+                        .submitLabel(.done)
+                        .focused($focus, equals: .name)
+                        .onSubmit { link() }
+                        .onChange(of: name) { nameError = nil }
+                        .accessibilityIdentifier("link.name")
                 }
+                .padding(.top, QeetrixSpace.layoutSm)
+                Panel {
+                    QeetrixText("Once it’s linked", size: .sm, weight: .semibold, tone: .subtle)
+                    Fact("Sign-ins to your Qeet ID account can be approved here")
+                    Fact(Text("Approving asks for \(model.lock.biometry.name) and the number on the sign-in screen"))
+                    Fact("Unlink it any time, here or on the computer")
+                }
+                .padding(.top, room.isShort ? QeetrixSpace.insetLg : QeetrixSpace.layoutSm)
             }
-            .padding(QeetrixSpace.insetLg)
         }
         .scrollDismissesKeyboard(.interactively)
         .background(QeetrixColor.surfaceCanvas)
-        .navigationTitle("Link this iPhone")
-        .navigationBarTitleDisplayMode(.inline)
-        .qeetrixNavigationBar(background: .canvas, title: .qeetrix)
-        .qeetrixBottomActionBar(primary: QeetrixScreenAction("Link iPhone", icon: .smartphone, isLoading: isLinking) { link() })
+        .screenBar(Text("Link this iPhone"))
+        .actionFooter(
+            primary: scannedCodeFailed
+                ? QeetrixScreenAction("Scan a new code", icon: .scanLine) { model.modal = .scanPairing }
+                : QeetrixScreenAction("Link this iPhone", isLoading: isLinking) { link() }
+        )
         .qeetrixAlertDialog($alert)
         .onAppear { focus = scannedCode == nil ? .code : .name }
+        .accessibilityElement(children: .contain)
         .accessibilityIdentifier("link.name-screen")
     }
 
@@ -107,7 +124,7 @@ struct NameAndLinkView: View {
             if scannedCode == nil {
                 codeError = message
             } else {
-                alert = QeetrixAlertDialog("This code can't link the iPhone", message: Text(message))
+                scannedCodeFailed = true
             }
         case .api(.throttled(let seconds)):
             let minutes = max(1, Int((Double(seconds) / 60).rounded(.up)))

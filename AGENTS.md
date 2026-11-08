@@ -36,8 +36,8 @@ qeet-context (L0)  →  qeet-id-context (L1)  →  qeet-id-server (contract + en
 | [docs/llm/boundaries.md](docs/llm/boundaries.md) | What it owns and must not do |
 | [docs/llm/workflows.md](docs/llm/workflows.md) | Local server, simulated pushes, adding a screen, releasing |
 
-Product-level flow: `qeet-id-context/FLOWS/mfa.md`. The approved screens: the iOS mockup in the Qeet ID workspace
-(27 screens, light and dark).
+Product-level flow: `qeet-id-context/FLOWS/mfa.md`. The screens follow the Qeet ID mockups in `qeetgroup/qeet-mockups`
+(`products/qeet-id/screens/`, modules 01 to 05, light and dark).
 
 ## Targets
 
@@ -81,7 +81,8 @@ local-network HTTP (`INFOPLIST_PREPROCESS`, `QEETID_DEBUG`).
 
 ### 5. Linking only with a pairing code, and only on the person's tap
 The code comes from the console (Account → Security → Link a phone), scanned, typed or opened from
-`qeetidauth://pair?code=…`. A link fills in the code; it never links by itself. Never ask for or accept an access token.
+`qeetidauth://pair?code=…`. A link fills in the code; it never links by itself. Linking never asks for or accepts an
+access token.
 
 ### 6. Approving always needs the number and a fresh device-owner check
 `POST …/respond` carries the typed `number`; the server denies a mismatch (403 `mfa.push_number_mismatch`). Before an
@@ -90,10 +91,11 @@ lock is set to. Denying needs neither. Never add a bearer to `respond`: the devi
 
 ### 7. Qeetrix for every screen
 Build from Qeetrix components and tokens (`QeetrixColor`, `QeetrixSpace`, `qeetrixTextStyle`). Icons are Qeetrix icons
-in the **sharp** shape (`shape: .sharp`; the default is round). Ember only for primary actions, focus, the current item
-and progress. No uppercase text except Qeetrix group labels. Every long or full-width button carries a trailing icon.
-When Qeetrix lacks something, build the smallest app-level piece from Qeetrix tokens and record it for Qeetrix; never
-patch or fork Qeetrix here.
+in the **sharp** shape (`shape: .sharp`; the default is round); the few Qeetrix lacks are `AppIcon`s generated from
+`@qeetrix/icons`' sharp SVGs (`Scripts/generate-app-icons.py`). Ember only for primary actions, focus, the current
+item and progress. No uppercase text except group labels. Buttons carry the icon the mockup gives them. When Qeetrix
+lacks something, build the smallest app-level piece from Qeetrix tokens (`QeetID/Components/`) and record it for
+Qeetrix; never patch or fork Qeetrix here.
 
 ### 8. AutoFill stays phishing-resistant
 The AutoFill extension asks for Face ID before showing or filling any code. Codes for the requesting site come first;
@@ -103,7 +105,16 @@ an account is tied to a site only after the person chose it there, and only then
 Swift 6 language mode, complete checking, warnings are errors. UI and models are `@MainActor`; `Core` types are
 `Sendable` values or actors. No `@unchecked Sendable` outside tests.
 
-### 10. No ticket keys in code or docs
+### 10. Administration has its own session, apart from the link
+An administrator signs in with a passkey (`AuthenticationServices`, `QeetID/Admin/`) and gets their own Qeet ID session:
+the refresh token in the app's own Keychain item (`com.qeetgroup.qeetid.admin`, this device only, never synced, not
+shared with the extensions), the access token in memory only; neither reaches UI state, a log or a toast. It is used
+only for the administration routes (`AdminAPI`), never for the link or `respond`. Anything that gives or takes access
+asks first: a passkey step-up (approve an access request, reactivate) or `.deviceOwnerAuthentication` (suspend, stop
+all agents). Passkeys need the `webcredentials:id.qeet.in` associated domain and `id.qeet.in/.well-known/
+apple-app-site-association` (qeet-id-website) naming this app's team and bundle ID.
+
+### 11. No ticket keys in code or docs
 No tracker keys or tracker links in code, comments, tests or Markdown. Commits and pull requests may name them.
 
 ## Commands
