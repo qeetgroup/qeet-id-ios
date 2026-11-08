@@ -1,0 +1,7 @@
+# Test fixtures gitleaks flags as generic API keys: the RFC 6238 sample setup keys ("1234567890…" in Base32) and a
+# made-up device token in the storage tests. Each entry is one finding's fingerprint (commit:file:rule:line), so a new
+# secret anywhere is still caught.
+
+5cea91438aecace7bec9ce6b2083abb8dc4a1a3f:QeetIDTests/StorageTests.swift:generic-api-key:25
+5cea91438aecace7bec9ce6b2083abb8dc4a1a3f:QeetIDTests/StorageTests.swift:generic-api-key:78
+5cea91438aecace7bec9ce6b2083abb8dc4a1a3f:QeetIDTests/StorageTests.swift:generic-api-key:100
