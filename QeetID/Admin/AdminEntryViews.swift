@@ -359,8 +359,16 @@ struct AdminHomeView: View {
         )
         .toolbar {
             ToolbarItem(placement: .primaryAction) {
-                Button("Switch") { model.path.append(.adminOrganizations) }
-                    .accessibilityIdentifier("admin.switch")
+                Button {
+                    model.path.append(.adminOrganizations)
+                } label: {
+                    Label {
+                        Text("Switch organisation")
+                    } icon: {
+                        Image(qeetrix: .arrowLeftRight, shape: .sharp)
+                    }
+                }
+                .accessibilityIdentifier("admin.switch")
             }
         }
         .task { await loader.reload(quietly: loader.result != nil) }

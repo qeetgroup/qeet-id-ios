@@ -115,8 +115,12 @@ final class AccountsUITests: QeetIDUITestCase {
         app.switches["settings.hide-codes"].tap()
         app.navigationBars.buttons.element(boundBy: 0).tap()
         XCTAssertTrue(textContaining("Code hidden").exists)
+        // The next code starts hidden again, so tap with time left in this one: a tap in its last seconds would be
+        // followed by the next, hidden code before the check.
+        let secondsLeft = 30 - Int(Date().timeIntervalSince1970) % 30
+        if secondsLeft < 6 { sleep(UInt32(secondsLeft + 1)) }
         tapCode(inRowContaining: "Code hidden")
-        XCTAssertFalse(textContaining("Code hidden").waitForExistence(timeout: 1))
+        XCTAssertTrue(textContaining("Code hidden", timeout: 0).waitForNonExistence(timeout: 2), "The tap shows the code")
     }
 }
 

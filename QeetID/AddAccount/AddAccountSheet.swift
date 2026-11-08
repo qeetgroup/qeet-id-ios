@@ -14,7 +14,7 @@ struct AddAccountSheet: View {
         ) {
             VStack(alignment: .leading, spacing: 0) {
                 choice(Text("Scan a QR code"), Text("The site shows one when you turn on 2-step verification"), id: "add.scan") {
-                    QeetrixIcon(.scanQrCode, shape: .sharp)
+                    QeetrixIcon(.qrCode, shape: .sharp)
                 } action: {
                     dismiss()
                     onScan()

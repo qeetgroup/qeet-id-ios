@@ -44,6 +44,9 @@ final class CodePickerModel {
 
     var isEmpty: Bool { matching.isEmpty && others.isEmpty }
 
+    /// Face ID, Touch ID or the passcode, for the Unlock button's icon.
+    var biometry: Biometry { authenticator.biometry() }
+
     /// Face ID, Touch ID or the passcode, before any code is shown or filled.
     func unlock() async {
         access = .checking

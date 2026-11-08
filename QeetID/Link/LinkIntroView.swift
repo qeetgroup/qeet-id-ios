@@ -45,7 +45,7 @@ struct LinkIntroView: View {
         .background(QeetrixColor.surfaceCanvas)
         .screenBar(Text("Link this iPhone"))
         .actionFooter(
-            primary: QeetrixScreenAction("Scan the code", icon: .scanLine, isDisabled: linked) { model.modal = .scanPairing },
+            primary: QeetrixScreenAction("Scan the code", icon: .qrCode, isDisabled: linked) { model.modal = .scanPairing },
             tertiary: QeetrixScreenAction("Type the code", tone: .neutral, isDisabled: linked) { model.path.append(.linkName(code: nil)) }
         )
         .accessibilityElement(children: .contain)

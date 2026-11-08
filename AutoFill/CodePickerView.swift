@@ -12,7 +12,7 @@ struct CodePickerView: View {
                 if model.access == .refused {
                     Section {
                         QeetrixEmptyState("Qeet ID is locked", description: "Unlock to fill a code.", icon: .lock, size: .section) {
-                            QeetrixButton("Unlock", icon: .scanLine) { Task { await model.unlock() } }
+                            QeetrixButton("Unlock", icon: model.biometry.icon) { Task { await model.unlock() } }
                         }
                         .listRowBackground(Color.clear)
                     }

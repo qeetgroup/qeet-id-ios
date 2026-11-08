@@ -12,7 +12,7 @@ struct UpdateRequiredView: View {
         NavigationStack {
             ResultScreen(title: Text("Update Qeet ID"), line: Text("This version can’t approve sign-ins any more. Your codes still work."))
             {
-                AppIcon(.download, size: .md)
+                QeetrixIcon(.download, size: .md, shape: .sharp)
             } content: {
                 ResultDetails(rows: [(Text("This version"), Text(verbatim: AppIdentity.version))])
                 ResultNote(text: Text("Updating keeps your codes and this iPhone’s link to your account.")) {

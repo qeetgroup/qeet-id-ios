@@ -74,7 +74,7 @@ struct NameAndLinkView: View {
         .screenBar(Text("Link this iPhone"))
         .actionFooter(
             primary: scannedCodeFailed
-                ? QeetrixScreenAction("Scan a new code", icon: .scanLine) { model.modal = .scanPairing }
+                ? QeetrixScreenAction("Scan a new code", icon: .qrCode) { model.modal = .scanPairing }
                 : QeetrixScreenAction("Link this iPhone", isLoading: isLinking) { link() }
         )
         .qeetrixAlertDialog($alert)

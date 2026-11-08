@@ -32,7 +32,7 @@ runtime:
   platforms: {ios: "17.0", autofill_extension: "18.0"}
   devices: iPhone
   toolchain: Xcode 27.2
-  design_system: {package: "https://github.com/qeetgroup/qeetrix-ios", from: "0.2.0", product: Qeetrix}
+  design_system: {package: "https://github.com/qeetgroup/qeetrix-ios", from: "0.3.0", product: Qeetrix}
   third_party_deps: [Qeetrix]           # nothing else
 
 app:

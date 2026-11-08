@@ -164,9 +164,9 @@ private struct WaitingRow: View {
         if agent.contains("iPhone") || agent.contains("iPad") || agent.contains("Android") {
             QeetrixIcon(.smartphone, size: .md, shape: .sharp)
         } else if agent.contains("Macintosh") || agent.contains("CrOS") {
-            AppIcon(.laptop)
+            QeetrixIcon(.laptop, shape: .sharp)
         } else {
-            AppIcon(.monitor)
+            QeetrixIcon(.monitor, shape: .sharp)
         }
     }
 }

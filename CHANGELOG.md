@@ -23,9 +23,12 @@ All notable changes to Qeet ID for iPhone are documented here. The format follow
 - The Xcode project: the app, an AutoFill credential provider, a notification service extension, unit tests and UI
   tests, on folder-synchronised groups with every build setting in `Configs/*.xcconfig`. Swift 6 language mode with
   complete concurrency checking and warnings as errors.
-- Qeetrix for iOS from 0.2.0 through Swift Package Manager. Its bottom action bar, list rows with a code and a
+- Qeetrix for iOS from 0.3.0 through Swift Package Manager. Its bottom action bar, list rows with a code and a
   monogram tile, flush-row card, copy, rename dialog with text fields, number-match input, accordion summary, AutoFill
-  code that fills on a tap, empty-state tones and icons replace the app's own stand-ins.
+  code that fills on a tap, empty-state tones and icons replace the app's own stand-ins. Every icon is the mockups'
+  own Qeetrix icon (qr-code on the scan actions, an icon-only Switch organisation button, laptop, monitor, globe,
+  bell-ring, bot-off, download, rotate-ccw, shield-alert); the app draws none itself. Paste stays the system Paste
+  button, which reads the clipboard only when tapped and without the "Allow Paste" prompt.
 - The app icon (light, dark and tinted) and the in-app Q-key mark.
 - CI on pull requests into `main` and pushes to `main`: build, tests, lint and a gitleaks scan.
 - Foundations: Keychain storage (`…ThisDeviceOnly`, never synchronizable, one item per account in the access group

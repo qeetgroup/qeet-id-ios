@@ -63,8 +63,8 @@ struct LockSetupView: View {
         .screenBar(Text("Step 1 of 2"))
         .actionFooter(
             primary: hasPasscode
-                ? QeetrixScreenAction(title: Text("Use \(biometry.name)"), isLoading: isEnabling) { useLock() }
-                : QeetrixScreenAction("Continue without the lock", icon: .chevronRight) { onDone() },
+                ? QeetrixScreenAction(title: Text("Use \(biometry.name)"), icon: biometry.icon, isLoading: isEnabling) { useLock() }
+                : QeetrixScreenAction("Continue without the lock", icon: .arrowRight) { onDone() },
             tertiary: hasPasscode
                 ? QeetrixScreenAction("Not now", tone: .neutral) { onDone() }
                 : QeetrixScreenAction("Open Settings", tone: .neutral) { openSettings() }

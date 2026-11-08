@@ -19,7 +19,7 @@ struct LinkedView: View {
                 ])
             }
             ResultNote(text: Text("Next time you sign in on a computer, a request comes to this iPhone.")) {
-                AppIcon(.bellRing, size: .sm)
+                QeetrixIcon(.bellRing, size: .sm, shape: .sharp)
             }
         }
         .navigationBarBackButtonHidden()

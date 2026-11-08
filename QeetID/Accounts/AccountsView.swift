@@ -243,7 +243,7 @@ struct AccountsView: View {
     /// No accounts yet: where codes come from, and both ways in; and, while not linked, the way to approve sign-ins.
     private var emptyState: some View {
         VStack(spacing: 0) {
-            QeetrixIcon(.scanQrCode, size: .lg, shape: .sharp)
+            QeetrixIcon(.qrCode, size: .lg, shape: .sharp)
                 .foregroundStyle(QeetrixColor.iconBrand)
                 .frame(width: 56, height: 56)
                 .background(QeetrixColor.bgBrandSubtle, in: RoundedRectangle(cornerRadius: QeetrixRadius.control))
@@ -255,7 +255,7 @@ struct AccountsView: View {
             .frame(maxWidth: 300)
             .padding(.top, 6)
             VStack(spacing: QeetrixSpace.gapSm) {
-                QeetrixButton("Scan QR code", icon: .scanLine, size: .lg, isFullWidth: true) { model.modal = .addAccount }
+                QeetrixButton("Scan QR code", icon: .qrCode, size: .lg, isFullWidth: true) { model.modal = .addAccount }
                     .accessibilityIdentifier("empty.scan")
                 QeetrixButton("Type the key instead", icon: .keyboard, variant: .ghost, size: .lg, isFullWidth: true) {
                     showsSetupKey = true

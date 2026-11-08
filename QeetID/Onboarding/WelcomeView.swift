@@ -56,7 +56,7 @@ struct WelcomeView: View {
         .toolbar(.hidden, for: .navigationBar)
         .safeAreaInset(edge: .bottom, spacing: 0) {
             VStack(spacing: QeetrixSpace.gapSm) {
-                QeetrixButton("Get started", icon: .chevronRight, size: .lg, isFullWidth: true, action: onStart)
+                QeetrixButton("Get started", icon: .arrowRight, size: .lg, isFullWidth: true, action: onStart)
                     .accessibilityIdentifier("welcome.start")
                 QeetrixText("No account needed to start", size: .sm, tone: .subtle, align: .center)
             }

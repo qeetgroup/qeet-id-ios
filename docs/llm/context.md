@@ -31,7 +31,7 @@ the sign-in gets belong to `qeet-id-server`. It never holds a Qeet ID session or
 
 ## Design system
 
-Every screen uses **Qeetrix for iOS** (`qeetgroup/qeetrix-ios`, Swift Package Manager, `from: "0.2.0"`). Qeetrix wraps
+Every screen uses **Qeetrix for iOS** (`qeetgroup/qeetrix-ios`, Swift Package Manager, `from: "0.3.0"`). Qeetrix wraps
 the system's own controls and presentations — navigation bars and large titles, search, sheets, alerts, action sheets,
 context menus — and carries Qeetrix's square geometry, filled fields, label-first buttons, ruled surfaces, sharp icons
 and Ember. Where the approved mockup needs something Qeetrix lacks, the app builds the smallest piece from Qeetrix

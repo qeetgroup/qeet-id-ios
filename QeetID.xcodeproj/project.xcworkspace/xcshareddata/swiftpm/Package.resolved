@@ -6,8 +6,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/qeetgroup/qeetrix-ios.git",
       "state" : {
-        "revision" : "a198f8a632e0199089dfb91beb8273a7ed495d3f",
-        "version" : "0.2.0"
+        "revision" : "79d59209ca561a847d694eb59e5da9c17ec4c9fd",
+        "version" : "0.3.0"
       }
     }
   ],

@@ -91,8 +91,7 @@ lock is set to. Denying needs neither. Never add a bearer to `respond`: the devi
 
 ### 7. Qeetrix for every screen
 Build from Qeetrix components and tokens (`QeetrixColor`, `QeetrixSpace`, `qeetrixTextStyle`). Icons are Qeetrix icons
-in the **sharp** shape (`shape: .sharp`; the default is round); the few Qeetrix lacks are `AppIcon`s generated from
-`@qeetrix/icons`' sharp SVGs (`Scripts/generate-app-icons.py`). Ember only for primary actions, focus, the current
+in the **sharp** shape (`shape: .sharp`; the default is round); the app draws none of its own. Ember only for primary actions, focus, the current
 item and progress. No uppercase text except group labels. Buttons carry the icon the mockup gives them. When Qeetrix
 lacks something, build the smallest app-level piece from Qeetrix tokens (`QeetID/Components/`) and record it for
 Qeetrix; never patch or fork Qeetrix here.

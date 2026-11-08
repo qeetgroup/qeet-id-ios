@@ -39,7 +39,7 @@ struct LockedView: View {
         .scrollBounceBehavior(.basedOnSize)
         .brandWash()
         .actionFooter(
-            primary: QeetrixScreenAction(title: Text(biometry.unlockTitle), isLoading: lock.isAuthenticating) {
+            primary: QeetrixScreenAction(title: Text(biometry.unlockTitle), icon: biometry.icon, isLoading: lock.isAuthenticating) {
                 Task { await lock.unlock() }
             }
         )
@@ -52,7 +52,7 @@ struct LockedView: View {
 private struct RequestWaitingCard: View {
     var body: some View {
         HStack(spacing: QeetrixSpace.gapMd) {
-            AppIcon(.bellRing)
+            QeetrixIcon(.bellRing, shape: .sharp)
                 .foregroundStyle(QeetrixColor.iconBrand)
                 .frame(width: 40, height: 40)
                 .background(QeetrixColor.bgBrandSubtle, in: Circle())

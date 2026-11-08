@@ -499,7 +499,7 @@ struct AdminAgentsView: View {
                 title: Text("Every agent stopped"), line: Text("\(stopped) agents can’t act until they’re resumed in the console."),
                 sealTone: .danger
             ) {
-                AppIcon(.botOff, size: .md)
+                QeetrixIcon(.botOff, size: .md, shape: .sharp)
             } content: {
                 AuditNote()
             }
@@ -515,7 +515,7 @@ struct AdminAgentsView: View {
                     }
                     AdminContent(result: loader.result, model: model, retry: { await loader.reload() }) { count in
                         VStack(spacing: 0) {
-                            MarkRings(size: room.isShort ? .xs : .sm, sealTone: .danger) { AppIcon(.botOff) }
+                            MarkRings(size: room.isShort ? .xs : .sm, sealTone: .danger) { QeetrixIcon(.botOff, shape: .sharp) }
                             if count == 0 {
                                 PageTitle(
                                     title: Text("No AI agents running"), line: Text("Nothing to stop in this organisation right now."),

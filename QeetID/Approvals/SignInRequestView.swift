@@ -74,7 +74,7 @@ struct SignInRequestView: View {
             } content: {
                 RequestDetails(request: model.request, withPlace: true)
                 ResultNote(text: Text("Not you after all? On the computer, go to My account, then Sessions, and sign it out.")) {
-                    AppIcon(.shieldAlert, size: .sm)
+                    QeetrixIcon(.shieldAlert, size: .sm, shape: .sharp)
                 }
             }
             .actionFooter(primary: QeetrixScreenAction("Done") { onClose() })
@@ -123,7 +123,7 @@ struct SignInRequestView: View {
             } content: {
                 RequestDetails(request: model.request, withPlace: false)
                 ResultNote(text: Text("If it’s you, sign in again on the computer. A new request comes here.")) {
-                    AppIcon(.rotateCcw, size: .sm)
+                    QeetrixIcon(.rotateCcw, size: .sm, shape: .sharp)
                 }
             }
             .actionFooter(primary: QeetrixScreenAction("Done") { onClose() })
@@ -282,7 +282,7 @@ private struct FactsCard: View {
         let ip = context.ip.flatMap { $0.isEmpty ? nil : $0 }
         VStack(spacing: 0) {
             if let browser = context.browser {
-                row(Text(verbatim: browser)) { AppIcon(.laptop, size: .sm) }
+                row(Text(verbatim: browser)) { QeetrixIcon(.laptop, size: .sm, shape: .sharp) }
             }
             if let place {
                 QeetrixSeparator()
@@ -292,7 +292,7 @@ private struct FactsCard: View {
             row(Text(RequestDetails.day(challenge.signedInAt))) { QeetrixIcon(.clock, size: .sm, shape: .sharp) }
             if let ip {
                 QeetrixSeparator()
-                row(Text("IP address \(ip)")) { AppIcon(.globe, size: .sm) }
+                row(Text("IP address \(ip)")) { QeetrixIcon(.globe, size: .sm, shape: .sharp) }
             }
         }
         .background(QeetrixColor.surfaceRaised, in: RoundedRectangle(cornerRadius: QeetrixRadius.surface))
