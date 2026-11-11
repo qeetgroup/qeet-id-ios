@@ -132,19 +132,30 @@ end-to-end test against a local server runs only with `TEST_RUNNER_QEETID_E2E_UR
 
 ## What CI runs
 
-`.github/workflows/ci.yml` on pull requests into `main`, pushes to `main` and by hand: build, unit tests and UI tests
-on an iPhone simulator, and the swift-format lint. `.github/workflows/security.yml`: the gitleaks CLI over the whole
-history. macOS minutes are scarce, so nothing runs on pushes to `develop`; run the commands above locally first.
-CodeQL is off while the repository is private.
+`.github/workflows/ci.yml` · **Verify**, the only workflow, on pull requests into `develop` and `main` and by hand (a
+release branch is checked once, on its pull request into `main`): the swift-format lint, one simulator build of the
+app and its tests (`build-for-testing`, warnings are errors), and gitleaks over the pull request's commits. macOS
+minutes are scarce, so the unit and UI tests and the Release build for devices run locally before every push, not in
+CI, and nothing runs on a plain push. CodeQL is off while the repository is private. Dependabot proposes Actions
+updates monthly into `develop`. There is no TestFlight or App Store workflow yet: it needs the Apple team and its
+signing.
 
-## Branches
+## Branches and releases
 
-Work on `develop`; `main` is what ships. A pull request from `develop` into `main` runs CI.
+The app ships with the Qeet ID monthly release and carries its number: `develop` is where changes land, `main` is what
+ships. For a month the app changes, `release/YEAR.MONTH.0` is cut from `develop` (e.g. `release/2027.1.0`); its first
+commit sets `MARKETING_VERSION` to that version (no leading zeros) and raises `CURRENT_PROJECT_VERSION` in
+`Configs/Project.xcconfig`. After the cut it takes fixes only, each made on `develop` first and then copied over;
+testers install it from TestFlight. After sign-off it merges into `main`, is tagged `v2027.1.0` and goes to the App
+Store. An urgent fix afterwards is `hotfix/YEAR.MONTH.N` from `main` (e.g. `hotfix/2027.1.1`). A month without app
+changes ships no app release.
 
 ## Before you finish
 
 ```bash
+Scripts/lint.sh
 xcodebuild test -project QeetID.xcodeproj -scheme QeetID -destination 'platform=iOS Simulator,name=iPhone 17'
+xcodebuild build -project QeetID.xcodeproj -scheme QeetID -configuration Release -destination 'generic/platform=iOS' CODE_SIGNING_ALLOWED=NO
 git diff
 ```
 

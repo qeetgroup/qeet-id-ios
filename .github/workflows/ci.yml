@@ -1,12 +1,12 @@
 name: CI
 
-# macOS minutes are scarce, so CI runs on pull requests into main, on main after each merge, and on request.
-# Pushes to develop run nothing: run the same commands locally first (AGENTS.md).
+# Verify: the essential checks, kept short because macOS minutes are scarce. swift-format, one simulator build of the
+# app and its tests (warnings are errors), which type-checks everything, and a secret scan of the pull request. Runs on pull requests into develop and
+# main (a release branch is checked once, on its pull request into main), and on request. The unit and UI tests and the Release build for devices run
+# locally before every push (AGENTS.md, "Before you finish").
 on:
   pull_request:
-    branches: [main]
-  push:
-    branches: [main]
+    branches: [develop, main]
   workflow_dispatch:
 
 permissions:
@@ -22,12 +22,15 @@ env:
   XCODE_VERSION: "27.1"
 
 jobs:
-  app:
-    name: Build and test
+  verify:
+    name: Verify
     runs-on: xcode-27
-    timeout-minutes: 60
+    timeout-minutes: 30
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          fetch-depth: 0 # the pull request's commits, for the secret scan
+          persist-credentials: false
 
       - name: Select Xcode
         run: |
@@ -37,33 +40,28 @@ jobs:
       - name: Format (swift-format)
         run: Scripts/lint.sh
 
-      - name: Pick a simulator
-        id: simulator
-        run: echo "id=$(Scripts/ci-simulator.sh)" >> "$GITHUB_OUTPUT"
-
       # Warnings are errors in every target (Configs/Project.xcconfig). Simulator builds sign to run locally and
-      # need no team.
-      - name: Build for testing
+      # need no team; a generic destination needs no booted simulator.
+      - name: Build the app and its tests
         run: |
           xcodebuild build-for-testing -project QeetID.xcodeproj -scheme QeetID \
-            -destination "platform=iOS Simulator,id=${{ steps.simulator.outputs.id }}" \
+            -destination 'generic/platform=iOS Simulator' \
             -derivedDataPath .build/xcode
 
-      - name: Unit tests
+      # The free gitleaks CLI (the gitleaks Action needs a paid licence for an organisation), pinned and
+      # checksum-verified for this runner's architecture, over this pull request's commits.
+      - name: Secret scan
+        if: github.event_name == 'pull_request'
+        env:
+          GITLEAKS_VERSION: 8.30.1
+          BASE_SHA: ${{ github.event.pull_request.base.sha }}
+          HEAD_SHA: ${{ github.event.pull_request.head.sha }}
         run: |
-          xcodebuild test-without-building -project QeetID.xcodeproj -scheme QeetID -only-testing:QeetIDTests \
-            -destination "platform=iOS Simulator,id=${{ steps.simulator.outputs.id }}" \
-            -derivedDataPath .build/xcode
-
-      - name: UI tests
-        run: |
-          xcodebuild test-without-building -project QeetID.xcodeproj -scheme QeetID -only-testing:QeetIDUITests \
-            -destination "platform=iOS Simulator,id=${{ steps.simulator.outputs.id }}" \
-            -derivedDataPath .build/xcode
-
-      # The Release configuration for devices, unsigned: it has no team yet (Configs/Signing.xcconfig).
-      - name: Release build for devices (unsigned)
-        run: |
-          xcodebuild build -project QeetID.xcodeproj -scheme QeetID -configuration Release \
-            -destination 'generic/platform=iOS' -derivedDataPath .build/xcode \
-            CODE_SIGNING_ALLOWED=NO
+          case "$(uname -m)" in
+            arm64) arch=darwin_arm64 sum=b40ab0ae55c505963e365f271a8d3846efbc170aa17f2607f13df610a9aeb6a5 ;;
+            *) arch=darwin_x64 sum=dfe101a4db2255fc85120ac7f3d25e4342c3c20cf749f2c20a18081af1952709 ;;
+          esac
+          archive="gitleaks_${GITLEAKS_VERSION}_${arch}.tar.gz"
+          curl -sSfL -o "$RUNNER_TEMP/$archive" "https://github.com/gitleaks/gitleaks/releases/download/v${GITLEAKS_VERSION}/${archive}"
+          (cd "$RUNNER_TEMP" && echo "${sum}  ${archive}" | shasum -a 256 --check --strict && tar -xzf "$archive" gitleaks)
+          "$RUNNER_TEMP/gitleaks" git --redact --exit-code 1 --log-opts="$BASE_SHA..$HEAD_SHA" .
