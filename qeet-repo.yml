@@ -89,9 +89,11 @@ commands:
   lint:  "xcrun swift-format lint --strict --recursive Core Shared QeetID AutoFill NotificationService QeetIDTests QeetIDUITests"
 
 ci:
-  workflows: [ci.yml, security.yml]
-  triggers: [pull_request into main, push to main, workflow_dispatch]   # macOS minutes are scarce
-  gates: [build, unit tests, UI tests, swift-format lint, gitleaks CLI]
+  workflows: [ci.yml]
+  triggers: [pull_request into develop and main, workflow_dispatch]   # macOS minutes are scarce; a release branch is checked once, on its PR into main
+  gates: [swift-format lint, build-for-testing, gitleaks]   # Verify; unit + UI tests and the device Release build run locally
+  branches: "develop · main (what ships) · release/YEAR.MONTH.0 (the month's Qeet ID release; sets MARKETING_VERSION) · hotfix/YEAR.MONTH.N"
+  dependencies: ".github/dependabot.yml: github-actions, monthly into develop"
   codeql: off while the repository is private
 
 security:

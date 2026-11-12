@@ -76,7 +76,10 @@ the foreground, and on pull to refresh on Accounts (`POST /v1/mfa/push/devices/{
 
 ## Release
 
+0. Cut `release/YEAR.MONTH.0` from `develop` for the month's Qeet ID release (e.g. `release/2027.1.0`).
 1. Put the team in `Configs/Signing.xcconfig.local` (ignored by git).
-2. Bump `MARKETING_VERSION` / `CURRENT_PROJECT_VERSION` in `Configs/Project.xcconfig`.
+2. On the release branch, set `MARKETING_VERSION` to that version and raise `CURRENT_PROJECT_VERSION` in
+   `Configs/Project.xcconfig`.
 3. Move `[Unreleased]` in `CHANGELOG.md` under the new version.
-4. Product › Archive in Xcode (Release uses the production APNs environment).
+4. Product › Archive in Xcode (Release uses the production APNs environment); upload to TestFlight for testers.
+5. After sign-off, merge the release branch into `main` with a merge commit and tag `vYEAR.MONTH.N`.

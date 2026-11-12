@@ -1,0 +1,12 @@
+version: 2
+# The workflows' actions, one grouped pull request a month into develop. The app's Swift packages are pinned in the
+# Xcode project and raised by hand.
+updates:
+  - package-ecosystem: github-actions
+    directory: /
+    target-branch: develop
+    schedule:
+      interval: monthly
+    groups:
+      actions:
+        patterns: ["*"]
