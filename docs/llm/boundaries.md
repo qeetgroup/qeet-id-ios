@@ -1,7 +1,7 @@
 # Boundaries — qeet-id-ios
 
 **Level:** L2 · **Last verified:** 2026-11-06
-**Verification scope:** ownership from `qeet-id-context/REPOSITORIES.md`; endpoints read from `qeet-id-server`.
+**Verification scope:** ownership from `qeet-id-files/TAD.md` §14; endpoints read from `qeet-id-server`.
 
 ## Owns
 
