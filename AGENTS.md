@@ -22,7 +22,7 @@ Plus a Face ID app lock, a privacy cover in the app switcher, and AutoFill of co
 ## Context hierarchy
 
 ```text
-qeet-context (L0)  →  qeet-id-files (L1)  →  qeet-id-server (contract + enforcement)
+qeet-context (L0)  →  qeet-id-context (L1)  →  qeet-id-server (contract + enforcement)
                                             →  qeet-id-ios (L2, this repository)
 ```
 
@@ -36,7 +36,7 @@ qeet-context (L0)  →  qeet-id-files (L1)  →  qeet-id-server (contract + enfo
 | [docs/llm/boundaries.md](docs/llm/boundaries.md) | What it owns and must not do |
 | [docs/llm/workflows.md](docs/llm/workflows.md) | Local server, simulated pushes, adding a screen, releasing |
 
-Product-level flow: `qeet-id-files/TAD.md` §6. The screens follow the Qeet ID mockups in `qeetgroup/qeet-mockups`
+Product-level flow: `qeet-id-context/FLOWS/mfa.md`. The screens follow the Qeet ID mockups in `qeetgroup/qeet-mockups`
 (`products/qeet-id/screens/`, modules 01 to 05, light and dark).
 
 ## Targets

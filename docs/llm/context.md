@@ -12,7 +12,7 @@ warnings as errors), iOS 17 or later, iPhone only, built with Xcode 27. It repla
 ## Context inheritance
 
 ```text
-qeet-context (L0)  →  qeet-id-files (L1)  →  qeet-id-server (contract + enforcement)
+qeet-context (L0)  →  qeet-id-context (L1)  →  qeet-id-server (contract + enforcement)
                                             →  qeet-id-ios (L2, this document)
 ```
 
