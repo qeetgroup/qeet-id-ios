@@ -1,12 +1,12 @@
 name: CI
 
 # Verify: the essential checks, kept short because macOS minutes are scarce. swift-format, one simulator build of the
-# app and its tests (warnings are errors), which type-checks everything, and a secret scan of the pull request. Runs on pull requests into develop and
-# main (a release branch is checked once, on its pull request into main), and on request. The unit and UI tests and the Release build for devices run
+# app and its tests (warnings are errors), which type-checks everything, and a secret scan of the pull request. Runs on pull requests into develop,
+# release/* and main, and on request. The unit and UI tests and the Release build for devices run
 # locally before every push (AGENTS.md, "Before you finish").
 on:
   pull_request:
-    branches: [develop, main]
+    branches: [develop, "release/**", main]
   workflow_dispatch:
 
 permissions:
